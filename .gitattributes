@@ -1,0 +1,2 @@
+# dotplan: hide planning files from PR diffs and language stats
+.planning/** linguist-generated
