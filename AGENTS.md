@@ -23,9 +23,30 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
-- Results in `results/` (JSON, gitignored if large)
+- Results in `results/` (JSON, gitignored)
 - Findings in `findings/` (markdown writeups per phase)
-- Concept pair sets in `pairs/` or `words.ts`
+- Concept pair definitions in `pairs.ts`
+- Types in `types.ts`, canonicalization in `canonicalize.ts`
+- Core engine in `index.ts` (also serves as CLI entry point)
+
+## CLI Usage
+
+```bash
+# Single elicitation
+bun run index.ts --model claude --from music --to mathematics --waypoints 5
+
+# Multiple reps
+bun run index.ts --model gpt --from "Beyoncé" --to erosion --reps 10
+
+# Experiments (use --dry-run to preview)
+bun run prompt-selection         # Prompt format selection on holdout pairs
+bun run pilot                    # Main pilot experiment on reporting pairs
+bun run analyze                  # Analyze pilot results and generate findings
+```
+
+## Models
+
+Four models via OpenRouter: Claude Sonnet 4, GPT-4o, Grok 3, Gemini 2.0 Flash. Model configs in `pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 

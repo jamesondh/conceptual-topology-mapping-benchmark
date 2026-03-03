@@ -1,28 +1,53 @@
 # State
 
 ## Current Phase
-Phase 1: Waypoint elicitation engine + pilot data — not started
+Phase 1: Waypoint elicitation engine + pilot data — **engine complete, ready to run experiments**
 
 ## Context
-- Research survey complete (`research.md`) — covers embedding geometry, navigation/interpolation, compositionality, consistency/directionality, trajectory dynamics, cognitive science, cross-model comparison, closest benchmarks
-- Word convergence game (575 games, 4 models) provides empirical foundation — characteristic gaits, semantic basins, direction-dependence, cross-model novelty
-- Core thesis: to our knowledge, no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently. Static embedding analysis ≠ behavioral navigation.
-- Phase 1 spec reviewed by Codex (GPT) — incorporated feedback on controls, stratified pair design, metric validity, prompt format confounds, reproducibility metadata, and sample size
+- Research survey complete (`research.md`)
+- Word convergence game (575 games, 4 models) provides empirical foundation
+- Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
+
+## Phase 1 Implementation Summary
+
+### Engine (`index.ts`)
+- OpenRouter API integration with retry logic (3 retries, exponential backoff)
+- Provider route extraction, 60s request timeout, generation ID tracking
+- Batch runner with configurable concurrency and progress callbacks
+- CLI: `bun run index.ts --model X --from A --to B --waypoints N`
+
+### Concept Pairs (`pairs.ts`)
+- 36 pairs across 9 categories: anchor (5), hierarchy (4), cross-domain (4), polysemy (6), near-synonym (4), antonym (2), control-identity (2), control-random (7), control-nonsense (2)
+- Holdout/reporting split: 15 holdout, 21 reporting
+- All pairs have metadata: concreteness axes, relational type, polysemy level, basin info
+
+### Canonicalization (`canonicalize.ts`)
+- Multi-strategy waypoint extraction (JSON, numbered, bullet, comma, arrow, fallback)
+- Pipeline: lowercase → strip articles → lemmatize (compromise) → normalize → dedupe
+- Metrics: Jaccard, positional overlap, distributional entropy, semantic similarity (embeddings)
+
+### Experiments
+- `experiments/01-prompt-selection.ts` — 1,200 runs (15 holdout × 4 models × 2 formats × 10 reps)
+- `experiments/01-pilot.ts` — 2,480 runs (21 reporting × 4 models × 2 waypoint counts × 10-20 reps), with resume support
+- `analysis/01-pilot.ts` — full analysis pipeline with findings report generation
+
+### Codex Review
+- 13 findings addressed; critical fixes: format field mismatch, resume result loading, provider route, timeouts, concurrency validation, empty response handling
 
 ## Key Design Decisions
-- **Exploration-first workflow** — phases follow the most interesting data signal, not a fixed plan
-- **Reuse word-convergence anchor pairs** for cross-experiment comparability (formation, network, echo basins)
-- **Distributional evaluation** — multiple runs per pair (10-20 reps), compare distributions not single paths
-- **Controls from day one** — identity, random, nonsense pairs establish baselines before claiming geometry
-- **Holdout split** — prompt format selected on holdout pairs, findings reported on separate set
-- **Small external anchor subset** — ConceptNet comparison on ~10 pairs to check self-grounding circularity early
-- **OpenRouter for multi-model access** — log exact model IDs, provider routes, full decoding params
+- **Exploration-first workflow** — phases follow the most interesting data signal
+- **Reuse word-convergence anchor pairs** for cross-experiment comparability
+- **Distributional evaluation** — 10-20 reps per pair, compare distributions not single paths
+- **Controls from day one** — identity, random, nonsense baselines
+- **Holdout split** — prompt format selected on holdout, findings on reporting set
+- **OpenRouter for multi-model** — exact model IDs, provider routes, full decoding params
 
 ## Blockers
 None
 
 ## Next Steps
-- Build waypoint elicitation engine (prompt design, API calls, result storage, canonicalization)
-- Implement stratified concept pair set with metadata
-- Run prompt format selection on holdout pairs
-- Run main pilot experiments
+- Set `OPENROUTER_API_KEY` in environment
+- Run `bun run prompt-selection` to select prompt format on holdout pairs
+- Run `bun run pilot` for main pilot experiment
+- Run `bun run analyze` to compute metrics and generate findings
+- ConceptNet external anchor comparison (deferred — spec acknowledges this)

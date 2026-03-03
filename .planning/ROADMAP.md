@@ -6,7 +6,7 @@ Exploration-first project. Phases 1-2 are concrete; phase 3+ follows the most in
 <!-- Completed phases move here -->
 
 ## In Progress
-- [ ] **Phase 1: Waypoint elicitation engine + pilot data** — Build the core primitive (prompt model with concept pair, get ordered waypoints). Run across 4+ models on curated pairs (reusing word-convergence anchors + new). Test prompt formats, waypoint counts, variance across repeated runs.
+- [ ] **Phase 1: Waypoint elicitation engine + pilot data** — Engine implemented. 36 stratified pairs curated, canonicalization pipeline built, experiment scripts ready. Next: run prompt selection → pilot → analysis. Codex-reviewed.
 
 ## Planned
 - [ ] **Phase 2: Reversals & path consistency** — Run every pair in both directions (A→B, B→A). Compute path overlap, edit distance, asymmetry structure. Correlate with word-convergence direction findings and reversal curse predictions.
