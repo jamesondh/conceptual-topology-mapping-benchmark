@@ -8,6 +8,8 @@
     "prompt-selection": "bun run experiments/01-prompt-selection.ts",
     "pilot": "bun run experiments/01-pilot.ts",
     "analyze": "bun run analysis/01-pilot.ts",
+    "reversals": "bun run experiments/02-reversals.ts",
+    "analyze-reversals": "bun run analysis/02-reversals.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

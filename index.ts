@@ -265,6 +265,18 @@ export async function elicit(
   const extractedWaypoints = extractWaypoints(rawResponse, waypointCount);
   const canonicalizedWaypoints = canonicalizeAll(extractedWaypoints);
 
+  // Extraction count enforcement (Option B: lenient)
+  let extractionCountMismatch = false;
+  let finalWaypoints = canonicalizedWaypoints;
+  if (canonicalizedWaypoints.length !== waypointCount) {
+    extractionCountMismatch = true;
+    if (canonicalizedWaypoints.length > waypointCount) {
+      // Truncate to requested count
+      finalWaypoints = canonicalizedWaypoints.slice(0, waypointCount);
+    }
+    // If underlong, keep as-is (soft warning)
+  }
+
   // Clear failureMode if we ultimately succeeded
   if (rawResponse) {
     failureMode = undefined;
@@ -280,7 +292,7 @@ export async function elicit(
     temperature,
     rawResponse,
     extractedWaypoints,
-    canonicalizedWaypoints,
+    canonicalizedWaypoints: finalWaypoints,
     timestamp: new Date(startTime).toISOString(),
     durationMs,
     retryCount,
@@ -288,6 +300,7 @@ export async function elicit(
     ...(providerRoute ? { providerRoute } : {}),
     ...(openRouterGenId ? { openRouterGenId } : {}),
     ...(failureMode ? { failureMode } : {}),
+    ...(extractionCountMismatch ? { extractionCountMismatch: true } : {}),
   };
 
   return result;
@@ -339,7 +352,7 @@ export async function runBatch(config: BatchConfig): Promise<ElicitationResult[]
   const batchDir = `${outputDir}/${batchId}`;
 
   // Ensure output directory exists
-  const { mkdir, writeFile } = await import("node:fs/promises");
+  const { mkdir, writeFile, rename } = await import("node:fs/promises");
   await mkdir(batchDir, { recursive: true });
 
   const results: ElicitationResult[] = [];
@@ -402,10 +415,12 @@ export async function runBatch(config: BatchConfig): Promise<ElicitationResult[]
 
       results.push(result);
 
-      // Save individual result
+      // Save individual result (atomic write)
       const resultPath = `${batchDir}/${result.runId}.json`;
       try {
-        await writeFile(resultPath, JSON.stringify(result, null, 2));
+        const tmpPath = `${resultPath}.tmp.${Date.now()}`;
+        await writeFile(tmpPath, JSON.stringify(result, null, 2));
+        await rename(tmpPath, resultPath);
       } catch (writeError: unknown) {
         console.error(
           `Failed to write result ${result.runId}:`,
@@ -465,7 +480,9 @@ export async function runBatch(config: BatchConfig): Promise<ElicitationResult[]
 
   const summaryPath = `${batchDir}/batch-summary.json`;
   try {
-    await writeFile(summaryPath, JSON.stringify(summary, null, 2));
+    const tmpSummaryPath = `${summaryPath}.tmp.${Date.now()}`;
+    await writeFile(tmpSummaryPath, JSON.stringify(summary, null, 2));
+    await rename(tmpSummaryPath, summaryPath);
   } catch (writeError: unknown) {
     console.error(
       "Failed to write batch summary:",

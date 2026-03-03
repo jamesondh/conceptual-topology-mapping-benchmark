@@ -39,6 +39,14 @@ bun run pilot --dry-run           # Preview
 # 3. Analyze results and generate findings
 bun run analyze
 bun run analyze --skip-embeddings  # Skip semantic similarity (no API calls)
+
+# 4. Phase 2: Reversal experiment (runs reporting pairs in reverse + polysemy supplementary)
+bun run reversals                 # ~960 API calls
+bun run reversals --dry-run       # Preview
+bun run reversals --concurrency 12  # Faster with higher concurrency
+
+# 5. Analyze reversal results
+bun run analyze-reversals
 ```
 
 ## What It Measures
@@ -48,6 +56,7 @@ bun run analyze --skip-embeddings  # Skip semantic similarity (no API calls)
 - **Waypoint count effect** — Do 5-waypoint and 10-waypoint paths share structure at different resolutions?
 - **Control baselines** — Identity pairs (trivial), random pairs (noise floor), nonsense (hallucination detection)
 - **Polysemy steering** — Do ambiguous words (bank↔river vs bank↔mortgage) produce clearly different paths?
+- **Directional asymmetry** — Is the path from A→B the same as B→A? (Phase 2: permutation tests, bootstrap CIs, direction-exclusive waypoints)
 
 ## Concept Pairs
 
@@ -74,9 +83,13 @@ index.ts                          # Waypoint elicitation engine + CLI
 types.ts                          # Type definitions
 pairs.ts                          # Curated concept pairs with metadata
 canonicalize.ts                   # Extraction, canonicalization, metrics
+scheduler.ts                      # Global request scheduler with per-model rate limiting
+metrics.ts                        # Asymmetry metrics, permutation tests, bootstrap CIs
 experiments/01-prompt-selection.ts # Prompt format comparison
 experiments/01-pilot.ts           # Main pilot batch runner
-analysis/01-pilot.ts              # Analysis + findings generation
+experiments/02-reversals.ts       # Phase 2: reverse elicitation + polysemy supplementary
+analysis/01-pilot.ts              # Phase 1 analysis + findings generation
+analysis/02-reversals.ts          # Phase 2 reversal analysis + findings generation
 results/                          # Experiment output (gitignored)
 findings/                         # Markdown analysis writeups
 research.md                       # Literature survey
@@ -92,4 +105,6 @@ research.md                       # Literature survey
 
 ## Status
 
-Phase 1 engine is implemented. Next: run experiments and generate pilot findings. See `.planning/ROADMAP.md` for the full plan.
+**Phase 1 complete.** 2,480 runs across 4 models and 21 pairs. Key finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT).
+
+**Phase 2 implemented.** Reversal experiment ready to run — tests directional asymmetry (A→B vs B→A) with permutation tests, bootstrap CIs, and category-level predictions. See `.planning/ROADMAP.md` for the full plan.

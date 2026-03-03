@@ -114,7 +114,7 @@ interface AnalysisOutput {
   polysemyComparisons: Array<{
     group: string;
     pairs: Array<{ pairId: string; from: string; to: string }>;
-    crossPairJaccard: number;
+    crossPairJaccard: number | null;
   }>;
 }
 
@@ -663,7 +663,7 @@ function computePolysemyComparisons(
 ): Array<{
   group: string;
   pairs: Array<{ pairId: string; from: string; to: string }>;
-  crossPairJaccard: number;
+  crossPairJaccard: number | null;
 }> {
   // Find all polysemy pairs from the pair definitions
   const polysemyPairs = [
@@ -682,7 +682,7 @@ function computePolysemyComparisons(
   const comparisons: Array<{
     group: string;
     pairs: Array<{ pairId: string; from: string; to: string }>;
-    crossPairJaccard: number;
+    crossPairJaccard: number | null;
   }> = [];
 
   for (const [groupName, pairs] of groups) {
@@ -701,28 +701,33 @@ function computePolysemyComparisons(
       pairWaypoints.set(pair.id, wpSet);
     }
 
+    // Check if any side has an empty waypoint set
+    const hasEmptySet = Array.from(pairWaypoints.values()).some((s) => s.size === 0);
+
     // Compute average pairwise Jaccard across the polysemy group
     const pairIds = Array.from(pairWaypoints.keys());
     let totalJaccard = 0;
     let pairCount = 0;
 
-    for (let i = 0; i < pairIds.length; i++) {
-      for (let j = i + 1; j < pairIds.length; j++) {
-        const setA = pairWaypoints.get(pairIds[i])!;
-        const setB = pairWaypoints.get(pairIds[j])!;
+    if (!hasEmptySet) {
+      for (let i = 0; i < pairIds.length; i++) {
+        for (let j = i + 1; j < pairIds.length; j++) {
+          const setA = pairWaypoints.get(pairIds[i])!;
+          const setB = pairWaypoints.get(pairIds[j])!;
 
-        if (setA.size > 0 && setB.size > 0) {
-          const jaccardResult = computeJaccard(
-            Array.from(setA),
-            Array.from(setB),
-          );
-          totalJaccard += jaccardResult.similarity;
-          pairCount++;
+          if (setA.size > 0 && setB.size > 0) {
+            const jaccardResult = computeJaccard(
+              Array.from(setA),
+              Array.from(setB),
+            );
+            totalJaccard += jaccardResult.similarity;
+            pairCount++;
+          }
         }
       }
     }
 
-    const crossPairJaccard = pairCount > 0 ? totalJaccard / pairCount : 0;
+    const crossPairJaccard = hasEmptySet ? null : (pairCount > 0 ? totalJaccard / pairCount : null);
 
     comparisons.push({
       group: groupName,
@@ -1020,9 +1025,18 @@ function generateFindings(analysis: AnalysisOutput): string {
         lines.push(`- \`${p.pairId}\`: ${p.from} -> ${p.to}`);
       }
       lines.push("");
-      lines.push(
-        `**Cross-pair Jaccard:** ${pc.crossPairJaccard.toFixed(3)} (lower = more distinct paths = better sense differentiation)`,
-      );
+      if (pc.crossPairJaccard === null) {
+        lines.push(
+          `**Cross-pair Jaccard:** n/a`,
+        );
+        lines.push(
+          `> ⚠️ Incomplete data — one or more sense-steering pairs had no results. Cross-pair comparison not possible.`,
+        );
+      } else {
+        lines.push(
+          `**Cross-pair Jaccard:** ${pc.crossPairJaccard.toFixed(3)} (lower = more distinct paths = better sense differentiation)`,
+        );
+      }
       lines.push("");
     }
   } else {
@@ -1351,8 +1365,9 @@ async function analyze(opts: {
   console.log("Computing polysemy comparisons...");
   const polysemyComparisons = computePolysemyComparisons(results);
   for (const pc of polysemyComparisons) {
+    const jaccardStr = pc.crossPairJaccard !== null ? pc.crossPairJaccard.toFixed(3) : "n/a (incomplete data)";
     console.log(
-      `  Group "${pc.group}": cross-pair Jaccard=${pc.crossPairJaccard.toFixed(3)}`,
+      `  Group "${pc.group}": cross-pair Jaccard=${jaccardStr}`,
     );
   }
   console.log("");

@@ -42,6 +42,8 @@ bun run index.ts --model gpt --from "Beyoncé" --to erosion --reps 10
 bun run prompt-selection         # Prompt format selection on holdout pairs
 bun run pilot                    # Main pilot experiment on reporting pairs
 bun run analyze                  # Analyze pilot results and generate findings
+bun run reversals                # Phase 2: reverse elicitation + polysemy supplementary
+bun run analyze-reversals        # Analyze reversal results and generate findings
 ```
 
 ## Models

@@ -14,7 +14,9 @@
  */
 
 import { parseArgs } from "node:util";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readdir, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { runBatch } from "../index.ts";
 import { HOLDOUT_PAIRS, MODELS } from "../pairs.ts";
 import {
@@ -582,12 +584,38 @@ export async function runPromptSelectionExperiment(
 
   for (let i = 0; i < plans.length; i++) {
     const plan = plans[i];
+    const batchDir = path.join(experimentOutputDir, plan.batchId);
+    const summaryPath = path.join(batchDir, "batch-summary.json");
+
     console.log(
       `\n--- Batch ${i + 1}/${plans.length}: ${plan.batchId} ---`,
     );
     console.log(
       `    ${plan.model.displayName} / ${plan.format} / ${plan.requests.length} requests`,
     );
+
+    // Resume support: skip batches that already have a batch-summary.json
+    if (existsSync(summaryPath)) {
+      console.log(`    Resuming: batch already completed, loading existing results...`);
+      const existingResults: ElicitationResult[] = [];
+      try {
+        const files = await readdir(batchDir);
+        for (const file of files) {
+          if (!file.endsWith(".json") || file === "batch-summary.json") continue;
+          try {
+            const content = await readFile(path.join(batchDir, file), "utf-8");
+            const result = JSON.parse(content) as ElicitationResult;
+            if (result.model && result.pair) existingResults.push(result);
+          } catch { /* skip malformed */ }
+        }
+      } catch { /* skip read errors */ }
+
+      const key = `${plan.model.id}-${plan.format}`;
+      allResults.set(key, existingResults);
+      const successful = existingResults.filter((r) => !r.failureMode).length;
+      console.log(`    Loaded ${successful}/${existingResults.length} existing results`);
+      continue;
+    }
 
     const results = await runBatch({
       requests: plan.requests,

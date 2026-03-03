@@ -89,6 +89,9 @@ export interface ElicitationResult {
   // Run context
   runId: string; // Unique run identifier
   batchId?: string; // If part of a batch
+
+  // Data quality
+  extractionCountMismatch?: boolean; // True if extracted count != requested count
 }
 
 // ── Metrics ────────────────────────────────────────────────────────
@@ -137,4 +140,89 @@ export interface BatchProgress {
   failed: number;
   startTime: string;
   estimatedRemaining?: number;
+}
+
+// ── Phase 2: Reversal & Asymmetry Types ─────────────────────────────
+
+export interface AsymmetryMetrics {
+  pairId: string;
+  modelId: string;
+  /** Mean Jaccard across all forward×reverse run pairs */
+  meanCrossDirectionJaccard: number;
+  /** Bootstrap 95% CI for mean cross-direction Jaccard */
+  crossDirectionJaccardCI: [number, number];
+  /** 1 - meanCrossDirectionJaccard; 0=symmetric, 1=asymmetric */
+  asymmetryIndex: number;
+  /** Bootstrap 95% CI for asymmetry index */
+  asymmetryIndexCI: [number, number];
+  /** Permutation test p-value (null: direction doesn't matter) */
+  permutationPValue: number;
+  /** Waypoints appearing >50% in forward only */
+  forwardExclusiveWaypoints: string[];
+  /** Waypoints appearing >50% in reverse only */
+  reverseExclusiveWaypoints: string[];
+  /** Normalized Levenshtein between characteristic forward/reverse sequences */
+  normalizedEditDistance: number;
+  /** Spearman's rho between forward and reverse orderings (-1=mirror, 0=unrelated, 1=same) */
+  reversalOrderRho: number | null;
+  /** Number of forward runs used */
+  forwardRunCount: number;
+  /** Number of reverse runs used */
+  reverseRunCount: number;
+}
+
+export interface CategoryAsymmetry {
+  category: PairCategory;
+  meanAsymmetryIndex: number;
+  asymmetryIndexCI: [number, number];
+  pairCount: number;
+  /** Prediction from spec: "high symmetry", "asymmetric", "unknown" */
+  prediction: string;
+  /** Whether observed matches prediction */
+  predictionMatch: boolean | null;
+}
+
+export interface ModelDirectionSensitivity {
+  modelId: string;
+  displayName: string;
+  meanAsymmetryIndex: number;
+  asymmetryIndexCI: [number, number];
+  /** Pairs ordered by asymmetry (most asymmetric first) */
+  pairAsymmetries: Array<{ pairId: string; asymmetryIndex: number }>;
+}
+
+export interface ReversalAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    forwardResultCount: number;
+    reverseResultCount: number;
+    polysemySupplementaryCount: number;
+    models: string[];
+    pairs: string[];
+  };
+  pairModelMetrics: AsymmetryMetrics[];
+  categoryAsymmetries: CategoryAsymmetry[];
+  modelSensitivities: ModelDirectionSensitivity[];
+  polysemyComparisons: Array<{
+    group: string;
+    pairs: Array<{ pairId: string; from: string; to: string }>;
+    crossPairJaccard: number | null;
+    hasDataForBothSenses: boolean;
+  }>;
+}
+
+export interface SchedulerConfig {
+  globalConcurrency: number;
+  perModelConcurrency: Map<string, number>;
+  throttleMs: number;
+}
+
+export interface SchedulerStatus {
+  totalRequests: number;
+  completed: number;
+  failed: number;
+  inFlight: number;
+  startTime: string;
+  lastUpdateTime: string;
+  estimatedRemainingMs?: number;
 }

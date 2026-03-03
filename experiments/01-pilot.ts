@@ -218,7 +218,10 @@ async function writeStatus(
   status: PilotStatus,
 ): Promise<void> {
   try {
-    await writeFile(statusPath, JSON.stringify(status, null, 2));
+    const { rename } = await import("node:fs/promises");
+    const tmpPath = `${statusPath}.tmp.${Date.now()}`;
+    await writeFile(tmpPath, JSON.stringify(status, null, 2));
+    await rename(tmpPath, statusPath);
   } catch (error) {
     console.error(
       "Failed to write status file:",
@@ -816,7 +819,10 @@ async function main() {
   );
 
   const summaryPath = path.join(pilotDir, "pilot-summary.json");
-  await writeFile(summaryPath, JSON.stringify(summary, null, 2));
+  const { rename } = await import("node:fs/promises");
+  const tmpSummaryPath = `${summaryPath}.tmp.${Date.now()}`;
+  await writeFile(tmpSummaryPath, JSON.stringify(summary, null, 2));
+  await rename(tmpSummaryPath, summaryPath);
 
   // Print final summary
   console.log("\n=== Pilot Experiment Complete ===\n");

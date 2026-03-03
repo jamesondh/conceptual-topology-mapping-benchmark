@@ -1,8 +1,8 @@
 /**
  * Curated concept pair sets for the Conceptual Topology Mapping Benchmark.
  *
- * ~38 pairs covering all category axes, split into holdout (~15) and
- * reporting (~23) sets with even category distribution across both.
+ * 36 pairs covering all category axes, split into holdout (15) and
+ * reporting (21) sets with even category distribution across both.
  */
 
 import type {
