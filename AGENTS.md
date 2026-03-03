@@ -46,7 +46,7 @@ bun run analyze                  # Analyze pilot results and generate findings
 
 ## Models
 
-Four models via OpenRouter: Claude Sonnet 4, GPT-4o, Grok 3, Gemini 2.0 Flash. Model configs in `pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
+Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 

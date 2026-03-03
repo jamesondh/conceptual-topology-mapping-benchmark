@@ -527,22 +527,22 @@ export function getPairsByCategory(category: PairCategory): ConceptPair[] {
 export const MODELS: ModelConfig[] = [
   {
     id: "claude",
-    openRouterId: "anthropic/claude-sonnet-4",
-    displayName: "Claude Sonnet 4",
+    openRouterId: "anthropic/claude-sonnet-4.6",
+    displayName: "Claude Sonnet 4.6",
   },
   {
     id: "gpt",
-    openRouterId: "openai/gpt-4o",
-    displayName: "GPT-4o",
+    openRouterId: "openai/gpt-5.2",
+    displayName: "GPT-5.2",
   },
   {
     id: "grok",
-    openRouterId: "x-ai/grok-3",
-    displayName: "Grok 3",
+    openRouterId: "x-ai/grok-4.1-fast",
+    displayName: "Grok 4.1 Fast",
   },
   {
     id: "gemini",
-    openRouterId: "google/gemini-2.0-flash-001",
-    displayName: "Gemini 2.0 Flash",
+    openRouterId: "google/gemini-3-flash-preview",
+    displayName: "Gemini 3 Flash",
   },
 ];

@@ -65,7 +65,7 @@ bun run analyze --skip-embeddings  # Skip semantic similarity (no API calls)
 
 ## Models
 
-Four models via OpenRouter: Claude Sonnet 4, GPT-4o, Grok 3, Gemini 2.0 Flash.
+Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5.
 
 ## Project Structure
 
