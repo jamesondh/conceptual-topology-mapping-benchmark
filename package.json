@@ -1,0 +1,21 @@
+{
+  "name": "conceptual-topology-mapping-benchmark",
+  "version": "0.1.0",
+  "description": "LLM benchmark testing whether models have consistent geometric structure in conceptual space navigation",
+  "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "prompt-selection": "bun run experiments/01-prompt-selection.ts",
+    "pilot": "bun run experiments/01-pilot.ts",
+    "analyze": "bun run analysis/01-pilot.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "compromise": "^14.14.3",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.4",
+    "typescript": "^5.7.3"
+  }
+}
