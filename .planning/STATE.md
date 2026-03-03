@@ -1,53 +1,48 @@
 # State
 
 ## Current Phase
-Phase 1: Waypoint elicitation engine + pilot data — **engine complete, ready to run experiments**
+Phase 1: Waypoint elicitation engine + pilot data — **complete**
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
 
-## Phase 1 Implementation Summary
+## Phase 1 Summary
 
-### Engine (`index.ts`)
-- OpenRouter API integration with retry logic (3 retries, exponential backoff)
-- Provider route extraction, 60s request timeout, generation ID tracking
-- Batch runner with configurable concurrency and progress callbacks
-- CLI: `bun run index.ts --model X --from A --to B --waypoints N`
+### What We Built
+- OpenRouter engine with retry logic, batch runner, CLI (`index.ts`)
+- 36 concept pairs across 9 categories, holdout/reporting split (`pairs.ts`)
+- Multi-strategy canonicalization pipeline (`canonicalize.ts`)
+- Prompt selection experiment on 15 holdout pairs → selected "semantic" format
+- Pilot experiment: 2,480 runs (21 pairs × 4 models × 2 waypoint counts × 10-20 reps)
+- Analysis pipeline with metrics computation and findings generation (`analysis/01-pilot.ts`)
 
-### Concept Pairs (`pairs.ts`)
-- 36 pairs across 9 categories: anchor (5), hierarchy (4), cross-domain (4), polysemy (6), near-synonym (4), antonym (2), control-identity (2), control-random (7), control-nonsense (2)
-- Holdout/reporting split: 15 holdout, 21 reporting
-- All pairs have metadata: concreteness axes, relational type, polysemy level, basin info
+### Key Findings
+1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
+2. **Polysemy → perfect sense differentiation** — cross-pair Jaccard = 0.000 for all 3 groups
+3. **Cross-model paths are genuinely different** — all pairs show ~0.17-0.20 Jaccard
+4. **Controls validate cleanly** — nonsense near-zero, antonyms highest, random intermediate
+5. **Waypoint scaling is coherent** — 70.5% shared, 67.9% subsequence rate (5→10wp)
+6. **Category hierarchy** — antonym > hierarchy > near-synonym > cross-domain > polysemy > anchor
 
-### Canonicalization (`canonicalize.ts`)
-- Multi-strategy waypoint extraction (JSON, numbered, bullet, comma, arrow, fallback)
-- Pipeline: lowercase → strip articles → lemmatize (compromise) → normalize → dedupe
-- Metrics: Jaccard, positional overlap, distributional entropy, semantic similarity (embeddings)
+### What Was Skipped
+- Embedding-based semantic similarity (see `_deferred/semantic-similarity-optimization.md`)
 
-### Experiments
-- `experiments/01-prompt-selection.ts` — 1,200 runs (15 holdout × 4 models × 2 formats × 10 reps)
-- `experiments/01-pilot.ts` — 2,480 runs (21 reporting × 4 models × 2 waypoint counts × 10-20 reps), with resume support
-- `analysis/01-pilot.ts` — full analysis pipeline with findings report generation
-
-### Codex Review
-- 13 findings addressed; critical fixes: format field mismatch, resume result loading, provider route, timeouts, concurrency validation, empty response handling
+### Artifacts
+- `findings/01-pilot.md` — auto-generated metrics report
+- `findings/01-pilot-analysis.md` — detailed interpretive analysis
+- `results/analysis/pilot-metrics.json` — full metrics data (716KB)
 
 ## Key Design Decisions
-- **Exploration-first workflow** — phases follow the most interesting data signal
-- **Reuse word-convergence anchor pairs** for cross-experiment comparability
-- **Distributional evaluation** — 10-20 reps per pair, compare distributions not single paths
-- **Controls from day one** — identity, random, nonsense baselines
-- **Holdout split** — prompt format selected on holdout, findings on reporting set
-- **OpenRouter for multi-model** — exact model IDs, provider routes, full decoding params
+- Exploration-first workflow — phases follow the most interesting data signal
+- Reuse word-convergence anchor pairs for cross-experiment comparability
+- Distributional evaluation — 10-20 reps per pair, compare distributions not single paths
+- Controls from day one — identity, random, nonsense baselines
+- Holdout split — prompt format selected on holdout, findings on reporting set
 
 ## Blockers
 None
 
 ## Next Steps
-- Set `OPENROUTER_API_KEY` in environment
-- Run `bun run prompt-selection` to select prompt format on holdout pairs
-- Run `bun run pilot` for main pilot experiment
-- Run `bun run analyze` to compute metrics and generate findings
-- ConceptNet external anchor comparison (deferred — spec acknowledges this)
+- Phase 2: Reversals & path consistency (A→B vs B→A)
