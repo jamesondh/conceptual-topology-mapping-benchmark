@@ -568,8 +568,8 @@ function computeWaypointCountEffects(
       const sharedFraction =
         fiveArr.length > 0 ? sharedCount / fiveArr.length : 0;
 
-      // Check if the canonical 5-waypoint path (most frequent run)
-      // appears as a subsequence in any 10-waypoint run
+      // Check if ANY 5-waypoint run path appears as a subsequence
+      // in ANY 10-waypoint run path (existence test, not canonical)
       const fivePaths = fiveResults.map((r) => r.canonicalizedWaypoints);
       const tenPaths = tenResults.map((r) => r.canonicalizedWaypoints);
 

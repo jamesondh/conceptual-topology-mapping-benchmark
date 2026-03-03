@@ -388,17 +388,28 @@ export async function getEmbeddings(texts: string[]): Promise<number[][]> {
 
   if (texts.length === 0) return [];
 
-  const response = await fetch(`${OPENROUTER_BASE_URL}/embeddings`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: EMBEDDING_MODEL,
-      input: texts,
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000); // 30s timeout
+
+  let response: Response;
+  try {
+    response = await fetch(`${OPENROUTER_BASE_URL}/embeddings`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: EMBEDDING_MODEL,
+        input: texts,
+      }),
+      signal: controller.signal,
+    });
+  } catch (error: unknown) {
+    clearTimeout(timeout);
+    throw error;
+  }
+  clearTimeout(timeout);
 
   if (!response.ok) {
     const errorText = await response.text();

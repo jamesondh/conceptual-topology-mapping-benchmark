@@ -113,7 +113,7 @@ async function callOpenRouter(
   model: string,
   prompt: string,
   temperature: number,
-): Promise<{ text: string; generationId?: string }> {
+): Promise<{ text: string; generationId?: string; providerRoute?: string }> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     throw new Error(
@@ -122,20 +122,31 @@ async function callOpenRouter(
     );
   }
 
-  const response = await fetch(OPENROUTER_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://github.com/jamesondh/conceptual-topology-mapping-benchmark",
-      "X-Title": "Conceptual Topology Mapping Benchmark",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: "user", content: prompt }],
-      temperature,
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60_000); // 60s timeout
+
+  let response: Response;
+  try {
+    response = await fetch(OPENROUTER_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://github.com/jamesondh/conceptual-topology-mapping-benchmark",
+        "X-Title": "Conceptual Topology Mapping Benchmark",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: "user", content: prompt }],
+        temperature,
+      }),
+      signal: controller.signal,
+    });
+  } catch (error: unknown) {
+    clearTimeout(timeout);
+    throw error;
+  }
+  clearTimeout(timeout);
 
   if (!response.ok) {
     if (isRateLimitOrServerError(response.status)) {
@@ -157,8 +168,16 @@ async function callOpenRouter(
 
   const text = data.choices?.[0]?.message?.content ?? "";
   const generationId = data.id;
+  const providerRoute = response.headers.get("x-openrouter-provider") ?? undefined;
 
-  return { text, generationId };
+  if (!text || text.trim().length === 0) {
+    throw Object.assign(
+      new Error("OpenRouter returned empty response content"),
+      { transient: true },
+    );
+  }
+
+  return { text, generationId, providerRoute };
 }
 
 // ── Core Elicitation Function ────────────────────────────────────────
@@ -186,6 +205,7 @@ export async function elicit(
 
   let rawResponse = "";
   let openRouterGenId: string | undefined;
+  let providerRoute: string | undefined;
   let retryCount = 0;
   let failureMode: string | undefined;
 
@@ -198,6 +218,7 @@ export async function elicit(
       );
       rawResponse = result.text;
       openRouterGenId = result.generationId;
+      providerRoute = result.providerRoute;
       break;
     } catch (error: unknown) {
       const isTransient =
@@ -264,6 +285,7 @@ export async function elicit(
     durationMs,
     retryCount,
     runId,
+    ...(providerRoute ? { providerRoute } : {}),
     ...(openRouterGenId ? { openRouterGenId } : {}),
     ...(failureMode ? { failureMode } : {}),
   };
@@ -414,8 +436,9 @@ export async function runBatch(config: BatchConfig): Promise<ElicitationResult[]
   }
 
   // Launch concurrent workers
+  const safeConcurrency = Number.isFinite(concurrency) && concurrency > 0 ? concurrency : DEFAULT_CONCURRENCY;
   const workers: Promise<void>[] = [];
-  const workerCount = Math.min(concurrency, requests.length);
+  const workerCount = Math.min(safeConcurrency, requests.length);
   for (let i = 0; i < workerCount; i++) {
     workers.push(processNext());
   }

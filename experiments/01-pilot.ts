@@ -111,20 +111,26 @@ function selectDiagnosticSubset(pairs: ConceptPair[]): Set<string> {
  * Count existing results for a given batch to support resuming.
  * Groups results by pair ID and counts how many successful runs exist.
  */
-async function countExistingResults(
+interface ExistingResultsInfo {
+  counts: Map<string, number>;
+  results: ElicitationResult[];
+}
+
+async function loadExistingResults(
   batchDir: string,
-): Promise<Map<string, number>> {
+): Promise<ExistingResultsInfo> {
   const counts = new Map<string, number>();
+  const results: ElicitationResult[] = [];
 
   if (!existsSync(batchDir)) {
-    return counts;
+    return { counts, results };
   }
 
   let files: string[];
   try {
     files = await readdir(batchDir);
   } catch {
-    return counts;
+    return { counts, results };
   }
 
   for (const file of files) {
@@ -133,16 +139,19 @@ async function countExistingResults(
     try {
       const content = await readFile(path.join(batchDir, file), "utf-8");
       const result = JSON.parse(content) as ElicitationResult;
-      if (!result.failureMode && result.pair?.id) {
-        const current = counts.get(result.pair.id) ?? 0;
-        counts.set(result.pair.id, current + 1);
+      if (result.pair?.id) {
+        results.push(result);
+        if (!result.failureMode) {
+          const current = counts.get(result.pair.id) ?? 0;
+          counts.set(result.pair.id, current + 1);
+        }
       }
     } catch {
       // Skip malformed files
     }
   }
 
-  return counts;
+  return { counts, results };
 }
 
 // ── Prompt Format Resolution ─────────────────────────────────────────
@@ -160,12 +169,13 @@ async function readSelectedFormat(outputDir: string): Promise<PromptFormat> {
 
   try {
     const content = await readFile(formatPath, "utf-8");
-    const data = JSON.parse(content) as { format?: string };
-    if (data.format === "direct" || data.format === "semantic") {
-      return data.format;
+    const data = JSON.parse(content) as { selectedFormat?: string; format?: string };
+    const format = data.selectedFormat ?? data.format;
+    if (format === "direct" || format === "semantic") {
+      return format;
     }
     console.warn(
-      `Warning: Invalid format in ${formatPath}: "${data.format}". Falling back to "direct".`,
+      `Warning: Invalid format in ${formatPath}: "${format}". Falling back to "direct".`,
     );
     return "direct";
   } catch {
@@ -660,7 +670,8 @@ async function main() {
     );
 
     // Check for existing results to support resuming
-    const existingCounts = await countExistingResults(batchDir);
+    const existing = await loadExistingResults(batchDir);
+    const existingCounts = existing.counts;
 
     // Build the filtered request list — skip pairs with enough reps
     const filteredRequests: ElicitationRequest[] = [];
@@ -690,6 +701,8 @@ async function main() {
 
     if (filteredRequests.length === 0) {
       console.log("    All runs already completed. Skipping batch.");
+      // Load existing results so summary statistics are correct
+      allResults.push(...existing.results);
       status.batchStatuses[i].status = "completed";
       status.batchStatuses[i].completed = batch.requests.length;
       status.completedBatches++;
@@ -699,6 +712,9 @@ async function main() {
       await writeStatus(statusPath, status);
       continue;
     }
+
+    // Also load existing results for partially completed batches
+    allResults.push(...existing.results);
 
     // Update status to running
     status.batchStatuses[i].status = "running";
