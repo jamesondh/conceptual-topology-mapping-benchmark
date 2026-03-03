@@ -90,6 +90,11 @@ export class Scheduler {
       const item = this.queue.splice(eligibleIdx, 1)[0];
       const modelId = item.request.model.id;
 
+      // Update counters BEFORE throttle sleep to prevent concurrent
+      // dispatch() calls from over-filling concurrency during await
+      this.inFlight++;
+      this.perModelInFlight.set(modelId, this.getModelInFlight(modelId) + 1);
+
       // Apply throttle
       if (this.config.throttleMs > 0) {
         const lastTime = this.perModelLastRequest.get(modelId) ?? 0;
@@ -98,9 +103,6 @@ export class Scheduler {
           await new Promise((r) => setTimeout(r, this.config.throttleMs - elapsed));
         }
       }
-
-      this.inFlight++;
-      this.perModelInFlight.set(modelId, this.getModelInFlight(modelId) + 1);
       this.perModelLastRequest.set(modelId, Date.now());
 
       // Fire and don't await — let it complete asynchronously

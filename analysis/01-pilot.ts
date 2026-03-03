@@ -336,9 +336,11 @@ async function computeConditionMetrics(
   key: ConditionKey,
   results: ElicitationResult[],
   skipEmbeddings: boolean,
+  strictExtraction = false,
 ): Promise<ConditionMetrics> {
   const runs = results
     .filter((r) => !r.failureMode)
+    .filter((r) => !strictExtraction || !r.extractionCountMismatch)
     .map((r) => r.canonicalizedWaypoints);
 
   const avgJaccard = averagePairwiseJaccard(runs);
@@ -1180,6 +1182,7 @@ async function analyze(opts: {
   input: string;
   output: string;
   skipEmbeddings: boolean;
+  strictExtraction: boolean;
   findings: string;
 }): Promise<void> {
   const inputDir = resolve(opts.input);
@@ -1193,6 +1196,7 @@ async function analyze(opts: {
   console.log(`Output directory: ${outputDir}`);
   console.log(`Findings output:  ${findingsPath}`);
   console.log(`Skip embeddings:  ${opts.skipEmbeddings}`);
+  console.log(`Strict extraction: ${opts.strictExtraction}`);
   console.log("");
 
   // ── Load data
@@ -1299,6 +1303,7 @@ async function analyze(opts: {
       key,
       group,
       opts.skipEmbeddings,
+      opts.strictExtraction,
     );
     conditionMetrics.push(metrics);
   }
@@ -1435,6 +1440,11 @@ if (import.meta.main) {
       false,
     )
     .option(
+      "--strict-extraction",
+      "exclude runs where extracted waypoint count doesn't match requested count",
+      false,
+    )
+    .option(
       "--findings <path>",
       "path for findings markdown output",
       "findings/01-pilot.md",
@@ -1447,6 +1457,7 @@ if (import.meta.main) {
     input: opts.input,
     output: opts.output,
     skipEmbeddings: opts.skipEmbeddings,
+    strictExtraction: opts.strictExtraction,
     findings: opts.findings,
   }).catch((error) => {
     console.error("Fatal error:", error);
