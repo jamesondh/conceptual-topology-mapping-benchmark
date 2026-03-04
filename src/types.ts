@@ -960,3 +960,283 @@ export interface PositionalAnalysisOutput {
     forcedLowerVariance: boolean;
   } | null;
 }
+
+// ── Phase 7: Early Anchoring & Navigational Mechanics Types ──────
+
+// --- Part A: Early-Anchoring Causal Test ---
+
+// Pre-fill condition type
+export type PreFillCondition = "unconstrained" | "incongruent" | "congruent" | "neutral";
+
+// Anchoring pair definition
+export interface Phase7AnchoringPair {
+  id: string;
+  from: string;
+  to: string;
+  bridge: string;
+  unconstrainedModalPosition: string; // e.g. "1-2", "4-5"
+  incongruentPreFill: string;
+  congruentPreFill: string;
+  neutralPreFill: string;
+  role: "heading-bridge" | "taxonomic-control" | "forced-crossing-control";
+  targetReps: { preFilled: number; unconstrained: number };
+  notes?: string;
+}
+
+// Analysis output for Part A
+export interface AnchoringAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    conditions: PreFillCondition[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-pair/model/condition bridge metrics */
+  pairModelConditionMetrics: Array<{
+    pairId: string;
+    modelId: string;
+    condition: PreFillCondition;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    /** Frequency of bridge at each position (7 positions) */
+    perPositionBridgeFreq: number[];
+    /** Modal bridge position (0-indexed) */
+    modalBridgePosition: number;
+    /** Mean bridge position (across runs where bridge appears) */
+    meanBridgePosition: number | null;
+    runCount: number;
+  }>;
+  /** Primary test: bridge displacement */
+  bridgeDisplacementTest: {
+    /** Mean bridge freq at modal position (unconstrained) minus freq at modal+1 (pre-filled) */
+    incongruentDisplacement: number;
+    incongruentDisplacementCI: [number, number];
+    congruentDisplacement: number;
+    congruentDisplacementCI: [number, number];
+    neutralDisplacement: number;
+    neutralDisplacementCI: [number, number];
+    /** Incongruent > congruent? (supports directional-heading) */
+    incongruentGreaterThanCongruent: boolean;
+    /** Incongruent > neutral? (supports directional-heading over mechanical-shift) */
+    incongruentGreaterThanNeutral: boolean;
+  };
+  /** Bridge survival rate per condition */
+  bridgeSurvivalRate: Array<{
+    condition: PreFillCondition;
+    meanSurvivalRate: number;
+    survivalRateCI: [number, number];
+  }>;
+  /** Positional shift analysis */
+  positionalShift: {
+    /** Mean position shift for bridges that survive pre-fill */
+    meanShiftIncongruent: number;
+    meanShiftCongruent: number;
+    meanShiftNeutral: number;
+    /** Whether shift exceeds mechanical +1 */
+    exceedsMechanicalShift: boolean;
+  };
+  /** Animal-poodle control comparison */
+  taxonomicControl: {
+    taxonomicDisplacement: number;
+    headingMeanDisplacement: number;
+    taxonomicLowerThanHeading: boolean;
+  } | null;
+  /** Forced-crossing (loan-shore) robustness */
+  forcedCrossingRobustness: {
+    bankSurvivalRate: number;
+    bankMeanPositionShift: number;
+    bankResistsDisplacement: boolean;
+  } | null;
+  /** Per-model displacement comparison */
+  perModelDisplacement: Array<{
+    modelId: string;
+    incongruentDisplacement: number;
+    congruentDisplacement: number;
+    neutralDisplacement: number;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// --- Part B: Curvature Estimation ---
+
+// Triangle definition for curvature estimation
+export interface Phase7CurvatureTriangle {
+  id: string;
+  A: string;
+  B: string; // vertex of interest (polysemous or non-polysemous)
+  C: string;
+  vertexType: "polysemous" | "non-polysemous";
+  polysemyType: string | null; // e.g. "homonym" or null
+  polysemyLabel?: string | null; // e.g. "financial/geographic"
+  relationship?: string; // e.g. "causal-chain", "cross-domain"
+  /** Reusable legs from prior phases: maps leg label to prior pair ID */
+  reusableLegs: Record<string, string>;
+  targetReps: number; // per model per leg
+  waypointCount: number; // typically 5
+  notes?: string;
+}
+
+// Curvature analysis output
+export interface CurvatureAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    triangles: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Distance metric validity checks */
+  validityChecks: {
+    /** Correlation between Jaccard distance and intuitive semantic distance */
+    semanticCorrelation: number | null;
+    semanticCorrelationPass: boolean; // r > 0.30
+    /** Mean cross-model distance correlation */
+    crossModelCorrelation: number | null;
+    crossModelCorrelationPass: boolean; // r > 0.50
+    /** Overall validity */
+    distanceMetricValid: boolean;
+  };
+  /** Per-triangle/model distance and excess */
+  triangleModelMetrics: Array<{
+    triangleId: string;
+    modelId: string;
+    distanceAB: number;
+    distanceBC: number;
+    distanceAC: number;
+    excess: number; // d(A,B) + d(B,C) - d(A,C)
+    triangleInequalityHolds: boolean;
+    runCountAB: number;
+    runCountBC: number;
+    runCountAC: number;
+  }>;
+  /** Primary test: polysemous vs non-polysemous excess */
+  primaryTest: {
+    polysemousMeanExcess: number;
+    polysemousExcessCI: [number, number];
+    nonPolysemousMeanExcess: number;
+    nonPolysemousExcessCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    significantlyGreater: boolean;
+  };
+  /** Triangle inequality compliance */
+  triangleInequalityCompliance: {
+    totalCombinations: number;
+    holdingCount: number;
+    complianceRate: number;
+  };
+  /** Per-model curvature profiles */
+  perModelProfiles: Array<{
+    modelId: string;
+    polysemousMeanExcess: number;
+    nonPolysemousMeanExcess: number;
+    overallMeanExcess: number;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// --- Part C: Too-Central Boundary ---
+
+// Too-central category
+export type TooCentralCategory = "too-central" | "obvious-useful" | "boundary";
+
+// Too-central pair definition
+export interface Phase7TooCentralPair {
+  id: string;
+  from: string;
+  to: string;
+  candidateBridge: string;
+  category: TooCentralCategory;
+  expectedFreq: string; // e.g. "< 0.15", "> 0.50", "0.10-0.40"
+  /** Random targets for informational redundancy probing */
+  randomTargets?: string[];
+  targetReps: number;
+  notes?: string;
+}
+
+// Too-central analysis output
+export interface TooCentralAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-pair/model bridge frequency */
+  pairModelBridgeFreqs: Array<{
+    pairId: string;
+    modelId: string;
+    category: TooCentralCategory;
+    candidateBridge: string;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+  }>;
+  /** Primary test: too-central vs obvious-useful */
+  primaryTest: {
+    tooCentralMeanFreq: number;
+    tooCentralFreqCI: [number, number];
+    obviousUsefulMeanFreq: number;
+    obviousUsefulFreqCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    significantlyDifferent: boolean;
+  };
+  /** Boundary case classification */
+  boundaryClassification: Array<{
+    pairId: string;
+    candidateBridge: string;
+    meanBridgeFreq: number;
+    classification: "too-central" | "obvious-useful" | "intermediate";
+  }>;
+  /** Navigational entropy comparison */
+  entropyComparison: {
+    tooCentralMeanEntropy: number;
+    obviousUsefulMeanEntropy: number;
+    difference: number;
+    differenceCI: [number, number];
+    tooCentralHigher: boolean;
+  };
+  /** Informational redundancy test */
+  informationalRedundancy: Array<{
+    pairId: string;
+    candidateBridge: string;
+    baselineFreqOnRandomPaths: number;
+    baselineFreqCI: [number, number];
+    isRedundant: boolean; // freq > 0.10
+  }> | null;
+  /** Gradient vs causal-chain analysis */
+  gradientVsCausalChain: {
+    gradientPairsMeanFreq: number;
+    causalChainPairsMeanFreq: number;
+    gradientHigher: boolean;
+  } | null;
+  /** Cross-model agreement per pair */
+  crossModelAgreement: Array<{
+    pairId: string;
+    perModelFreq: Array<{ modelId: string; frequency: number }>;
+    agreementSD: number;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}

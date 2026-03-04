@@ -1275,3 +1275,84 @@ export function computePositionalVariance(
   const variance = modalPositions.reduce((sum, pos) => sum + (pos - m) ** 2, 0) / (modalPositions.length - 1);
   return Math.sqrt(variance);
 }
+
+// ── Phase 7: Early Anchoring, Curvature, Too-Central Metrics ──────
+
+export function computeTriangleExcess(dAB: number, dBC: number, dAC: number): number {
+  return dAB + dBC - dAC;
+}
+
+/**
+ * Compute cross-run distance: d(X,Y) = 1 - mean pairwise Jaccard
+ * between runs (i,j) where i≠j. This is the distance metric for
+ * curvature estimation — it measures how consistently models navigate
+ * between two concepts.
+ */
+export function computeCrossRunDistance(runs: string[][]): number {
+  if (runs.length < 2) return 1;
+  const jaccards: number[] = [];
+  for (let i = 0; i < runs.length; i++) {
+    for (let j = i + 1; j < runs.length; j++) {
+      const result = computeJaccard(runs[i], runs[j]);
+      jaccards.push(result.similarity);
+    }
+  }
+  return 1 - mean(jaccards);
+}
+
+/**
+ * Compute bridge survival rate: fraction of runs where the bridge concept
+ * appears at ANY position. Used for Part A anchoring analysis.
+ */
+export function computeBridgeSurvivalRate(
+  runs: string[][],
+  bridgeConcept: string,
+): number {
+  if (runs.length === 0) return 0;
+  const bridgeLower = bridgeConcept.toLowerCase();
+  let count = 0;
+  for (const run of runs) {
+    if (run.some(wp => bridgeConceptMatchesExported(wp.toLowerCase(), bridgeLower))) {
+      count++;
+    }
+  }
+  return count / runs.length;
+}
+
+/**
+ * Compute mean bridge position across runs where the bridge appears.
+ * Returns null if bridge never appears.
+ */
+export function computeMeanBridgePosition(
+  runs: string[][],
+  bridgeConcept: string,
+): number | null {
+  const bridgeLower = bridgeConcept.toLowerCase();
+  const positions: number[] = [];
+  for (const run of runs) {
+    for (let pos = 0; pos < run.length; pos++) {
+      if (bridgeConceptMatchesExported(run[pos].toLowerCase(), bridgeLower)) {
+        positions.push(pos);
+        break; // only first occurrence per run
+      }
+    }
+  }
+  if (positions.length === 0) return null;
+  return mean(positions);
+}
+
+/**
+ * Compute informational redundancy: frequency of a candidate bridge
+ * on paths from A to random targets. If the bridge appears frequently
+ * regardless of target, it's a high-frequency associate (informationally
+ * redundant), not a navigational bridge.
+ */
+export function computeInformationalRedundancy(
+  randomTargetRuns: string[][],
+  candidateBridge: string,
+): { frequency: number; ci: [number, number] } {
+  if (randomTargetRuns.length === 0) return { frequency: 0, ci: [0, 0] };
+  const freq = computeBridgeFrequency(randomTargetRuns, candidateBridge);
+  const ci = bootstrapBridgeFrequencyCI(randomTargetRuns, candidateBridge);
+  return { frequency: freq, ci };
+}

@@ -32,6 +32,13 @@
     "positional": "bun run experiments/06c-positional.ts",
     "analyze-positional": "bun run analysis/06c-positional.ts",
     "phase6": "bun run experiments/06a-salience.ts && bun run analysis/06a-salience.ts && bun run experiments/06b-forced-crossing.ts && bun run analysis/06b-forced-crossing.ts && bun run experiments/06c-positional.ts && bun run analysis/06c-positional.ts",
+    "anchoring": "bun run experiments/07a-anchoring.ts",
+    "analyze-anchoring": "bun run analysis/07a-anchoring.ts",
+    "curvature": "bun run experiments/07b-curvature.ts",
+    "analyze-curvature": "bun run analysis/07b-curvature.ts",
+    "too-central": "bun run experiments/07c-too-central.ts",
+    "analyze-too-central": "bun run analysis/07c-too-central.ts",
+    "phase7": "bun run experiments/07a-anchoring.ts && bun run analysis/07a-anchoring.ts && bun run experiments/07b-curvature.ts && bun run analysis/07b-curvature.ts && bun run experiments/07c-too-central.ts && bun run analysis/07c-too-central.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
