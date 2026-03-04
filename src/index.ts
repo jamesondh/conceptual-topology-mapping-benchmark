@@ -14,7 +14,7 @@
 
 import { Command } from "commander";
 import { extractWaypoints, canonicalizeAll } from "./canonicalize.ts";
-import { MODELS } from "./pairs.ts";
+import { MODELS } from "./data/pairs.ts";
 import type {
   PromptFormat,
   ModelConfig,

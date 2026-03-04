@@ -20,13 +20,13 @@ import {
   computePositionalOverlap,
   computeDistributionalEntropy,
   averageSemanticSimilarity,
-} from "../canonicalize.ts";
-import { REPORTING_PAIRS, MODELS, getPairsByCategory } from "../pairs.ts";
+} from "../src/canonicalize.ts";
+import { REPORTING_PAIRS, MODELS, getPairsByCategory } from "../src/data/pairs.ts";
 import type {
   ElicitationResult,
   PairCategory,
   ConceptPair,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Types for Analysis Output ──────────────────────────────────────
 

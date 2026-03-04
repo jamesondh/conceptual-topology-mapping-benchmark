@@ -8,6 +8,28 @@ Give models two concepts, ask for intermediate waypoints, and test whether the r
 
 **Builds on:** [Word convergence game](https://github.com/jamesondh/word-convergence-game) — 575 games across 4 models showing characteristic navigational patterns, semantic basins of attraction, and direction-dependent behavior.
 
+## Key Findings
+
+Across 5,800+ elicitation runs and 4 models, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
+
+### Models have distinct "conceptual gaits"
+Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography."
+
+### Conceptual space is quasimetric, not metric
+The path from A→B is fundamentally different from B→A. Mean directional asymmetry is 0.811 across all pairs, and 87% of conditions show statistically significant asymmetry. Even supposedly "symmetric" relationships like synonyms are directional. This means LLM conceptual space has a consistent orientation — direction matters semantically.
+
+### Polysemy routing is remarkably clean
+When the same ambiguous word (e.g., "bank") is steered toward different senses via its endpoint (river vs. mortgage), the resulting paths diverge completely (0.000 cross-pair Jaccard). LLMs don't just pick different words — they route through entirely distinct intermediate concept spaces.
+
+### Hierarchical paths compose like a metric space
+Paths along taxonomic chains (animal→dog→poodle) show 4.9× more waypoint overlap than random concept triples. The triangle inequality holds in 91% of cases. Conceptual navigation has genuine mathematical structure, not just surface associations.
+
+### Bridge concepts are predictable — but model-dependent
+When two concepts share an obvious intermediary (music→*harmony*→mathematics), that bridge concept appears on the direct path with 81.3% prediction accuracy for concrete bridges. But abstract bridges fail universally (0% for "metaphor"). Claude uses "harmony" 100% of the time on music→mathematics; Gemini uses it 0%.
+
+### Gemini fragments at conceptual frame boundaries
+Gemini shows systematic isolation from other models (mean bridge frequency delta: 0.336 vs 0.200 for non-Gemini pairs). This isn't just about abstract vs. concrete — Gemini fails specifically when navigation requires crossing between conceptual frames, suggesting a fundamentally different internal organization of semantic space.
+
 ## Quick Start
 
 ```bash
@@ -19,10 +41,10 @@ cp .env.example .env
 # Add your OPENROUTER_API_KEY to .env
 
 # Single waypoint elicitation
-bun run index.ts --model claude --from music --to mathematics --waypoints 5
+bun run src/index.ts --model claude --from music --to mathematics --waypoints 5
 
 # Run with multiple repetitions
-bun run index.ts --model gpt --from "Beyoncé" --to erosion --reps 10 --format semantic
+bun run src/index.ts --model gpt --from "Beyoncé" --to erosion --reps 10 --format semantic
 ```
 
 ## Experiment Pipeline
@@ -106,34 +128,21 @@ Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 
 ## Project Structure
 
 ```
-index.ts                          # Waypoint elicitation engine + CLI
-types.ts                          # Type definitions
-pairs.ts                          # Curated concept pairs with metadata
-canonicalize.ts                   # Extraction, canonicalization, metrics
-scheduler.ts                      # Global request scheduler with per-model rate limiting
-metrics.ts                        # Asymmetry metrics, permutation tests, bootstrap CIs
-triples.ts                        # Phase 3B concept triple definitions
-triples-phase4.ts                 # Phase 4 triple definitions with predictions
-triples-phase5.ts                 # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
-experiments/01-prompt-selection.ts # Prompt format comparison
-experiments/01-pilot.ts           # Main pilot batch runner
-experiments/02-reversals.ts       # Phase 2: reverse elicitation + polysemy supplementary
-experiments/03b-transitivity.ts   # Phase 3B: transitivity experiment
-experiments/04b-targeted-bridges.ts # Phase 4B: targeted bridge topology experiment
-experiments/05a-cue-strength.ts   # Phase 5A: cue-strength gradient experiment
-experiments/05b-dimensionality.ts # Phase 5B: dimensionality probing experiment
-experiments/05c-convergence.ts    # Phase 5C: triple-anchor convergence experiment
-analysis/01-pilot.ts              # Phase 1 analysis + findings generation
-analysis/02-reversals.ts          # Phase 2 reversal analysis + findings generation
-analysis/03a-positional-convergence.ts # Phase 3A: positional convergence analysis
-analysis/03b-transitivity.ts      # Phase 3B: transitivity analysis
-analysis/04a-bridge-agreement.ts  # Phase 4A: cross-model bridge agreement analysis
-analysis/04b-targeted-bridges.ts  # Phase 4B: targeted bridge topology analysis
-analysis/05a-cue-strength.ts     # Phase 5A: cue-strength gradient analysis
-analysis/05b-dimensionality.ts   # Phase 5B: dimensionality probing analysis
-analysis/05c-convergence.ts      # Phase 5C: convergence profile + W-shape analysis
+src/
+  index.ts                        # Waypoint elicitation engine + CLI
+  types.ts                        # Type definitions
+  canonicalize.ts                 # Extraction, canonicalization, metrics
+  scheduler.ts                    # Global request scheduler with per-model rate limiting
+  metrics.ts                      # Asymmetry metrics, permutation tests, bootstrap CIs
+  data/
+    pairs.ts                      # Curated concept pairs with metadata + model configs
+    triples.ts                    # Phase 3B concept triple definitions
+    triples-phase4.ts             # Phase 4 triple definitions with predictions
+    triples-phase5.ts             # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
+experiments/                      # Batch experiment runners per phase
+analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
-findings/                         # Markdown analysis writeups
+findings/                         # Markdown analysis writeups per phase
 research.md                       # Literature survey
 .planning/                        # Project management (STATE, ROADMAP, specs)
 ```

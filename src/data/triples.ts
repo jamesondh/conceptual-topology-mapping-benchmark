@@ -9,7 +9,7 @@
  * Some legs already exist as Phase 1 forward or Phase 2 reverse data.
  */
 
-import type { ConceptTriple, TripleType } from "./types.ts";
+import type { ConceptTriple, TripleType } from "../types.ts";
 
 // ── Triple Definitions ─────────────────────────────────────────────
 

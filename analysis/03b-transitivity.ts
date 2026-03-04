@@ -23,16 +23,16 @@ import {
   computeTransitivityMetrics,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { TRIPLES, getTripleLegs } from "../triples.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { TRIPLES, getTripleLegs } from "../src/data/triples.ts";
 import type {
   ElicitationResult,
   TransitivityMetrics,
   TripleType,
   TripleTypeAggregation,
   TransitivityAnalysisOutput,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Data Loading ───────────────────────────────────────────────────
 

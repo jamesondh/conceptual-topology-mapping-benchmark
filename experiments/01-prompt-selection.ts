@@ -17,20 +17,20 @@ import { parseArgs } from "node:util";
 import { mkdir, writeFile, readdir, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { runBatch } from "../index.ts";
-import { HOLDOUT_PAIRS, MODELS } from "../pairs.ts";
+import { runBatch } from "../src/index.ts";
+import { HOLDOUT_PAIRS, MODELS } from "../src/data/pairs.ts";
 import {
   computeJaccard,
   computePositionalOverlap,
   computeDistributionalEntropy,
-} from "../canonicalize.ts";
+} from "../src/canonicalize.ts";
 import type {
   PromptFormat,
   ModelConfig,
   ConceptPair,
   ElicitationRequest,
   ElicitationResult,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Constants ────────────────────────────────────────────────────────
 

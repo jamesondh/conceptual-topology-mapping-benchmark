@@ -20,9 +20,9 @@ import { Command } from "commander";
 import { writeFile, mkdir, readdir, readFile, rename } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { MODELS } from "../pairs.ts";
-import { TRIPLES, getTripleLegs, countLegs } from "../triples.ts";
-import { Scheduler, parseModelConcurrency } from "../scheduler.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { TRIPLES, getTripleLegs, countLegs } from "../src/data/triples.ts";
+import { Scheduler, parseModelConcurrency } from "../src/scheduler.ts";
 import type {
   PromptFormat,
   ModelConfig,
@@ -30,7 +30,7 @@ import type {
   ElicitationRequest,
   ElicitationResult,
   SchedulerStatus,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // -- Constants ----------------------------------------------------------------
 

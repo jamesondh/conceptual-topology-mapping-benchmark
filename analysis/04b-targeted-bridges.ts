@@ -31,17 +31,17 @@ import {
   computeCrossModelJaccard,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { PHASE4_TRIPLES, getPhase4TripleLegs } from "../triples-phase4.ts";
-import { TRIPLES as PHASE3_TRIPLES } from "../triples.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE4_TRIPLES, getPhase4TripleLegs } from "../src/data/triples-phase4.ts";
+import { TRIPLES as PHASE3_TRIPLES } from "../src/data/triples.ts";
 import type {
   ElicitationResult,
   TransitivityMetrics,
   Phase4TargetedBridgesOutput,
   Phase4DiagnosticType,
-} from "../types.ts";
-import { computeJaccard } from "../canonicalize.ts";
+} from "../src/types.ts";
+import { computeJaccard } from "../src/canonicalize.ts";
 
 // ── Data Loading ───────────────────────────────────────────────────
 

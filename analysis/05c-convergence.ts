@@ -27,15 +27,15 @@ import {
   computeWShapeContrast,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { PHASE5C_PAIRS } from "../triples-phase5.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE5C_PAIRS } from "../src/data/triples-phase5.ts";
 import type {
   ConvergenceAnalysisOutput,
   ConvergenceProfileMetrics,
   Phase5ConvergencePair,
   ElicitationResult,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Data Loading ───────────────────────────────────────────────────
 

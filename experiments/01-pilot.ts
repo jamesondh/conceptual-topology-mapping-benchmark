@@ -16,8 +16,8 @@ import { Command } from "commander";
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { elicit, runBatch } from "../index.ts";
-import { REPORTING_PAIRS, MODELS } from "../pairs.ts";
+import { elicit, runBatch } from "../src/index.ts";
+import { REPORTING_PAIRS, MODELS } from "../src/data/pairs.ts";
 import type {
   PromptFormat,
   ModelConfig,
@@ -25,7 +25,7 @@ import type {
   ElicitationRequest,
   ElicitationResult,
   PairCategory,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Constants ────────────────────────────────────────────────────────
 

@@ -21,23 +21,21 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 
 ## Conventions
 
+- Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
 - Findings in `findings/` (markdown writeups per phase)
-- Concept pair definitions in `pairs.ts`
-- Concept triple definitions in `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), and `triples-phase5.ts` (Phase 5)
-- Types in `types.ts`, canonicalization in `canonicalize.ts`
-- Core engine in `index.ts` (also serves as CLI entry point)
 
 ## CLI Usage
 
 ```bash
 # Single elicitation
-bun run index.ts --model claude --from music --to mathematics --waypoints 5
+bun run src/index.ts --model claude --from music --to mathematics --waypoints 5
 
 # Multiple reps
-bun run index.ts --model gpt --from "Beyoncé" --to erosion --reps 10
+bun run src/index.ts --model gpt --from "Beyoncé" --to erosion --reps 10
 
 # Experiments (use --dry-run to preview)
 bun run prompt-selection         # Prompt format selection on holdout pairs
@@ -60,7 +58,7 @@ bun run phase5                   # Run all Phase 5 in sequence (5A → 5B → 5C
 
 ## Models
 
-Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
+Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 

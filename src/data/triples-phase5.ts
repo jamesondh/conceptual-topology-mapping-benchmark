@@ -23,7 +23,7 @@ import type {
   Phase5CueStrengthTriple,
   Phase5DimensionalityTriple,
   Phase5ConvergencePair,
-} from "./types.ts";
+} from "../types.ts";
 
 // ── Part A: Cue-Strength Triples ──────────────────────────────────────
 

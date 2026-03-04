@@ -24,8 +24,8 @@ import {
   computePositionalConvergence,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { ALL_PAIRS, MODELS, getPairsByCategory } from "../pairs.ts";
+} from "../src/metrics.ts";
+import { ALL_PAIRS, MODELS, getPairsByCategory } from "../src/data/pairs.ts";
 import type {
   ElicitationResult,
   PairCategory,
@@ -33,7 +33,7 @@ import type {
   CategoryConvergence,
   ModelConvergence,
   PositionalConvergenceOutput,
-} from "../types.ts";
+} from "../src/types.ts";
 
 const WAYPOINT_COUNT = 5;
 

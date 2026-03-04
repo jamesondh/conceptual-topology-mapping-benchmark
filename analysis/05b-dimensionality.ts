@@ -29,15 +29,15 @@ import {
   bootstrapBridgeFrequencyCI,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { PHASE5B_TRIPLES } from "../triples-phase5.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE5B_TRIPLES } from "../src/data/triples-phase5.ts";
 import type {
   DimensionalityAnalysisOutput,
   AxisPattern,
   Phase5DimensionalityTriple,
   ElicitationResult,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Data Loading ───────────────────────────────────────────────────
 

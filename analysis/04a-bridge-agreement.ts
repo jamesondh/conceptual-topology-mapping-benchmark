@@ -30,15 +30,15 @@ import {
   pearsonCorrelation,
   bootstrapCI,
   mean,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { TRIPLES } from "../triples.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { TRIPLES } from "../src/data/triples.ts";
 import type {
   ElicitationResult,
   BridgeAgreementOutput,
   ModelPairBridgeAgreement,
   CrossModelJaccardResult,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Data Loading ───────────────────────────────────────────────────
 

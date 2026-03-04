@@ -21,8 +21,8 @@ import { Command } from "commander";
 import { writeFile, mkdir, readdir, readFile, rename } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { REPORTING_PAIRS, ALL_PAIRS, MODELS } from "../pairs.ts";
-import { Scheduler, parseModelConcurrency } from "../scheduler.ts";
+import { REPORTING_PAIRS, ALL_PAIRS, MODELS } from "../src/data/pairs.ts";
+import { Scheduler, parseModelConcurrency } from "../src/scheduler.ts";
 import type {
   PromptFormat,
   ModelConfig,
@@ -31,7 +31,7 @@ import type {
   ElicitationResult,
   PairCategory,
   SchedulerStatus,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // -- Constants ----------------------------------------------------------------
 

@@ -23,9 +23,9 @@ import { Command } from "commander";
 import { writeFile, mkdir, readdir, readFile, rename, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { MODELS } from "../pairs.ts";
-import { PHASE4_TRIPLES } from "../triples-phase4.ts";
-import { Scheduler, parseModelConcurrency } from "../scheduler.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE4_TRIPLES } from "../src/data/triples-phase4.ts";
+import { Scheduler, parseModelConcurrency } from "../src/scheduler.ts";
 import type {
   PromptFormat,
   ModelConfig,
@@ -34,7 +34,7 @@ import type {
   ElicitationResult,
   SchedulerStatus,
   Phase4Triple,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // -- Constants ----------------------------------------------------------------
 

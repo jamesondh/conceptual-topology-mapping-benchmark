@@ -22,9 +22,9 @@ import { Command } from "commander";
 import { writeFile, mkdir, readdir, readFile, rename, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { MODELS } from "../pairs.ts";
-import { PHASE5B_TRIPLES } from "../triples-phase5.ts";
-import { Scheduler, parseModelConcurrency } from "../scheduler.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE5B_TRIPLES } from "../src/data/triples-phase5.ts";
+import { Scheduler, parseModelConcurrency } from "../src/scheduler.ts";
 import type {
   PromptFormat,
   ModelConfig,
@@ -32,7 +32,7 @@ import type {
   ElicitationRequest,
   ElicitationResult,
   SchedulerStatus,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // -- Constants ----------------------------------------------------------------
 

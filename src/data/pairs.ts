@@ -9,7 +9,7 @@ import type {
   ConceptPair,
   ModelConfig,
   PairCategory,
-} from "./types.ts";
+} from "../types.ts";
 
 // ── Anchor Pairs ────────────────────────────────────────────────────
 // Known basin structure from word-convergence experiments.

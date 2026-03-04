@@ -22,7 +22,7 @@ import type {
   Phase4Triple,
   Phase4DiagnosticType,
   TripleType,
-} from "./types.ts";
+} from "../types.ts";
 
 // ── Triple Definitions ─────────────────────────────────────────────
 

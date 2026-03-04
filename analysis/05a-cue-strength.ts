@@ -35,16 +35,16 @@ import {
   bootstrapCI,
   mean,
   fitLogistic,
-} from "../metrics.ts";
-import { MODELS } from "../pairs.ts";
-import { PHASE5A_TRIPLES } from "../triples-phase5.ts";
-import { TRIPLES as PHASE3_TRIPLES } from "../triples.ts";
+} from "../src/metrics.ts";
+import { MODELS } from "../src/data/pairs.ts";
+import { PHASE5A_TRIPLES } from "../src/data/triples-phase5.ts";
+import { TRIPLES as PHASE3_TRIPLES } from "../src/data/triples.ts";
 import type {
   ElicitationResult,
   TransitivityMetrics,
   CueStrengthAnalysisOutput,
   CueStrengthFamilyResult,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // -- Data Loading -------------------------------------------------------------
 

@@ -15,13 +15,13 @@
 import { Command } from "commander";
 import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { computeJaccard } from "../canonicalize.ts";
+import { computeJaccard } from "../src/canonicalize.ts";
 import {
   computeAsymmetryMetrics,
   bootstrapCI,
   characteristicPath,
-} from "../metrics.ts";
-import { ALL_PAIRS, MODELS, getPairsByCategory } from "../pairs.ts";
+} from "../src/metrics.ts";
+import { ALL_PAIRS, MODELS, getPairsByCategory } from "../src/data/pairs.ts";
 import type {
   ElicitationResult,
   PairCategory,
@@ -30,7 +30,7 @@ import type {
   CategoryAsymmetry,
   ModelDirectionSensitivity,
   ReversalAnalysisOutput,
-} from "../types.ts";
+} from "../src/types.ts";
 
 // ── Category Predictions ───────────────────────────────────────────
 
