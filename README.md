@@ -128,11 +128,12 @@ research.md                       # Literature survey
 
 ## Status
 
-**Phase 4 complete.** Cumulative: 5,800+ API runs across 4 models.
+**Phase 4 complete. Phase 5 spec ready.** Cumulative: 5,800+ API runs across 4 models.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
 - **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
-- **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation.
+- **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
+- **Phase 5 (next):** Cue-strength thresholds, conceptual dimensionality probing, triple-anchor convergence. ~3,280 planned runs.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

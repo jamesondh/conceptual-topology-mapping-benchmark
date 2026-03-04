@@ -32,6 +32,9 @@ Phase 4: Cross-Model Bridge Topology + Targeted Gemini Investigation — **COMPL
 7. **No temporal drift** — Cross-batch Jaccard within 0.1 of within-batch for all top-up legs, validating data pooling across phases.
 8. **Polysemy sense consistency** — Financial sense of "bank" (deposit→savings) shows 100% bridge frequency across ALL models including Gemini, while geographic sense shows Gemini-specific failure.
 
+### Interpretive Analysis
+- `findings/04-analysis.md` — Deep interpretive analysis covering bridge topology landscape, frame-crossing hypothesis for Gemini fragmentation, the "metaphor" surprise (association ≠ navigation), cross-model topology families, and prediction accuracy validation. Reviewed by Codex; all critical/important fixes applied.
+
 ### Infrastructure Built
 - `triples-phase4.ts` — 8 Phase 4 triple definitions with predictions and diagnostic types
 - `analysis/04a-bridge-agreement.ts` — cross-model bridge agreement analysis
@@ -49,9 +52,7 @@ Phase 4: Cross-Model Bridge Topology + Targeted Gemini Investigation — **COMPL
 None
 
 ## Next Steps
-- Phase 5 candidates (from analysis):
-  1. **Dimensionality probing** — MDS on pairwise navigational distances to estimate dimensionality
-  2. **Chain length scaling** — 3-hop, 5-hop, 7-hop chains to test compositionality degradation
-  3. **Gemini cue threshold** — What makes a bridge "strong enough" for Gemini? Test gradient from concrete→abstract
-  4. **Higher-resolution convergence** — 7wp or 9wp paths for finer positional analysis
-  5. **Paper writing** — 4 phases of findings now available for writeup
+- **Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality** — Spec complete (`.planning/phases/05-cue-strength-and-dimensionality/SPEC.md`). Three-part design:
+  1. **Part A: Cue-strength thresholds** (~1,680 runs) — Controlled families with fixed endpoints, varied bridge cue strength. Tests whether Gemini's fragmentation boundary is a cue-strength threshold (logistic curve fitting per model).
+  2. **Part B: Dimensionality probing** (~960 runs) — Same-axis vs cross-axis bridge frequency around polysemous ("light", "bank") and non-polysemous ("fire") focal concepts. First empirical estimate of conceptual space dimensionality.
+  3. **Part C: Triple-anchor convergence** (~640 runs) — 7-waypoint paths testing W-shape hypothesis: do bridge concepts create a third convergence anchor? Natural within-pair experiment on music→mathematics (model-dependent bridge).
