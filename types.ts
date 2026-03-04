@@ -226,3 +226,156 @@ export interface SchedulerStatus {
   lastUpdateTime: string;
   estimatedRemainingMs?: number;
 }
+
+// ── Phase 3A: Positional Convergence Types ─────────────────────────
+
+export interface PositionalConvergenceMetrics {
+  pairId: string;
+  modelId: string;
+  /** Per-position mirror-match rate (fwd pos i vs rev pos 5-i) */
+  perPositionMatchRate: number[];
+  /** Per-position pooled Jaccard (vocabulary overlap at each mirror position) */
+  perPositionJaccard: number[];
+  /** Linear regression slope of match rate across positions (positive = convergence) */
+  convergenceSlope: number;
+  /** R² of the linear regression */
+  convergenceR2: number;
+  /** Number of forward runs used */
+  forwardRunCount: number;
+  /** Number of reverse runs used */
+  reverseRunCount: number;
+}
+
+export interface CategoryConvergence {
+  category: PairCategory;
+  /** Mean convergence slope across all pair/model combos in this category */
+  meanConvergenceSlope: number;
+  convergenceSlopeCI: [number, number];
+  /** Mean per-position match rates (averaged across combos) */
+  meanPerPositionMatchRate: number[];
+  pairModelCount: number;
+}
+
+export interface ModelConvergence {
+  modelId: string;
+  displayName: string;
+  /** Mean convergence slope across all pairs for this model */
+  meanConvergenceSlope: number;
+  convergenceSlopeCI: [number, number];
+  /** Mean per-position match rates (averaged across pairs) */
+  meanPerPositionMatchRate: number[];
+  pairCount: number;
+}
+
+export interface PositionalConvergenceOutput {
+  metadata: {
+    timestamp: string;
+    forwardResultCount: number;
+    reverseResultCount: number;
+    models: string[];
+    pairs: string[];
+    waypointCount: number;
+  };
+  pairModelMetrics: PositionalConvergenceMetrics[];
+  categoryConvergences: CategoryConvergence[];
+  modelConvergences: ModelConvergence[];
+  /** Overall summary stats */
+  overall: {
+    meanConvergenceSlope: number;
+    convergenceSlopeCI: [number, number];
+    meanPerPositionMatchRate: number[];
+    /** Fraction of combos with positive convergence slope */
+    positiveConvergenceFraction: number;
+  };
+}
+
+// ── Phase 3B: Transitive Path Structure Types ──────────────────────
+
+export type TripleType =
+  | "hierarchical"
+  | "semantic-chain"
+  | "existing-pair"
+  | "polysemy-extend"
+  | "random-control";
+
+export interface ConceptTriple {
+  id: string;
+  A: string;
+  B: string;
+  C: string;
+  type: TripleType;
+  notes?: string;
+  /** Pair IDs from existing data that can be reused (e.g. "cross-music-mathematics") */
+  reusableLegs?: {
+    /** existing pair ID for A→C leg */
+    AC?: string;
+    /** existing pair ID for C→A leg (reverse) */
+    CA?: string;
+    /** existing pair ID for A→B leg */
+    AB?: string;
+    /** existing pair ID for B→A leg (reverse) */
+    BA?: string;
+    /** existing pair ID for B→C leg */
+    BC?: string;
+    /** existing pair ID for C→B leg (reverse) */
+    CB?: string;
+  };
+}
+
+export interface TransitivityMetrics {
+  tripleId: string;
+  modelId: string;
+  /** Jaccard(waypoints(A→C), waypoints(A→B) ∪ waypoints(B→C)) */
+  waypointTransitivity: number;
+  waypointTransitivityCI: [number, number];
+  /** Navigational distance: d(X→Y) = 1 - mean within-direction Jaccard */
+  distanceAB: number;
+  distanceBC: number;
+  distanceAC: number;
+  /** Whether triangle inequality holds: d(A→C) ≤ d(A→B) + d(B→C) */
+  triangleInequalityHolds: boolean;
+  /** Triangle inequality slack: d(A→B) + d(B→C) - d(A→C) */
+  triangleSlack: number;
+  /** Waypoints on A→C but NOT on A→B ∪ B→C ("shortcuts") */
+  shortcuts: string[];
+  /** Waypoints on A→B ∪ B→C but NOT on A→C ("detours") */
+  detours: string[];
+  /** Whether B appears as a waypoint on any A→C run */
+  bridgeConceptAppears: boolean;
+  /** Fraction of A→C runs where B appears */
+  bridgeConceptFrequency: number;
+  /** Run counts */
+  runCountAB: number;
+  runCountBC: number;
+  runCountAC: number;
+}
+
+export interface TripleTypeAggregation {
+  type: TripleType;
+  meanWaypointTransitivity: number;
+  waypointTransitivityCI: [number, number];
+  meanTriangleSlack: number;
+  triangleInequalityHoldsFraction: number;
+  meanBridgeConceptFrequency: number;
+  tripleCount: number;
+}
+
+export interface TransitivityAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    triples: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  tripleModelMetrics: TransitivityMetrics[];
+  tripleTypeAggregations: TripleTypeAggregation[];
+  modelAggregations: Array<{
+    modelId: string;
+    displayName: string;
+    meanWaypointTransitivity: number;
+    waypointTransitivityCI: [number, number];
+    meanTriangleSlack: number;
+    triangleInequalityHoldsFraction: number;
+  }>;
+}

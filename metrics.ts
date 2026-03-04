@@ -1,9 +1,13 @@
 /**
- * Asymmetry metrics for Phase 2 reversal analysis.
+ * Metrics for Phase 2 reversal analysis and Phase 3 positional/transitivity analysis.
  *
- * Implements distribution-level comparison, permutation tests,
- * bootstrap confidence intervals, edit distance, and reversal order
- * correlation for comparing forward vs reverse waypoint paths.
+ * Phase 2: distribution-level comparison, permutation tests, bootstrap CIs,
+ * edit distance, reversal order correlation.
+ *
+ * Phase 3A: positional convergence (mirror-match rates, per-position Jaccard,
+ * convergence gradient via linear regression).
+ *
+ * Phase 3B: waypoint transitivity, navigational distance, shortcuts/detours.
  */
 
 import { computeJaccard } from "./canonicalize.ts";
@@ -40,7 +44,7 @@ export function bootstrapCI(
   return [lower, upper];
 }
 
-function mean(arr: number[]): number {
+export function mean(arr: number[]): number {
   if (arr.length === 0) return 0;
   return arr.reduce((sum, v) => sum + v, 0) / arr.length;
 }
@@ -134,7 +138,7 @@ export function directionExclusiveWaypoints(
 /**
  * Get waypoints appearing in >50% of runs.
  */
-function characteristicWaypoints(runs: string[][]): string[] {
+export function characteristicWaypoints(runs: string[][]): string[] {
   const freqMap = new Map<string, number>();
   for (const run of runs) {
     const unique = new Set(run);
@@ -259,7 +263,7 @@ export function reversalOrderRho(
 
 // ── Aggregate Asymmetry Metrics ─────────────────────────────────────
 
-import type { AsymmetryMetrics } from "./types.ts";
+import type { AsymmetryMetrics, PositionalConvergenceMetrics, TransitivityMetrics } from "./types.ts";
 
 /**
  * Compute full asymmetry metrics for a single pair/model combination.
@@ -312,5 +316,263 @@ export function computeAsymmetryMetrics(
     reversalOrderRho: rho,
     forwardRunCount: forwardRuns.length,
     reverseRunCount: reverseRuns.length,
+  };
+}
+
+// ── Phase 3A: Positional Convergence ──────────────────────────────
+
+/**
+ * Compute positional convergence metrics between forward and reverse runs.
+ *
+ * Mirror indexing: forward position i compares to reverse position (n-1-i),
+ * because forward wp1 is near concept A and reverse wp_last is also near A
+ * (since reverse swaps from/to).
+ *
+ * @param forwardRuns - Forward direction runs (ordered waypoints)
+ * @param reverseRuns - Reverse direction runs (ordered waypoints)
+ * @param waypointCount - Number of waypoints per path (default: 5)
+ */
+export function computePositionalConvergence(
+  pairId: string,
+  modelId: string,
+  forwardRuns: string[][],
+  reverseRuns: string[][],
+  waypointCount = 5,
+): PositionalConvergenceMetrics {
+  const perPositionMatchRate: number[] = [];
+  const perPositionJaccard: number[] = [];
+
+  for (let pos = 0; pos < waypointCount; pos++) {
+    const mirrorPos = waypointCount - 1 - pos;
+
+    // Collect all forward waypoints at position `pos`
+    // and all reverse waypoints at mirror position `mirrorPos`
+    let matchCount = 0;
+    let totalPairs = 0;
+
+    const fwdWaypointsAtPos: string[] = [];
+    const revWaypointsAtMirror: string[] = [];
+
+    for (const fwd of forwardRuns) {
+      if (pos < fwd.length) fwdWaypointsAtPos.push(fwd[pos]);
+    }
+    for (const rev of reverseRuns) {
+      if (mirrorPos < rev.length) revWaypointsAtMirror.push(rev[mirrorPos]);
+    }
+
+    // Exact mirror-match rate: for each fwd×rev pair, does fwd[pos] === rev[mirrorPos]?
+    for (const fwdWp of fwdWaypointsAtPos) {
+      for (const revWp of revWaypointsAtMirror) {
+        totalPairs++;
+        if (fwdWp === revWp) matchCount++;
+      }
+    }
+    perPositionMatchRate.push(totalPairs > 0 ? matchCount / totalPairs : 0);
+
+    // Pooled Jaccard at this position: vocabulary overlap
+    const fwdSet = new Set(fwdWaypointsAtPos);
+    const revSet = new Set(revWaypointsAtMirror);
+    const intersection = new Set([...fwdSet].filter((w) => revSet.has(w)));
+    const union = new Set([...fwdSet, ...revSet]);
+    perPositionJaccard.push(union.size > 0 ? intersection.size / union.size : 0);
+  }
+
+  // Linear regression: match rate as a function of position
+  const { slope, r2 } = linearRegression(
+    perPositionMatchRate.map((_, i) => i),
+    perPositionMatchRate,
+  );
+
+  return {
+    pairId,
+    modelId,
+    perPositionMatchRate,
+    perPositionJaccard,
+    convergenceSlope: slope,
+    convergenceR2: r2,
+    forwardRunCount: forwardRuns.length,
+    reverseRunCount: reverseRuns.length,
+  };
+}
+
+/**
+ * Simple linear regression: y = slope * x + intercept.
+ * Returns slope and R² (coefficient of determination).
+ */
+export function linearRegression(
+  x: number[],
+  y: number[],
+): { slope: number; intercept: number; r2: number } {
+  const n = x.length;
+  if (n < 2) return { slope: 0, intercept: y[0] ?? 0, r2: 0 };
+
+  const meanX = mean(x);
+  const meanY = mean(y);
+
+  let ssXY = 0;
+  let ssXX = 0;
+  let ssTot = 0;
+
+  for (let i = 0; i < n; i++) {
+    ssXY += (x[i] - meanX) * (y[i] - meanY);
+    ssXX += (x[i] - meanX) * (x[i] - meanX);
+    ssTot += (y[i] - meanY) * (y[i] - meanY);
+  }
+
+  const slope = ssXX > 0 ? ssXY / ssXX : 0;
+  const intercept = meanY - slope * meanX;
+
+  // R² = 1 - SS_res / SS_tot
+  let ssRes = 0;
+  for (let i = 0; i < n; i++) {
+    const predicted = slope * x[i] + intercept;
+    ssRes += (y[i] - predicted) * (y[i] - predicted);
+  }
+  const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+  return { slope, intercept, r2 };
+}
+
+// ── Phase 3B: Transitivity Metrics ───────────────────────────────
+
+/**
+ * Compute waypoint transitivity: how much does the direct A→C path overlap
+ * with the composed A→B + B→C path?
+ *
+ * transitivity = Jaccard(waypoints(A→C), waypoints(A→B) ∪ waypoints(B→C))
+ *
+ * Returns the mean transitivity across all run combinations, plus bootstrap CI.
+ */
+export function computeWaypointTransitivity(
+  runsAB: string[][],
+  runsBC: string[][],
+  runsAC: string[][],
+): { mean: number; ci: [number, number]; values: number[] } {
+  const values: number[] = [];
+
+  for (const ac of runsAC) {
+    for (const ab of runsAB) {
+      for (const bc of runsBC) {
+        // Union of A→B and B→C waypoints
+        const composedSet = new Set([...ab, ...bc]);
+        const acSet = new Set(ac);
+
+        // Jaccard between direct and composed
+        const intersection = new Set([...acSet].filter((w) => composedSet.has(w)));
+        const union = new Set([...acSet, ...composedSet]);
+        const jaccard = union.size > 0 ? intersection.size / union.size : 0;
+        values.push(jaccard);
+      }
+    }
+  }
+
+  const meanVal = mean(values);
+  const ci = values.length > 1 ? bootstrapCI(values) : [meanVal, meanVal] as [number, number];
+  return { mean: meanVal, ci, values };
+}
+
+/**
+ * Compute navigational distance for a set of runs in the same direction.
+ * d(X→Y) = 1 - mean within-direction Jaccard
+ *
+ * High within-direction consistency → low distance (easy navigation).
+ * Low consistency → high distance (difficult/unstable navigation).
+ */
+export function computeNavigationalDistance(runs: string[][]): number {
+  if (runs.length < 2) return 1; // Can't measure consistency with <2 runs
+
+  const jaccards: number[] = [];
+  for (let i = 0; i < runs.length; i++) {
+    for (let j = i + 1; j < runs.length; j++) {
+      const result = computeJaccard(runs[i], runs[j]);
+      jaccards.push(result.similarity);
+    }
+  }
+
+  return 1 - mean(jaccards);
+}
+
+/**
+ * Find shortcuts (waypoints on A→C but NOT on A→B ∪ B→C) and
+ * detours (waypoints on A→B ∪ B→C but NOT on A→C).
+ *
+ * Uses characteristic waypoints (>50% frequency) for each leg.
+ */
+export function findShortcutsAndDetours(
+  runsAB: string[][],
+  runsBC: string[][],
+  runsAC: string[][],
+): { shortcuts: string[]; detours: string[] } {
+  const charAB = characteristicWaypoints(runsAB);
+  const charBC = characteristicWaypoints(runsBC);
+  const charAC = characteristicWaypoints(runsAC);
+
+  const composedSet = new Set([...charAB, ...charBC]);
+  const directSet = new Set(charAC);
+
+  const shortcuts = charAC.filter((wp) => !composedSet.has(wp));
+  const detours = [...charAB, ...charBC].filter(
+    (wp) => !directSet.has(wp) && composedSet.has(wp), // deduplicate via composedSet check
+  );
+
+  // Deduplicate detours
+  const uniqueDetours = [...new Set(detours)];
+
+  return { shortcuts, detours: uniqueDetours };
+}
+
+/**
+ * Compute full transitivity metrics for a single triple/model combination.
+ */
+export function computeTransitivityMetrics(
+  tripleId: string,
+  modelId: string,
+  bridgeConcept: string,
+  runsAB: string[][],
+  runsBC: string[][],
+  runsAC: string[][],
+): TransitivityMetrics {
+  // Waypoint transitivity
+  const transitivity = computeWaypointTransitivity(runsAB, runsBC, runsAC);
+
+  // Navigational distances
+  const distanceAB = computeNavigationalDistance(runsAB);
+  const distanceBC = computeNavigationalDistance(runsBC);
+  const distanceAC = computeNavigationalDistance(runsAC);
+
+  // Triangle inequality
+  const triangleSlack = distanceAB + distanceBC - distanceAC;
+  const triangleInequalityHolds = triangleSlack >= -0.001; // small epsilon for floating point
+
+  // Shortcuts and detours
+  const { shortcuts, detours } = findShortcutsAndDetours(runsAB, runsBC, runsAC);
+
+  // Bridge concept analysis: does B appear in A→C paths?
+  const bridgeLower = bridgeConcept.toLowerCase();
+  let bridgeAppearCount = 0;
+  for (const ac of runsAC) {
+    if (ac.some((wp) => wp.toLowerCase() === bridgeLower)) {
+      bridgeAppearCount++;
+    }
+  }
+  const bridgeConceptFrequency = runsAC.length > 0 ? bridgeAppearCount / runsAC.length : 0;
+
+  return {
+    tripleId,
+    modelId,
+    waypointTransitivity: transitivity.mean,
+    waypointTransitivityCI: transitivity.ci,
+    distanceAB,
+    distanceBC,
+    distanceAC,
+    triangleInequalityHolds,
+    triangleSlack,
+    shortcuts,
+    detours,
+    bridgeConceptAppears: bridgeAppearCount > 0,
+    bridgeConceptFrequency,
+    runCountAB: runsAB.length,
+    runCountBC: runsBC.length,
+    runCountAC: runsAC.length,
   };
 }

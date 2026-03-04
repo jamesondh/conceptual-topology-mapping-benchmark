@@ -1,7 +1,7 @@
 # State
 
 ## Current Phase
-Phase 2: Reversals & path consistency — **COMPLETE**
+Phase 3: Positional Convergence + Transitive Path Structure — **COMPLETE**
 
 ## Context
 - Research survey complete (`research.md`)
@@ -18,36 +18,48 @@ Phase 2: Reversals & path consistency — **COMPLETE**
 
 ## Phase 2 Summary
 
+### Key Findings
+1. **Navigation is fundamentally asymmetric** — Overall mean asymmetry 0.811 (CI: [0.772, 0.848]). 73/84 significant at p<0.05.
+2. **Starting-point hypothesis** — Models construct forward from wherever they start.
+3. **Category predictions: 4/8 matched** — Conceptual space is quasimetric: d(A,B) ≠ d(B,A).
+4. **Gemini most direction-sensitive** (0.867), Claude least (0.780).
+
+## Phase 3 Summary
+
 ### Data Collected
-- 960 runs: 840 reverse (21 pairs × 4 models × 10 reps) + 120 polysemy supplementary
-- Combined with 1,240 forward results from Phase 1 (5wp/semantic only)
-- 84 pair/model combinations analyzed
+- **Part A (positional convergence)**: Pure analysis of existing data (0 new API calls). 84 pair/model combinations.
+- **Part B (transitivity)**: 600 new runs across 8 concept triples × 4 models × 10 reps. 15 new legs, 9 reused legs from Phase 1/2.
 
 ### Key Findings
-1. **Navigation is fundamentally asymmetric** — Overall mean asymmetry 0.811 (CI: [0.772, 0.848]). Forward and reverse paths share <19% waypoints on average. 73/84 combinations significant at p<0.05.
-2. **Starting-point hypothesis** — Control-random pairs show 0.908 asymmetry. When no semantic bridge exists, the path is almost entirely determined by the starting concept. Models don't find "the" path — they construct forward from wherever they start.
-3. **Category predictions: 4/8 matched** — Anchor (0.911 ✅), polysemy (0.824 ✅), hierarchy (0.683 ✅), identity (0.456 ✅). Antonym (0.596 ❌), near-synonym (0.665 ❌), control-random (0.908 ❌), nonsense (0.986 ❌).
-4. **Gemini most direction-sensitive** (0.867), Claude least (0.780) — two independent axes of navigational character: within-direction consistency vs cross-direction consistency.
-5. **Polysemy vindicated** — Supplementary data confirms genuine sense differentiation (cross-pair Jaccard 0.011–0.062), fixing Phase 1 artifact.
-6. **Conceptual space is quasimetric** — d(A,B) ≠ d(B,A). Asymmetry is structured, not random — it varies by category and model in interpretable ways.
+1. **Dual-anchor hypothesis** — Positional convergence shows U-shaped pattern (match rates 0.102 → 0.057 → 0.065 → 0.085 → 0.129). Both endpoints anchor the path, not just the start. Refines Phase 2's starting-point hypothesis.
+2. **Overall convergence slope near zero** (0.0082, CI crosses zero). Only 50% of combos show positive convergence. The starting-point hypothesis needs nuance.
+3. **Hierarchical triples are compositional** — Transitivity 0.175 vs random controls 0.036 (4.9× difference). "dog" appears on animal→poodle path 50-100% of the time; random bridges never appear.
+4. **Triangle inequality holds** — 29/32 cases (91%). All violations in Gemini. Conceptual space satisfies a key metric axiom.
+5. **Bridge concept frequency is model-dependent** — Claude: "harmony" appears 100% on music→math; Gemini: 0%. Models have different navigational connectivity.
+6. **Semantic chains partially compositional** (0.073) but "energy" is NOT on hot→cold (0.036). Association ≠ being on-route.
+7. **Polysemy-extend confirms compositionality** — bank→river→ocean shows 0.150 transitivity, "river" appears 72.5% as bridge.
+8. **Claude-Gemini axis persists** — Claude: dense, globally connected, rigid. Gemini: fragmented, locally specialized, direction-sensitive.
 
 ### Infrastructure Built
-- Scheduler (`scheduler.ts`) — ~4x faster than Phase 1
-- Metrics module (`metrics.ts`) — asymmetry metrics, bootstrap CIs, permutation tests
-- Resume-capable experiment scripts, atomic writes, extraction enforcement
+- `triples.ts` — 8 concept triple definitions with data reuse mapping
+- `analysis/03a-positional-convergence.ts` — positional convergence metrics
+- `experiments/03b-transitivity.ts` — transitivity experiment with scheduler
+- `analysis/03b-transitivity.ts` — transitivity analysis and findings
+- New metrics in `metrics.ts` — positional convergence, linear regression, waypoint transitivity, navigational distance, shortcuts/detours
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- 5wp only for reversals — Phase 1 showed 5wp paths are reliable coarse representations
-- Distributional comparison — permutation tests + bootstrap CIs, not just point estimates
-- Lenient extraction enforcement — truncate overlong, keep underlong, flag mismatches
+- Two-part phase: Part A (free analysis, 0 API cost) → Part B (new experiment, ~$3)
+- Data reuse strategy: 18 of 48 legs reused from Phase 1/2
+- Consistency-based navigational distance: d(X→Y) = 1 - mean within-direction Jaccard
 
 ## Blockers
 None
 
 ## Next Steps
-- Decide Phase 3 direction based on asymmetry data. Top candidates:
-  1. Triangle inequality testing — does d(A,C) ≤ d(A,B) + d(B,C)?
-  2. Positional asymmetry analysis — direct test of starting-point hypothesis
-  3. Model-specific asymmetry topology — which pairs are asymmetric for which models?
-  4. The random-pair gradient — test more random pairs to map the baseline
+- Phase 4 candidates (from analysis):
+  1. Dimensionality probing — how many independent axes structure each model's space?
+  2. Chain length scaling — how does transitivity change with 3-hop, 5-hop, 7-hop chains?
+  3. Cross-model bridge agreement — do models agree on which concepts are bridges?
+  4. Higher-resolution convergence — 7wp or 9wp paths for finer positional analysis
+  5. Targeted Gemini investigation — why all 3 triangle inequality violations?

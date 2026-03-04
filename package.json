@@ -10,6 +10,10 @@
     "analyze": "bun run analysis/01-pilot.ts",
     "reversals": "bun run experiments/02-reversals.ts",
     "analyze-reversals": "bun run analysis/02-reversals.ts",
+    "convergence": "bun run analysis/03a-positional-convergence.ts",
+    "transitivity": "bun run experiments/03b-transitivity.ts",
+    "analyze-transitivity": "bun run analysis/03b-transitivity.ts",
+    "phase3": "bun run analysis/03a-positional-convergence.ts && bun run experiments/03b-transitivity.ts && bun run analysis/03b-transitivity.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
