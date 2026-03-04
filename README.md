@@ -10,7 +10,7 @@ Give models two concepts, ask for intermediate waypoints, and test whether the r
 
 ## Key Findings
 
-Across 5,800+ elicitation runs and 4 models, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
+Across 11,800+ elicitation runs and 4 models across 6 phases, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
 
 ### Models have distinct "conceptual gaits"
 Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography."
@@ -152,6 +152,7 @@ src/
     triples-phase4.ts             # Phase 4 triple definitions with predictions
     triples-phase5.ts             # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
     pairs-phase6.ts               # Phase 6 pair definitions (salience, forced-crossing, positional)
+    pairs-phase7.ts               # Phase 7 pair definitions (anchoring, curvature, too-central) [planned]
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -173,15 +174,22 @@ research.md                       # Literature survey
 ### Polysemy creates forced crossings, not dimensional barriers
 Loan-bank-shore shows 0.95-1.00 bridge frequency (non-Gemini) — *higher* than same-axis paths. When a polysemous concept is the only connection between two domains, it becomes an obligatory navigational waypoint, producing the most reliable bridges in the benchmark.
 
+### Bridge concepts anchor early, not at the midpoint
+Bridges overwhelmingly appear at position 1-2 (the beginning of the path), not at the midpoint as previously assumed. Peak-detection contrast is 0.345 vs -0.080 for fixed-midpoint — the Phase 5 "W-shape null" was a methodological artifact. Bridges function as directional headings (establishing trajectory from the start), not as crossing points (connecting middles).
+
+### Navigational salience is heavy-tailed and model-specific
+The waypoint frequency distribution for any concept pair concentrates in a small number of high-frequency concepts. Claude navigates near-deterministically (entropy 2.59, often only 5-8 unique waypoints); GPT explores broadly (entropy 3.44, up to 36 unique waypoints). Gemini routes bank→ocean through a financial frame (vault-treasure-gold) while all other models use a geographic frame (river-estuary-shore).
+
 ## Status
 
-**Phase 5 complete. Phase 6 implemented, awaiting data collection.** Cumulative: 9,500+ API runs across 4 models and 5 phases.
+**Phase 6 complete. Phase 7 specified, awaiting implementation.** Cumulative: 11,800+ API runs across 4 models and 6 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
 - **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
 - **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
 - **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
-- **Phase 6 (implemented):** Navigational salience mapping, forced-crossing asymmetry, positional bridge scanning. ~2,240 new runs + Phase 5C reuse. Run: `bun run phase6`.
+- **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
+- **Phase 7 (specified):** Early-anchoring causal test, curvature estimation, too-central boundary. ~2,500 new runs. Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

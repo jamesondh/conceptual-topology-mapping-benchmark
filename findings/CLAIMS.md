@@ -169,25 +169,25 @@ A bridge concept's navigational salience (how often models route through it) is 
 **Sources:** `05-analysis.md` §2
 
 ### H4. Forced crossings reduce path asymmetry
-**[hypothesis]** — Phase 5 (predicted, not yet tested).
+**[falsified]** — Phase 5 (predicted), Phase 6B (tested and falsified).
 
-If "bank" is the only route from loan to shore, it should also be the only route from shore to loan. The bottleneck constrains both directions equally, reducing the quasimetric asymmetry. Phase 6B is designed to test this directly.
+Predicted that polysemous bottlenecks would constrain both directions equally, reducing the quasimetric asymmetry. Observed: forced-crossing mean asymmetry (0.817) is indistinguishable from same-axis (0.810) and Phase 2 baseline (0.811). The bottleneck constrains which concepts appear but not the directional structure.
 
-**Sources:** `05-analysis.md` §7 (Phase 2 asymmetry and the bottleneck model)
+**Sources:** `05-analysis.md` §7, `06-analysis.md` §2. **Graveyard entry: G13.**
 
 ### H5. Bridge position correlates with semantic distance ratios
-**[hypothesis]** — Phase 5C (inferred from Gemini bank-savings P3 spike).
+**[falsified]** — Phase 5C (inferred), Phase 6C (tested and falsified).
 
-Bridge concepts may anchor at different positions depending on d(A,bridge)/d(A,C). Gemini's P3 = 0.900 on bank-savings suggests the bridge is not always at the midpoint. Phase 6C is designed to test this with peak-detection scanning.
+Predicted that d(A,bridge)/d(A,C) would predict bridge position. Observed: r = 0.239 (p = 0.486). Bridges overwhelmingly anchor at positions 1-2 (0-indexed) regardless of distance ratio, making distance irrelevant to position.
 
-**Sources:** `05-analysis.md` §5
+**Sources:** `05-analysis.md` §5, `06-analysis.md` §3. **Graveyard entry: G14.**
 
 ### H6. Waypoint frequency distributions are heavy-tailed
-**[hypothesis]** — Phase 5 (predicted for Phase 6A).
+**[confirmed → O11]** — Phase 5 (predicted), Phase 6A (confirmed).
 
-If bridge-as-bottleneck is correct, the frequency distribution of waypoints on a given pair should be heavy-tailed (power-law or log-normal) rather than uniform. A few concepts should dominate navigation while most appear rarely.
+7/8 pairs reject uniformity at Bonferroni-corrected significance (KS test). Traffic concentrates in a small number of high-frequency waypoints. Upgraded to observed claim O11; formal distribution fitting (power-law vs log-normal) deferred.
 
-**Sources:** `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
+**Sources:** `06-analysis.md` §1, `06a-salience.md`
 
 ### H7. Claude's rigid gait is architectural, not just decoding temperature
 **[hypothesis]** — Phases 1-5 (consistent but untested directly).
@@ -198,7 +198,37 @@ Claude's high consistency (Jaccard 0.578) is pair-dependent — it still shows l
 
 ---
 
-## Deferred Claims (Awaiting Phase 6+ Data)
+### O11. Waypoint frequency distributions are non-uniform and concentrated
+**[observed]** — Phase 6A (8 pairs, 4 models, 1,200 runs).
+
+7/8 pairs reject uniformity at Bonferroni-corrected significance (KS test, p < 0.0063). Navigational traffic concentrates in a small number of high-frequency waypoints per pair/model. Claude shows the lowest entropy (mean 2.59, near-deterministic waypoint selection); GPT the highest (3.44, broadest exploration). Formal distribution fitting (power-law vs log-normal vs other families) is deferred.
+
+**Sources:** `06-analysis.md` §1, `06a-salience.md`
+
+### O12. Bridge concepts anchor early (position 1-2), not at the midpoint
+**[observed]** — Phase 6C (10 pairs, 40 positional profiles).
+
+Cross-model modal bridge position is 1-2 (0-indexed; 2nd-3rd waypoint) for 8 of 10 pairs. Peak-detection contrast 0.345 (CI [0.224, 0.459]) is robustly positive; fixed-midpoint contrast is -0.080. The Phase 5C W-shape null was a methodological artifact of the rigid midpoint assumption. Exception: animal-poodle (taxonomic bridge "dog" at position 4-5).
+
+**Sources:** `06-analysis.md` §3, `06c-positional.md`
+
+### O13. Forced-crossing bridges are positionally unstable
+**[observed]** — Phase 6C (2 forced-crossing pairs vs 8 non-forced).
+
+Positional SD for forced-crossing pairs (1.71) is 3.3x higher than non-forced (0.52). Loan-shore and deposit-river are the only "model-dependent" pairs in the positional analysis (SD > 1.0). The polysemous pivot sits at a frame junction where timing of frame-crossing is model-dependent.
+
+**Sources:** `06-analysis.md` §4, `06c-positional.md`
+
+### O14. Forced crossings standardize inter-model asymmetry without reducing it
+**[observed]** — Phase 6B (4 forced-crossing + 4 same-axis pairs).
+
+Loan-shore asymmetry range is 0.026 across 4 models (0.826-0.852), while deposit-river shows range 0.500 (0.422-0.922). The bottleneck homogenizes model-to-model variance on highly constrained pairs without shifting the mean asymmetry below baseline.
+
+**Sources:** `06-analysis.md` §2, `06b-forced-crossing.md`
+
+---
+
+## Deferred Claims (Awaiting Phase 7+ Data)
 
 - **Multiverse robustness** — How robust are R1-R7 across different waypoint counts, prompt formats, and temperature settings? Deferred to pre-paper robustness phase.
 - **Curvature around polysemous hubs** — Do polysemous concepts create regions of high curvature in conceptual space? Deferred (see `.planning/_deferred/curvature.md`).

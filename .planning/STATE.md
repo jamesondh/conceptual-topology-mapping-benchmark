@@ -1,8 +1,8 @@
 # State
 
 ## Current Phase
-Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality — **COMPLETE**
-Phase 6: Navigational Salience and Forced Crossings — **IMPLEMENTED** (awaiting data collection)
+Phase 6: Navigational Salience and Forced Crossings — **COMPLETE**
+Phase 7: Early Anchoring and Navigational Mechanics — **SPECIFIED** (awaiting implementation)
 
 ## Context
 - Research survey complete (`research.md`)
@@ -21,36 +21,42 @@ Phase 6: Navigational Salience and Forced Crossings — **IMPLEMENTED** (awaitin
 
 ## Phase 5 Summary
 - **3,720 new runs + 200 reused** across 36 triples, 8 convergence pairs, 4 models
-- **Cue-strength gradient is real but ragged** — 12/16 monotonic; biological-growth family inverted
-- **Germination > plant** — Process-naming bridges outperform object-naming bridges (navigational salience ≠ associative strength)
-- **Gemini threshold hypothesis FAILS** — Gemini threshold 1.79 not significantly different from others (mean 2.05, CI [-1.00, 1.07])
-- **Forced crossing discovery** — loan-bank-shore at 0.95-1.00 (cross-axis > same-axis, driven by bank)
-- **Fire is dead** — Near-zero bridge frequency in all configs (sole exception: GPT 0.15 on spark-fire-ash)
-- **W-shape fails in aggregate** — But Claude shows 0.52 contrast on music→mathematics (strongest positional signal)
-- **Prediction accuracy drops** — 64.6% (5A), 42.9% (5B) as experiments move from characterization to mechanism
-- **Bridge frequency and transitivity are decoupled** — Different aspects of compositional structure
+- Cue-strength gradient real but ragged (12/16 monotonic); germination > plant; Gemini threshold fails
+- Forced crossing discovery (loan-bank-shore at 0.95-1.00); fire is dead; W-shape aggregate null
+- Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism
 - See `findings/05-analysis.md` for full interpretive analysis
 
-## Phase 6 Implementation
-Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
-- **Part A: Navigational salience mapping** (~1,200 runs) — `experiments/06a-salience.ts`, `analysis/06a-salience.ts`
-- **Part B: Forced-crossing asymmetry** (~640 runs) — `experiments/06b-forced-crossing.ts`, `analysis/06b-forced-crossing.ts`
-- **Part C: Positional bridge scanning** (~400 new + reuse) — `experiments/06c-positional.ts`, `analysis/06c-positional.ts`
-- Types added to `src/types.ts`, metrics to `src/metrics.ts`, data to `src/data/pairs-phase6.ts`
-- Dry-run verified: all experiment scripts produce correct run counts (1200 + 640 + 400)
-- Typecheck passes clean
-- Run: `bun run phase6` (~$7.50-10.50, ~18-22 min)
+## Phase 6 Summary
+- **2,080 new runs + 280 reused** across 8 salience pairs, 8 asymmetry pairs, 10 positional pairs, 4 models
+- **Navigational salience distributions are non-uniform** — 7/8 pairs reject uniformity (KS test); H6 upgraded to O11
+- **Forced-crossing asymmetry hypothesis FAILS** — FC mean 0.817 ≈ SA mean 0.810 ≈ Phase 2 baseline 0.811; H4 falsified
+- **Bridge concepts anchor early (position 1-2, 0-indexed)** — Peak-detection contrast 0.345 vs fixed-midpoint -0.080; vindicates Phase 5C
+- **Animal-poodle exception** — Taxonomic bridges anchor at hierarchically appropriate position (4-5)
+- **Forced-crossing bridges are positionally unstable** — SD 1.71 vs 0.52 for non-forced
+- **GPT has highest entropy** (3.44), not Grok as predicted; Claude near-deterministic (2.59)
+- **Gemini routes bank-ocean through financial frame** — vault/treasure/gold, not geographic concepts
+- **Prediction accuracy ~40%** — Structural predictions succeed (~80%), point predictions fail (~25%)
+- See `findings/06-analysis.md` for full interpretive analysis
+
+## Phase 7 Specification
+Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`
+- **Part A: Early-anchoring causal test** (~1,260 runs) — Pre-filled waypoint manipulation with 3 conditions (incongruent, congruent, neutral)
+- **Part B: Curvature estimation** (~760 runs) — Triangle inequality excess around polysemous vs non-polysemous hubs
+- **Part C: Too-central boundary** (~480 runs) — Gradient from "obvious and useful" to "obvious and redundant" bridges
+- Total: ~2,500 new runs, ~$8-12, ~20-25 min runtime
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Phase 5 revised bridge taxonomy: process-naming, forced-crossing, too-central (new categories)
-- Phase 6 uses within-phase same-axis comparison as primary test (not cross-phase baseline)
-- Dead ends and failed hypotheses tracked in `GRAVEYARD.md` (12 entries across Phases 1-5)
-- All major claims cataloged with evidence tiers in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
+- Phase 6 revised bridge model: "launching pad" not "narrow passage"
+- Phase 7 Part A adds 3 control conditions per Codex review recommendations
+- Phase 7 Part B includes distance-metric validity checks before curvature interpretation
+- Dead ends tracked in `GRAVEYARD.md` (15 entries across Phases 1-6)
+- All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
 None
 
 ## Next Steps
-- Run `bun run phase6` (~$7.50-10.50, ~18-22 min)
-- Write interpretive analysis after data collected
+- Implement Phase 7 code (types, metrics, experiments, analysis)
+- Run Phase 7 experiments
+- Write interpretive analysis

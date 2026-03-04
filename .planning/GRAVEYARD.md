@@ -139,3 +139,39 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 **What survived:** The restricted version: for models with rigid navigational gaits (Claude) and bridge concepts with fixed positional placement, the bridge creates a genuine third convergence anchor. Phase 6C redesigns the test as peak-detection rather than fixed-position.
 
 **Lesson:** Aggregation can kill real signals when the effect is interaction-dependent (model x pair). Individual-level analysis is essential for positional phenomena.
+
+---
+
+## Phase 6: Forced-Crossing Asymmetry Reduction (H4)
+
+**What:** Predicted that forced crossings (where a polysemous concept is the only route between two domains) would reduce path asymmetry below the Phase 2 baseline of 0.811. Bank-mediated pairs predicted at 0.50-0.70 asymmetry.
+
+**Why it failed:** Forced-crossing mean asymmetry is 0.817 (CI [0.743, 0.877]), indistinguishable from same-axis mean (0.810) and Phase 2 baseline (0.811). The bottleneck constrains *which concepts* appear on the path but not the *surrounding navigational context*. Two paths that both pass through "bank" but differ in every other waypoint still show high asymmetry.
+
+**Resolution:** Path asymmetry is a global property of navigational structure, not modulated by local bottlenecks. The 0.811 baseline appears to be a structural constant. Forced crossings standardize inter-model asymmetry variance (loan-shore range 0.026 across models) without reducing the mean.
+
+**Lesson:** The bottleneck metaphor is about traffic concentration, not directional constraint. A shared waypoint does not produce shared paths.
+
+---
+
+## Phase 6: Semantic Distance Predicts Bridge Position (H5)
+
+**What:** Predicted that bridge position in the waypoint sequence correlates with the semantic distance ratio d(A,bridge)/d(A,C). Bridges closer to A should anchor earlier; bridges equidistant should anchor at the midpoint.
+
+**Why it failed:** Correlation r = 0.239 (p = 0.486), far from significant. The distance ratio is irrelevant because bridges overwhelmingly anchor at positions 1-2 (0-indexed) regardless of semantic distance. The early-anchoring discovery means there's almost no positional variance to predict.
+
+**Resolution:** Bridge position is determined by the directional-heading mechanism (bridges are selected early as the first step orienting toward the target), not by semantic geometry. Exception: taxonomic bridges (animal-dog-poodle) anchor at hierarchically appropriate positions.
+
+**Lesson:** The geometric intuition (distance determines position) is wrong for navigation. Navigational mechanics (heading selection) override geometry.
+
+---
+
+## Phase 6: Forced-Crossing Bridges Are Positionally Stable
+
+**What:** Predicted that forced-crossing bridges should have low positional variance (SD < 0.8) because their obligatory nature should fix their position.
+
+**Why it failed:** Forced-crossing positional SD = 1.71, vs 0.52 for non-forced. The two forced-crossing pairs (loan-shore, deposit-river) are the only "model-dependent" pairs in the positional analysis.
+
+**Resolution:** Forced-crossing bridges sit at frame junctions, and the timing of frame-crossing is model-dependent. Claude may cross early, GPT may cross late. The obligatory nature constrains *presence* (bridge always appears) but not *position* (bridge floats).
+
+**Lesson:** Obligatory ≠ stable. A concept can be mandatory on every path while still occupying different positions depending on the model's frame-activation sequence.
