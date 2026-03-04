@@ -78,6 +78,20 @@ Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 
 - Keep `STATE.md` under 150 lines and commit `.planning/` updates with code changes.
 - If `STATE.md` exceeds 150 lines, suggest the user compact it.
 
+## Claim Tagging
+
+All major claims use evidence tiers. When writing findings or analysis docs, tag claims inline:
+
+- **[robust]** — Replicated across multiple phases/models, survived prediction testing. Paper-ready.
+- **[observed]** — Directly measured with statistical support, but specific to conditions tested. May not generalize.
+- **[hypothesis]** — Explanatory model consistent with data, not directly tested or limited evidence. Could be falsified.
+
+The canonical registry of all claims is `findings/CLAIMS.md`. Update it when a new phase produces or upgrades a claim.
+
+## Graveyard
+
+`.planning/GRAVEYARD.md` tracks dead ends, failed hypotheses, and deprecated approaches. Before designing a new experiment or prediction, check the graveyard to avoid re-treading. Update it when a pre-registered prediction fails or an approach is abandoned.
+
 ## Workflow Style
 
 This is an **exploration-first** project. Phases are designed to follow the most interesting signal in the data. The roadmap is a starting direction, not a fixed plan. Each phase's findings determine where we go next — same process as word-convergence-game's 5 rounds.

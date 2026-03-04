@@ -42,6 +42,8 @@ Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
 - Exploration-first workflow — phases follow the most interesting data signal
 - Phase 5 revised bridge taxonomy: process-naming, forced-crossing, too-central (new categories)
 - Phase 6 uses within-phase same-axis comparison as primary test (not cross-phase baseline)
+- Dead ends and failed hypotheses tracked in `GRAVEYARD.md` (12 entries across Phases 1-5)
+- All major claims cataloged with evidence tiers in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
 None — Phase 6 spec ready, awaiting implementation
