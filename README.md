@@ -98,6 +98,15 @@ bun run analyze-forced-crossing  # Analyze forced-crossing asymmetry
 bun run positional               # Part C: ~480 API calls (+ reuse 5C data)
 bun run analyze-positional       # Analyze positional bridge results
 bun run phase6                   # Run all Phase 6 in sequence
+
+# 10. Phase 7: Early anchoring, curvature, and too-central boundary
+bun run anchoring                # Part A: ~1260 API calls (pre-filled waypoint manipulation)
+bun run analyze-anchoring        # Analyze anchoring results
+bun run curvature                # Part B: ~760 API calls (triangle inequality excess)
+bun run analyze-curvature        # Analyze curvature results
+bun run too-central              # Part C: ~480 API calls (informational redundancy)
+bun run analyze-too-central      # Analyze too-central results
+bun run phase7                   # Run all Phase 7 in sequence
 ```
 
 ## What It Measures
@@ -118,6 +127,9 @@ bun run phase6                   # Run all Phase 6 in sequence
 - **Navigational salience** — What is the empirical frequency distribution of waypoint concepts? (Phase 6A: heavy-tail testing, cross-model agreement)
 - **Forced-crossing asymmetry** — Do polysemous bottlenecks reduce path asymmetry? (Phase 6B: forward/reverse comparison for forced-crossing pairs)
 - **Positional bridge scanning** — Where do bridge concepts anchor in the positional sequence? (Phase 6C: peak-detection W-shape, semantic distance regression)
+- **Early anchoring** — Does a pre-filled heading waypoint bias the subsequent path? (Phase 7A: incongruent/congruent/neutral pre-fill conditions, bridge displacement test)
+- **Curvature estimation** — Do polysemous concepts create regions of high curvature? (Phase 7B: triangle inequality excess, polysemous vs non-polysemous vertex comparison)
+- **Too-central boundary** — What separates "too central to bridge" from "obvious and useful"? (Phase 7C: informational redundancy gradient, random-target probes)
 
 ## Concept Pairs
 
@@ -152,7 +164,7 @@ src/
     triples-phase4.ts             # Phase 4 triple definitions with predictions
     triples-phase5.ts             # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
     pairs-phase6.ts               # Phase 6 pair definitions (salience, forced-crossing, positional)
-    pairs-phase7.ts               # Phase 7 pair definitions (anchoring, curvature, too-central) [planned]
+    pairs-phase7.ts               # Phase 7 pair definitions (anchoring, curvature, too-central)
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -182,7 +194,7 @@ The waypoint frequency distribution for any concept pair concentrates in a small
 
 ## Status
 
-**Phase 6 complete. Phase 7 specified, awaiting implementation.** Cumulative: 11,800+ API runs across 4 models and 6 phases.
+**Phase 6 complete. Phase 7 implemented, awaiting experiment run.** Cumulative: 11,800+ API runs across 4 models and 6 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -190,6 +202,6 @@ The waypoint frequency distribution for any concept pair concentrates in a small
 - **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
 - **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
 - **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
-- **Phase 7 (specified):** Early-anchoring causal test, curvature estimation, too-central boundary. ~2,500 new runs. Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`.
+- **Phase 7 (implemented):** Early-anchoring causal test, curvature estimation, too-central boundary. ~2,500 new runs. Code complete and Codex-reviewed. Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

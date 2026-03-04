@@ -22,7 +22,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 ## Conventions
 
 - Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
-- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7, planned)
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
@@ -61,13 +61,13 @@ bun run analyze-forced-crossing  # Phase 6B: analyze forced-crossing results
 bun run positional               # Phase 6C: positional bridge scanning (~480 API calls)
 bun run analyze-positional       # Phase 6C: analyze positional bridge results
 bun run phase6                   # Run all Phase 6 in sequence (6A → 6B → 6C)
-bun run anchoring                # Phase 7A: early-anchoring causal test (~1260 API calls) [planned]
-bun run analyze-anchoring        # Phase 7A: analyze anchoring results [planned]
-bun run curvature                # Phase 7B: curvature estimation (~760 API calls) [planned]
-bun run analyze-curvature        # Phase 7B: analyze curvature results [planned]
-bun run too-central              # Phase 7C: too-central boundary (~480 API calls) [planned]
-bun run analyze-too-central      # Phase 7C: analyze too-central results [planned]
-bun run phase7                   # Run all Phase 7 in sequence (7A → 7B → 7C) [planned]
+bun run anchoring                # Phase 7A: early-anchoring causal test (~1260 API calls)
+bun run analyze-anchoring        # Phase 7A: analyze anchoring results
+bun run curvature                # Phase 7B: curvature estimation (~760 API calls)
+bun run analyze-curvature        # Phase 7B: analyze curvature results
+bun run too-central              # Phase 7C: too-central boundary (~480 API calls)
+bun run analyze-too-central      # Phase 7C: analyze too-central results
+bun run phase7                   # Run all Phase 7 in sequence (7A → 7B → 7C)
 ```
 
 ## Models

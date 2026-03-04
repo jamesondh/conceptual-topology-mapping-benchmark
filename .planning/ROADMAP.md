@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. Phases 1-6 complete; Phase 7 specified, awaiting implementation. Same process as word-convergence-game's 5 rounds.
+Exploration-first project. Phases 1-6 complete; Phase 7 implemented, awaiting experiment run. Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -11,11 +11,12 @@ Exploration-first project. Phases 1-6 complete; Phase 7 specified, awaiting impl
 - [x] **Phase 6: Navigational salience mapping and forced crossings** — 2,080 new runs + 280 reused across 8 salience pairs, 8 asymmetry pairs, 10 positional pairs. Core findings: salience distributions non-uniform (7/8 KS reject); forced-crossing asymmetry hypothesis falsified (0.817 ≈ 0.811 baseline); bridge concepts anchor early (position 1-2, not midpoint); peak-detection contrast 0.345 vindicates Phase 5C; forced-crossing bridges positionally unstable (SD 1.71 vs 0.52); GPT highest entropy (3.44); Gemini financial-frame routing on bank-ocean. See `findings/06a-salience.md`, `findings/06b-forced-crossing.md`, `findings/06c-positional.md`, and `findings/06-analysis.md`.
 
 ## In Progress
-- [ ] **Phase 7: Early anchoring and navigational mechanics** — Specification complete, awaiting implementation. Three-part design following Phase 6's strongest signals. Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`.
+- [ ] **Phase 7: Early anchoring and navigational mechanics** — Implemented, awaiting experiment run. Three-part design following Phase 6's strongest signals. Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`.
   - **Part A: Early-anchoring causal test** (~1,260 runs) — Pre-filled waypoint manipulation with 3 conditions (incongruent, congruent, neutral) to distinguish directional-heading from associative-primacy accounts. 8 focal pairs including animal-poodle (taxonomic control) and loan-shore (forced-crossing control).
   - **Part B: Curvature estimation around polysemous hubs** (~760 runs) — Triangle inequality excess for 4 polysemous-vertex vs 4 non-polysemous-vertex triangles. Includes distance-metric validity checks.
   - **Part C: Too-central boundary characterization** (~480 runs) — 10-pair gradient from known too-central (spark-ash, acorn-timber) to known obvious-useful (hot-cold, infant-elderly) with 4 boundary cases.
   - Total: ~2,500 new runs, ~$8-12, ~20-25 min runtime.
+  - **Implementation complete:** Types, data definitions, experiment runners, analysis scripts, package.json scripts. Codex-reviewed with critical/high fixes applied.
 
 ## Deferred
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many (see `_deferred/semantic-similarity-optimization.md`)

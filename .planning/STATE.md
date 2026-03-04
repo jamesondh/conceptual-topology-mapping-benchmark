@@ -2,7 +2,7 @@
 
 ## Current Phase
 Phase 6: Navigational Salience and Forced Crossings — **COMPLETE**
-Phase 7: Early Anchoring and Navigational Mechanics — **SPECIFIED** (awaiting implementation)
+Phase 7: Early Anchoring and Navigational Mechanics — **IMPLEMENTED** (awaiting experiment run)
 
 ## Context
 - Research survey complete (`research.md`)
@@ -38,12 +38,14 @@ Phase 7: Early Anchoring and Navigational Mechanics — **SPECIFIED** (awaiting 
 - **Prediction accuracy ~40%** — Structural predictions succeed (~80%), point predictions fail (~25%)
 - See `findings/06-analysis.md` for full interpretive analysis
 
-## Phase 7 Specification
+## Phase 7 Implementation
 Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`
 - **Part A: Early-anchoring causal test** (~1,260 runs) — Pre-filled waypoint manipulation with 3 conditions (incongruent, congruent, neutral)
 - **Part B: Curvature estimation** (~760 runs) — Triangle inequality excess around polysemous vs non-polysemous hubs
 - **Part C: Too-central boundary** (~480 runs) — Gradient from "obvious and useful" to "obvious and redundant" bridges
 - Total: ~2,500 new runs, ~$8-12, ~20-25 min runtime
+- **Implementation:** Types, data definitions, experiment scripts (07a/07b/07c), analysis scripts (07a/07b/07c), package.json scripts all complete
+- **Codex review:** 10 issues found (2 critical, 3 high, 4 medium, 1 low). Critical and high issues fixed: pair-ID mismatches in 7C analysis, wrong reusable leg IDs in 7B, peak detection excluding position 0, index-aligned condition comparison, bank-ocean undersampling
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
@@ -57,6 +59,6 @@ Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`
 None
 
 ## Next Steps
-- Implement Phase 7 code (types, metrics, experiments, analysis)
-- Run Phase 7 experiments
-- Write interpretive analysis
+- Run Phase 7 experiments (`bun run phase7` or individual sub-experiments)
+- Write interpretive analysis (findings/07-analysis.md)
+- Update CLAIMS.md with Phase 7 findings
