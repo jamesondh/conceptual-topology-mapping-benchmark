@@ -22,7 +22,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 ## Conventions
 
 - Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
-- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5)
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
@@ -54,6 +54,13 @@ bun run analyze-dimensionality   # Phase 5B: analyze dimensionality results
 bun run convergence-5c           # Phase 5C: triple-anchor convergence experiment (~640 API calls)
 bun run analyze-convergence      # Phase 5C: analyze convergence results
 bun run phase5                   # Run all Phase 5 in sequence (5A → 5B → 5C)
+bun run salience                 # Phase 6A: navigational salience mapping (~1200 API calls)
+bun run analyze-salience         # Phase 6A: analyze salience landscapes
+bun run forced-crossing          # Phase 6B: forced-crossing asymmetry test (~640 API calls)
+bun run analyze-forced-crossing  # Phase 6B: analyze forced-crossing results
+bun run positional               # Phase 6C: positional bridge scanning (~480 API calls)
+bun run analyze-positional       # Phase 6C: analyze positional bridge results
+bun run phase6                   # Run all Phase 6 in sequence (6A → 6B → 6C)
 ```
 
 ## Models

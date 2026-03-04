@@ -89,6 +89,15 @@ bun run analyze-dimensionality   # Analyze dimensionality probing results
 bun run convergence-5c           # Part C: ~640 API calls (7-waypoint paths)
 bun run analyze-convergence      # Analyze convergence profiles + W-shape
 bun run phase5                   # Run all Phase 5 in sequence
+
+# 9. Phase 6: Navigational salience, forced crossings, and positional scanning
+bun run salience                 # Part A: ~1200 API calls
+bun run analyze-salience         # Analyze salience landscapes
+bun run forced-crossing          # Part B: ~640 API calls
+bun run analyze-forced-crossing  # Analyze forced-crossing asymmetry
+bun run positional               # Part C: ~480 API calls (+ reuse 5C data)
+bun run analyze-positional       # Analyze positional bridge results
+bun run phase6                   # Run all Phase 6 in sequence
 ```
 
 ## What It Measures
@@ -106,6 +115,9 @@ bun run phase5                   # Run all Phase 5 in sequence
 - **Cue-strength thresholds** — Is there a measurable cue-strength threshold below which bridge frequency drops to zero? (Phase 5A: logistic curve fitting, Gemini threshold comparison)
 - **Conceptual dimensionality** — How many independent navigational axes does conceptual space have? (Phase 5B: same-axis vs cross-axis bridge frequency, polysemy vs non-polysemy)
 - **Triple-anchor convergence** — Do bridge concepts create a third convergence anchor in paths? (Phase 5C: W-shape detection in 7-waypoint paths)
+- **Navigational salience** — What is the empirical frequency distribution of waypoint concepts? (Phase 6A: heavy-tail testing, cross-model agreement)
+- **Forced-crossing asymmetry** — Do polysemous bottlenecks reduce path asymmetry? (Phase 6B: forward/reverse comparison for forced-crossing pairs)
+- **Positional bridge scanning** — Where do bridge concepts anchor in the positional sequence? (Phase 6C: peak-detection W-shape, semantic distance regression)
 
 ## Concept Pairs
 
@@ -139,6 +151,7 @@ src/
     triples.ts                    # Phase 3B concept triple definitions
     triples-phase4.ts             # Phase 4 triple definitions with predictions
     triples-phase5.ts             # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
+    pairs-phase6.ts               # Phase 6 pair definitions (salience, forced-crossing, positional)
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -154,14 +167,21 @@ research.md                       # Literature survey
 - **NLP:** [compromise](https://github.com/spencermountain/compromise) (lemmatization)
 - **Embeddings:** OpenAI text-embedding-3-large via OpenRouter
 
+### Bridge concepts require navigational salience, not just association
+"Germination" outperforms "plant" as a bridge from seed to garden despite being rated as a weaker associative cue. Process-naming bridges (spectrum, germination, deposit) outperform object-naming bridges (plant, fire) — what matters is whether the concept *moves the path forward*, not how strongly it's associated with the endpoints.
+
+### Polysemy creates forced crossings, not dimensional barriers
+Loan-bank-shore shows 0.95-1.00 bridge frequency (non-Gemini) — *higher* than same-axis paths. When a polysemous concept is the only connection between two domains, it becomes an obligatory navigational waypoint, producing the most reliable bridges in the benchmark.
+
 ## Status
 
-**Phase 4 complete. Phase 5 implementation ready.** Cumulative: 5,800+ API runs across 4 models.
+**Phase 5 complete. Phase 6 spec ready.** Cumulative: 9,500+ API runs across 4 models and 5 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
 - **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
 - **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
-- **Phase 5 (ready):** Implementation complete. Cue-strength thresholds (logistic fitting), conceptual dimensionality probing (same-axis vs cross-axis), triple-anchor convergence (W-shape detection). ~3,280 planned runs. Run: `bun run phase5`.
+- **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
+- **Phase 6 (ready):** Navigational salience mapping, forced-crossing asymmetry, positional bridge scanning. ~2,320 planned runs. Run: `bun run phase6`.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

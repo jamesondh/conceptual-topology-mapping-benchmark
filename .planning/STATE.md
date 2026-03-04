@@ -1,7 +1,8 @@
 # State
 
 ## Current Phase
-Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality — **IMPLEMENTATION COMPLETE** (awaiting experiment execution)
+Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality — **COMPLETE**
+Phase 6: Navigational Salience and Forced Crossings — **SPEC READY** (awaiting implementation)
 
 ## Context
 - Research survey complete (`research.md`)
@@ -18,37 +19,34 @@ Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality — **IMPLEMENTAT
 7. **Prediction accuracy 81.3%** — Concrete bridges universal, abstract bridges fail universally.
 8. **Gemini fragmentation pervasive** — Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries.
 
-## Phase 5 Implementation
+## Phase 5 Summary
+- **3,720 new runs + 200 reused** across 36 triples, 8 convergence pairs, 4 models
+- **Cue-strength gradient is real but ragged** — 12/16 monotonic; biological-growth family inverted
+- **Germination > plant** — Process-naming bridges outperform object-naming bridges (navigational salience ≠ associative strength)
+- **Gemini threshold hypothesis FAILS** — Gemini threshold 1.79 not significantly different from others (mean 2.05, CI [-1.00, 1.07])
+- **Forced crossing discovery** — loan-bank-shore at 0.95-1.00 (cross-axis > same-axis, driven by bank)
+- **Fire is dead** — Near-zero bridge frequency in all configs (sole exception: GPT 0.15 on spark-fire-ash)
+- **W-shape fails in aggregate** — But Claude shows 0.52 contrast on music→mathematics (strongest positional signal)
+- **Prediction accuracy drops** — 64.6% (5A), 42.9% (5B) as experiments move from characterization to mechanism
+- **Bridge frequency and transitivity are decoupled** — Different aspects of compositional structure
+- See `findings/05-analysis.md` for full interpretive analysis
 
-### Infrastructure Built
-- `triples-phase5.ts` — 36 definitions: 14 cue-strength triples (4 families + 2 controls), 14 dimensionality triples (3 focal concepts + 2 controls), 8 convergence pairs
-- `experiments/05a-cue-strength.ts` — Cue-strength gradient experiment (~1,680 runs), data reuse for emotion-nostalgia-melancholy triple
-- `experiments/05b-dimensionality.ts` — Dimensionality probing experiment (~960 AC-only runs)
-- `experiments/05c-convergence.ts` — Triple-anchor convergence experiment (~640 runs, 7-waypoint paths, bidirectional)
-- `analysis/05a-cue-strength.ts` — Logistic curve fitting, threshold estimation, Gemini comparison, monotonicity check
-- `analysis/05b-dimensionality.ts` — Same-axis vs cross-axis comparison, dimension counting, per-focal-concept breakdown
-- `analysis/05c-convergence.ts` — Positional convergence profiles, W-shape detection, bridge-variable natural experiment
-- New types in `types.ts` — Phase5CueStrengthTriple, Phase5DimensionalityTriple, Phase5ConvergencePair, LogisticFitResult, CueStrengthAnalysisOutput, DimensionalityAnalysisOutput, ConvergenceAnalysisOutput
-- New metrics in `metrics.ts` — fitLogistic (gradient descent logistic curve fitting), computeWShapeContrast (W-shape detection)
-
-### Codex Review Fixes Applied
-1. Fixed logistic gradient sign in `fitLogistic` (was doing ascent, not descent)
-2. Excluded random-control triples from same/cross-axis comparison in 05b analysis
-3. Proper bootstrap for Gemini threshold CI (resample data and refit, not just resample point estimates)
-4. Bridge-present aggregation in 05c respects `bridgeModels` (excludes Gemini from tree→ecosystem)
-5. Replaced `Math.random()` with `seededRandom()` in 05b bootstrap for reproducibility
+## Phase 6 Plan
+Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
+- **Part A: Navigational salience mapping** (~1,200 runs) — Empirical waypoint frequency distributions for 8 well-studied pairs. Heavy-tail test. Cross-model agreement.
+- **Part B: Forced-crossing asymmetry** (~640 runs) — Forward/reverse paths for 4 forced-crossing + 4 same-axis pairs. Test bottleneck asymmetry reduction.
+- **Part C: Positional bridge scanning** (~480 runs) — Peak-detection replacement for fixed-midpoint W-shape test. Bridge position regression on semantic distance.
+- Total: ~2,320 runs, ~$7.50-10.50, ~18-22 min
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Three-part phase: Part A (cue-strength), Part B (dimensionality), Part C (convergence)
-- Data reuse for emotion-nostalgia-melancholy from Phase 1/3B
-- AC-only collection for Part B (AB/BC optional follow-up)
-- 7-waypoint paths for Part C (higher resolution than Phase 3A's 5-waypoint)
+- Phase 5 revised bridge taxonomy: process-naming, forced-crossing, too-central (new categories)
+- Phase 6 uses within-phase same-axis comparison as primary test (not cross-phase baseline)
 
 ## Blockers
-None — implementation complete, ready to run experiments
+None — Phase 6 spec ready, awaiting implementation
 
 ## Next Steps
-- Run `bun run phase5` to execute all three experiments and analyses (~$10-14, ~20-25 min)
-- Write interpretive analysis (`findings/05-analysis.md`) after experiment data collected
-- Plan Phase 6 based on Phase 5 findings
+- Implement Phase 6 (types, experiments, analyses)
+- Run `bun run phase6` (~$7.50-10.50, ~18-22 min)
+- Write interpretive analysis after data collected
