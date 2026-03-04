@@ -12,6 +12,44 @@
 
 import { computeJaccard } from "./canonicalize.ts";
 
+// ── Seeded PRNG ─────────────────────────────────────────────────────
+
+/**
+ * Mulberry32: a fast, seedable 32-bit PRNG.
+ * Returns a function that produces values in [0, 1).
+ */
+function mulberry32(seed: number): () => number {
+  let s = seed | 0;
+  return () => {
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Default seed for reproducible analysis. Override via setMetricsSeed(). */
+let _rng = mulberry32(42);
+
+/**
+ * Reset the metrics PRNG with a new seed for reproducibility.
+ */
+export function setMetricsSeed(seed: number): void {
+  _rng = mulberry32(seed);
+}
+
+/**
+ * Fisher-Yates shuffle (unbiased, uses seeded PRNG).
+ */
+function fisherYatesShuffle<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(_rng() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 // ── Bootstrap CI ────────────────────────────────────────────────────
 
 /**
@@ -33,7 +71,7 @@ export function bootstrapCI(
   for (let i = 0; i < nBootstrap; i++) {
     const sample: number[] = [];
     for (let j = 0; j < data.length; j++) {
-      sample.push(data[Math.floor(Math.random() * data.length)]);
+      sample.push(data[Math.floor(_rng() * data.length)]);
     }
     bootstrapStats.push(statFn(sample));
   }
@@ -95,8 +133,8 @@ export function permutationTest(
   let countAsExtreme = 0;
 
   for (let i = 0; i < nPermutations; i++) {
-    // Shuffle and split
-    const shuffled = [...pooled].sort(() => Math.random() - 0.5);
+    // Unbiased Fisher-Yates shuffle with seeded PRNG
+    const shuffled = fisherYatesShuffle(pooled);
     const permForward = shuffled.slice(0, nForward);
     const permReverse = shuffled.slice(nForward);
 
@@ -111,7 +149,9 @@ export function permutationTest(
     }
   }
 
-  return countAsExtreme / nPermutations;
+  // Use (k+1)/(N+1) to avoid exact zero p-values
+  // (Phipson & Smyth, 2010: "Permutation P-values Should Never Be Zero")
+  return (countAsExtreme + 1) / (nPermutations + 1);
 }
 
 // ── Direction-Exclusive Waypoints ────────────────────────────────────
