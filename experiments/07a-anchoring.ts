@@ -439,9 +439,17 @@ async function main() {
     models = [...MODELS];
   }
 
-  // Categorize pairs
-  const reusePairs = PHASE7A_PAIRS.slice(0, 6);   // Pairs 1-6: reuse 6C + supplemental
-  const freshPairs = PHASE7A_PAIRS.slice(6);        // Pairs 7-8: fresh unconstrained
+  // Categorize pairs by actual 6C baseline availability (not by index)
+  // Phase 6C has baselines for these pairs; bank-ocean has no p6c-bank-ocean
+  const HAS_6C_BASELINE = new Set([
+    "p7a-music-mathematics",
+    "p7a-sun-desert",
+    "p7a-seed-garden",
+    "p7a-light-color",
+    "p7a-emotion-melancholy",
+  ]);
+  const reusePairs = PHASE7A_PAIRS.filter(p => HAS_6C_BASELINE.has(p.id));
+  const freshPairs = PHASE7A_PAIRS.filter(p => !HAS_6C_BASELINE.has(p.id));
   const preFilledConditions: PreFillCondition[] = ["incongruent", "congruent", "neutral"];
 
   // Print header
@@ -457,8 +465,7 @@ async function main() {
   // Summarize pairs
   console.log("Pair plan:");
   for (const pair of PHASE7A_PAIRS) {
-    const idx = PHASE7A_PAIRS.indexOf(pair);
-    const isReuse = idx < 6;
+    const isReuse = HAS_6C_BASELINE.has(pair.id);
     const unconLabel = isReuse
       ? `unconstrained: reuse 6C + ${pair.targetReps.unconstrained > 10 ? 5 : pair.targetReps.unconstrained} supplemental`
       : `unconstrained: ${pair.targetReps.unconstrained} fresh reps`;

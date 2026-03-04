@@ -344,15 +344,21 @@ async function analyze(opts: {
 
   for (const pair of PHASE7C_PAIRS) {
     for (const modelId of modelIds) {
-      // First try the primary 7C lookup
-      const primaryKey = `${pair.id}--fwd::${modelId}`;
+      // First try the primary 7C lookup (experiment writes pair ID as "${pair.id}--primary")
+      const primaryKey = `${pair.id}--primary::${modelId}`;
       let results = tooCentralLookup.get(primaryKey) ?? [];
       let isReused = false;
 
       if (results.length === 0) {
-        // Try alternate key without direction suffix
-        const altKey = `${pair.id}::${modelId}`;
-        results = tooCentralLookup.get(altKey) ?? [];
+        // Try alternate key patterns
+        const altKeys = [
+          `${pair.id}--fwd::${modelId}`,
+          `${pair.id}::${modelId}`,
+        ];
+        for (const altKey of altKeys) {
+          results = tooCentralLookup.get(altKey) ?? [];
+          if (results.length > 0) break;
+        }
       }
 
       // For reuse pairs, look in prior phase data
@@ -595,11 +601,11 @@ async function analyze(opts: {
     for (const target of pair.randomTargets) {
       for (const modelId of modelIds) {
         // Look for probe runs in the too-central directory
-        // Probe pair IDs follow the pattern: p7c-{from}-{target}
+        // Experiment writes probe pair IDs as "${pair.id}--probe-${target}"
         const probePatterns = [
-          `${pair.id}-probe-${target}--fwd::${modelId}`,
+          `${pair.id}--probe-${target}::${modelId}`,
+          `${pair.id}--probe-${target}--fwd::${modelId}`,
           `${pair.id}-probe-${target}::${modelId}`,
-          `p7c-${pair.from}-${target}--fwd::${modelId}`,
           `p7c-${pair.from}-${target}::${modelId}`,
         ];
 

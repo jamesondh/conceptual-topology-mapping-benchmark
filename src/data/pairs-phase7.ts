@@ -174,7 +174,7 @@ export const PHASE7B_TRIANGLES: Phase7CurvatureTriangle[] = [
     targetReps: 10,
     waypointCount: 5,
     reusableLegs: {
-      AC: "p5b-photon-heavy",
+      AC: "p5b-photon-light-heavy--AC",
     },
     notes: "Homonym (electromagnetic/weight). AC leg reuse from Phase 5B.",
   },
@@ -250,7 +250,7 @@ export const PHASE7B_TRIANGLES: Phase7CurvatureTriangle[] = [
     targetReps: 10,
     waypointCount: 5,
     reusableLegs: {
-      AC: "p5a-word-paragraph",
+      AC: "p5a-word-sentence-paragraph--AC",
     },
     notes: "Compositional. AC leg reuse from Phase 5A.",
   },

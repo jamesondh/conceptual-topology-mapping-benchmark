@@ -1078,7 +1078,7 @@ export interface Phase7CurvatureTriangle {
   polysemyLabel?: string | null; // e.g. "financial/geographic"
   relationship?: string; // e.g. "causal-chain", "cross-domain"
   /** Reusable legs from prior phases: maps leg label to prior pair ID */
-  reusableLegs: Record<string, string>;
+  reusableLegs: Partial<Record<"AB" | "BC" | "AC", string>>;
   targetReps: number; // per model per leg
   waypointCount: number; // typically 5
   notes?: string;

@@ -1193,21 +1193,27 @@ export function ksTestUniform(
  * the contrast there: peakFreq - mean(leftNeighbor, rightNeighbor).
  *
  * @param perPositionBridgeFreq - Bridge frequency at each of 7 positions
+ * @param opts.includeEndpoints - If true, include positions 0 and n-1 in peak search (default: false).
+ *   Phase 6C excludes endpoints (endpoint-dominated). Phase 7A includes them (bridges anchor at position 0-1).
  * @returns { peakContrast, peakPosition, fixedMidpointContrast }
  */
 export function computePeakDetectionContrast(
   perPositionBridgeFreq: number[],
+  opts?: { includeEndpoints?: boolean },
 ): { peakContrast: number; peakPosition: number; fixedMidpointContrast: number } {
   if (perPositionBridgeFreq.length < 3) {
     return { peakContrast: 0, peakPosition: 0, fixedMidpointContrast: 0 };
   }
 
   const n = perPositionBridgeFreq.length;
+  const includeEndpoints = opts?.includeEndpoints ?? false;
 
-  // Find peak position (excluding first and last positions, which are endpoint-dominated)
-  let peakPosition = 1; // start from position 1
-  let peakValue = perPositionBridgeFreq[1];
-  for (let i = 2; i < n - 1; i++) {
+  // Find peak position
+  const startIdx = includeEndpoints ? 0 : 1;
+  const endIdx = includeEndpoints ? n : n - 1;
+  let peakPosition = startIdx;
+  let peakValue = perPositionBridgeFreq[startIdx];
+  for (let i = startIdx + 1; i < endIdx; i++) {
     if (perPositionBridgeFreq[i] > peakValue) {
       peakValue = perPositionBridgeFreq[i];
       peakPosition = i;

@@ -398,8 +398,8 @@ async function analyze(opts: {
         // Per-position bridge frequency
         const perPosBridgeFreq = computePerPositionBridgeFreq(runs, pair.bridge, WAYPOINT_COUNT);
 
-        // Peak detection for modal position
-        const { peakPosition } = computePeakDetectionContrast(perPosBridgeFreq);
+        // Peak detection for modal position (include position 0 for early-anchoring)
+        const { peakPosition } = computePeakDetectionContrast(perPosBridgeFreq, { includeEndpoints: true });
 
         // Bridge frequency and survival
         const bridgeFrequency = computeBridgeFrequency(runs, pair.bridge);
@@ -438,8 +438,9 @@ async function analyze(opts: {
   // Only use heading-bridge pairs (1-6) for the primary test
   const headingBridgePairs = PHASE7A_PAIRS.filter(p => p.role === "heading-bridge");
 
-  function computeDisplacementValues(cond: PreFillCondition): number[] {
-    const displacements: number[] = [];
+  // Use keyed maps to ensure paired subtraction is aligned by pair/model, not array index
+  function computeDisplacementMap(cond: PreFillCondition): Map<string, number> {
+    const displacements = new Map<string, number>();
     for (const pair of headingBridgePairs) {
       for (const modelId of modelIds) {
         const unconMetric = pairModelConditionMetrics.find(
@@ -460,15 +461,20 @@ async function analyze(opts: {
         // Displacement = unconstrained modal freq minus pre-filled freq at displaced position
         // Positive displacement means the bridge is less frequent at its expected position
         const displacement = unconFreqAtModal - condFreqAtDisplaced;
-        displacements.push(displacement);
+        const key = `${pair.id}::${modelId}`;
+        displacements.set(key, displacement);
       }
     }
     return displacements;
   }
 
-  const incongruentDisplacements = computeDisplacementValues("incongruent");
-  const congruentDisplacements = computeDisplacementValues("congruent");
-  const neutralDisplacements = computeDisplacementValues("neutral");
+  const incongruentMap = computeDisplacementMap("incongruent");
+  const congruentMap = computeDisplacementMap("congruent");
+  const neutralMap = computeDisplacementMap("neutral");
+
+  const incongruentDisplacements = [...incongruentMap.values()];
+  const congruentDisplacements = [...congruentMap.values()];
+  const neutralDisplacements = [...neutralMap.values()];
 
   const incongruentMean = mean(incongruentDisplacements);
   const congruentMean = mean(congruentDisplacements);
@@ -478,19 +484,17 @@ async function analyze(opts: {
   const congruentCI = bootstrapCI(congruentDisplacements);
   const neutralCI = bootstrapCI(neutralDisplacements);
 
-  // Test: incongruent > congruent?
-  const incongVsCong = incongruentDisplacements.map(
-    (d, i) => d - (congruentDisplacements[i] ?? 0),
-  );
+  // Test: incongruent > congruent? (key-aligned paired comparison)
+  const incongVsCongKeys = [...incongruentMap.keys()].filter(k => congruentMap.has(k));
+  const incongVsCong = incongVsCongKeys.map(k => incongruentMap.get(k)! - congruentMap.get(k)!);
   const incongVsCongCI = bootstrapCI(incongVsCong);
-  const incongruentGreaterThanCongruent = incongVsCongCI[0] > 0;
+  const incongruentGreaterThanCongruent = incongVsCong.length > 0 && incongVsCongCI[0] > 0;
 
-  // Test: incongruent > neutral?
-  const incongVsNeut = incongruentDisplacements.map(
-    (d, i) => d - (neutralDisplacements[i] ?? 0),
-  );
+  // Test: incongruent > neutral? (key-aligned paired comparison)
+  const incongVsNeutKeys = [...incongruentMap.keys()].filter(k => neutralMap.has(k));
+  const incongVsNeut = incongVsNeutKeys.map(k => incongruentMap.get(k)! - neutralMap.get(k)!);
   const incongVsNeutCI = bootstrapCI(incongVsNeut);
-  const incongruentGreaterThanNeutral = incongVsNeutCI[0] > 0;
+  const incongruentGreaterThanNeutral = incongVsNeut.length > 0 && incongVsNeutCI[0] > 0;
 
   console.log(`  Incongruent: ${incongruentMean.toFixed(4)} [${incongruentCI[0].toFixed(4)}, ${incongruentCI[1].toFixed(4)}]`);
   console.log(`  Congruent:   ${congruentMean.toFixed(4)} [${congruentCI[0].toFixed(4)}, ${congruentCI[1].toFixed(4)}]`);
