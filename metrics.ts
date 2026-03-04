@@ -714,10 +714,14 @@ export function computeTransitivityMetrics(
   const { shortcuts, detours } = findShortcutsAndDetours(runsAB, runsBC, runsAC);
 
   // Bridge concept analysis: does B appear in A→C paths?
+  // Uses fuzzy matching: exact match, substring containment (either direction),
+  // or multi-word token containment. This catches "domestic dog" for bridge "dog",
+  // "riverbank" for bridge "river", etc.
+  // Limitation: true synonyms (e.g. "canine" for "dog") are still not matched.
   const bridgeLower = bridgeConcept.toLowerCase();
   let bridgeAppearCount = 0;
   for (const ac of runsAC) {
-    if (ac.some((wp) => wp.toLowerCase() === bridgeLower)) {
+    if (ac.some((wp) => bridgeConceptMatches(wp.toLowerCase(), bridgeLower))) {
       bridgeAppearCount++;
     }
   }
@@ -741,4 +745,34 @@ export function computeTransitivityMetrics(
     runCountBC: runsBC.length,
     runCountAC: runsAC.length,
   };
+}
+
+/**
+ * Check if a waypoint matches a bridge concept using fuzzy matching.
+ * Both inputs should be lowercased.
+ *
+ * Matches when:
+ * 1. Exact match: "dog" === "dog"
+ * 2. Waypoint contains bridge as a word boundary: "domestic dog" contains "dog"
+ * 3. Bridge contains waypoint as a word boundary: rare, but handles abbreviations
+ * 4. Waypoint tokens include the bridge: "domestic dog" split by spaces includes "dog"
+ */
+function bridgeConceptMatches(waypoint: string, bridge: string): boolean {
+  // Exact match
+  if (waypoint === bridge) return true;
+
+  // Word-boundary containment: bridge appears as a whole word in waypoint
+  // Use word boundary regex to avoid "dogma" matching "dog"
+  const bridgeRegex = new RegExp(`\\b${escapeRegex(bridge)}\\b`);
+  if (bridgeRegex.test(waypoint)) return true;
+
+  // Token match: any token in the waypoint exactly matches the bridge
+  const tokens = waypoint.split(/[\s\-\/]+/);
+  if (tokens.includes(bridge)) return true;
+
+  return false;
+}
+
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
