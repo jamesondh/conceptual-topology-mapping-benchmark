@@ -87,6 +87,75 @@ export function mean(arr: number[]): number {
   return arr.reduce((sum, v) => sum + v, 0) / arr.length;
 }
 
+/**
+ * Bootstrap CI by resampling runs (not cross-product pairs) to avoid
+ * pseudoreplication. The statistic is computed on each resample of the
+ * run arrays, producing correctly-widened confidence intervals.
+ */
+export function bootstrapCIFromRuns(
+  groupA: string[][],
+  groupB: string[][],
+  statFn: (a: string[][], b: string[][]) => number,
+  nBootstrap = 1000,
+): [number, number] {
+  if (groupA.length === 0 || groupB.length === 0) return [0, 0];
+
+  const bootstrapStats: number[] = [];
+  for (let i = 0; i < nBootstrap; i++) {
+    // Resample each group independently with replacement
+    const sampleA: string[][] = [];
+    for (let j = 0; j < groupA.length; j++) {
+      sampleA.push(groupA[Math.floor(_rng() * groupA.length)]);
+    }
+    const sampleB: string[][] = [];
+    for (let j = 0; j < groupB.length; j++) {
+      sampleB.push(groupB[Math.floor(_rng() * groupB.length)]);
+    }
+    bootstrapStats.push(statFn(sampleA, sampleB));
+  }
+
+  bootstrapStats.sort((a, b) => a - b);
+  const lower = bootstrapStats[Math.floor(nBootstrap * 0.025)];
+  const upper = bootstrapStats[Math.floor(nBootstrap * 0.975)];
+  return [lower, upper];
+}
+
+/**
+ * Bootstrap CI by resampling three groups of runs (for transitivity metrics).
+ * Avoids pseudoreplication from the triple cross-product.
+ */
+export function bootstrapCIFromTripleRuns(
+  groupA: string[][],
+  groupB: string[][],
+  groupC: string[][],
+  statFn: (a: string[][], b: string[][], c: string[][]) => number,
+  nBootstrap = 1000,
+): [number, number] {
+  if (groupA.length === 0 || groupB.length === 0 || groupC.length === 0) return [0, 0];
+
+  const bootstrapStats: number[] = [];
+  for (let i = 0; i < nBootstrap; i++) {
+    const sampleA: string[][] = [];
+    for (let j = 0; j < groupA.length; j++) {
+      sampleA.push(groupA[Math.floor(_rng() * groupA.length)]);
+    }
+    const sampleB: string[][] = [];
+    for (let j = 0; j < groupB.length; j++) {
+      sampleB.push(groupB[Math.floor(_rng() * groupB.length)]);
+    }
+    const sampleC: string[][] = [];
+    for (let j = 0; j < groupC.length; j++) {
+      sampleC.push(groupC[Math.floor(_rng() * groupC.length)]);
+    }
+    bootstrapStats.push(statFn(sampleA, sampleB, sampleC));
+  }
+
+  bootstrapStats.sort((a, b) => a - b);
+  const lower = bootstrapStats[Math.floor(nBootstrap * 0.025)];
+  const upper = bootstrapStats[Math.floor(nBootstrap * 0.975)];
+  return [lower, upper];
+}
+
 // ── Cross-Direction Jaccard ─────────────────────────────────────────
 
 /**
@@ -350,7 +419,11 @@ export function computeAsymmetryMetrics(
   // Cross-direction Jaccard distribution
   const jaccards = crossDirectionJaccards(forwardRuns, reverseRuns);
   const meanJaccard = mean(jaccards);
-  const jaccardCI = bootstrapCI(jaccards);
+  // Bootstrap at the run level to avoid pseudoreplication:
+  // resample forward and reverse runs independently, then compute cross-Jaccard
+  const jaccardCI = bootstrapCIFromRuns(forwardRuns, reverseRuns, (fwd, rev) => {
+    return mean(crossDirectionJaccards(fwd, rev));
+  });
 
   // Asymmetry index
   const asymmetry = 1 - meanJaccard;
@@ -540,7 +613,27 @@ export function computeWaypointTransitivity(
   }
 
   const meanVal = mean(values);
-  const ci = values.length > 1 ? bootstrapCI(values) : [meanVal, meanVal] as [number, number];
+
+  // Bootstrap CI at the run level (resample runs, not cross-product pairs)
+  // to avoid pseudoreplication from the triple cross-product
+  const ci = (runsAB.length > 1 || runsBC.length > 1 || runsAC.length > 1)
+    ? bootstrapCIFromTripleRuns(runsAB, runsBC, runsAC, (ab, bc, ac) => {
+        const resampled: number[] = [];
+        for (const acRun of ac) {
+          for (const abRun of ab) {
+            for (const bcRun of bc) {
+              const composed = new Set([...abRun, ...bcRun]);
+              const direct = new Set(acRun);
+              const inter = new Set([...direct].filter((w) => composed.has(w)));
+              const union = new Set([...direct, ...composed]);
+              resampled.push(union.size > 0 ? inter.size / union.size : 0);
+            }
+          }
+        }
+        return mean(resampled);
+      })
+    : [meanVal, meanVal] as [number, number];
+
   return { mean: meanVal, ci, values };
 }
 
