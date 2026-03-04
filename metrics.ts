@@ -241,14 +241,20 @@ export function reversalOrderRho(
 
   if (shared.length < 3) return null;
 
-  // Get positions in each path
-  const fwdRanks: number[] = [];
-  const revRanks: number[] = [];
+  // Get raw positions in each path, then convert to proper 1..n ranks
+  // among the shared subset. The Spearman closed-form formula requires
+  // ranks, not raw indices — using raw indices produces out-of-range rho values.
+  const fwdPositions: number[] = [];
+  const revPositions: number[] = [];
 
   for (const wp of shared) {
-    fwdRanks.push(forwardPath.indexOf(wp));
-    revRanks.push(reversePath.indexOf(wp));
+    fwdPositions.push(forwardPath.indexOf(wp));
+    revPositions.push(reversePath.indexOf(wp));
   }
+
+  // Convert raw positions to ranks (1-based, handling ties via average rank)
+  const fwdRanks = positionsToRanks(fwdPositions);
+  const revRanks = positionsToRanks(revPositions);
 
   // Spearman's rho = 1 - (6 * sum(d^2)) / (n * (n^2 - 1))
   const n = shared.length;
@@ -259,6 +265,33 @@ export function reversalOrderRho(
   }
 
   return 1 - (6 * sumD2) / (n * (n * n - 1));
+}
+
+/**
+ * Convert raw position values to ranks (1-based).
+ * Ties get average rank, e.g. [10, 5, 5, 20] → [3, 1.5, 1.5, 4].
+ */
+function positionsToRanks(positions: number[]): number[] {
+  const indexed = positions.map((val, idx) => ({ val, idx }));
+  indexed.sort((a, b) => a.val - b.val);
+
+  const ranks = new Array<number>(positions.length);
+  let i = 0;
+  while (i < indexed.length) {
+    // Find group of ties
+    let j = i;
+    while (j < indexed.length && indexed[j].val === indexed[i].val) {
+      j++;
+    }
+    // Average rank for tied group (1-based)
+    const avgRank = (i + 1 + j) / 2;
+    for (let k = i; k < j; k++) {
+      ranks[indexed[k].idx] = avgRank;
+    }
+    i = j;
+  }
+
+  return ranks;
 }
 
 // ── Aggregate Asymmetry Metrics ─────────────────────────────────────
