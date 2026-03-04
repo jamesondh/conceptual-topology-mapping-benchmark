@@ -3,13 +3,16 @@
 Exploration-first project. Phases 1-2 are concrete; phase 3+ follows the most interesting signal. Same process as word-convergence-game's 5 rounds.
 
 ## Completed
-- [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), perfect polysemy sense differentiation, clean control validation. See `findings/01-pilot-analysis.md`.
-
-## In Progress
-- [ ] **Phase 2: Reversals & path consistency** — Implementation complete. Scheduler, metrics module, experiment script (960 runs: 840 reverse + 120 polysemy supplementary), and analysis pipeline with permutation tests and bootstrap CIs. Data quality fixes applied (atomic writes, extraction enforcement, polysemy false-zero fix). Ready to run experiments.
+- [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
+- [x] **Phase 2: Reversals & path consistency** — 960 runs (840 reverse + 120 polysemy supplementary). Core finding: navigation is fundamentally asymmetric (mean 0.811). 4/8 category predictions matched. The "starting-point hypothesis" — models construct paths forward from the starting concept rather than finding "the" path — explains the full asymmetry gradient. Polysemy sense differentiation confirmed with supplementary data. Conceptual space is quasimetric. See `findings/02-reversals.md` and `findings/02-reversals-analysis.md`.
 
 ## Planned
-- [ ] **Phase 3: [Follow the data]** — Direction determined by phases 1-2 findings. Candidates: triangle inequality testing, asymmetry topology deep dive, PRH behavioral test (cross-model geodesic comparison), scale-dependent topology.
+- [ ] **Phase 3: [Follow the data]** — Direction determined by Phase 2 findings. Top candidates ranked by signal strength:
+  1. **Triangle inequality testing** — Does d(A,C) ≤ d(A,B) + d(B,C)? Tests whether the quasimetric structure has triangle inequality. Would establish stronger geometric claims.
+  2. **Positional asymmetry analysis** — Direct test of starting-point hypothesis. Analyze which waypoints appear at each position (wp1-wp5) across directions. If starting point dominates, wp1 should be strongly direction-dependent while wp5 converges.
+  3. **Model-specific asymmetry topology** — Which pairs are asymmetric for which models? The hierarchy result (Grok 0.271 vs Claude 0.818 on animal-poodle) suggests model-dependent topology.
+  4. **Random-pair gradient** — Test more random pairs to map the baseline asymmetry distribution.
+  5. **Scale-dependent topology** — Compare 3wp, 5wp, 7wp paths for scale effects on asymmetry.
 
 ## Deferred
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many (see `_deferred/semantic-similarity-optimization.md`)
