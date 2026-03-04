@@ -367,6 +367,8 @@ export interface TransitivityAnalysisOutput {
     models: string[];
     totalNewRuns: number;
     totalReusedRuns: number;
+    /** Number of unique reused run sets (totalReusedRuns counts usages, which may double-count across triples) */
+    totalUniqueReusedRuns?: number;
   };
   tripleModelMetrics: TransitivityMetrics[];
   tripleTypeAggregations: TripleTypeAggregation[];

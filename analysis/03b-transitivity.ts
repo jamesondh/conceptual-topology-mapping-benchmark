@@ -136,7 +136,7 @@ function generateFindings(output: TransitivityAnalysisOutput): string {
   lines.push(`- **Triples analyzed:** ${output.metadata.triples.length}`);
   lines.push(`- **Models:** ${output.metadata.models.join(", ")}`);
   lines.push(`- **New API runs:** ${output.metadata.totalNewRuns}`);
-  lines.push(`- **Reused runs from Phase 1/2:** ${output.metadata.totalReusedRuns}`);
+  lines.push(`- **Reused run usages:** ${output.metadata.totalReusedRuns} (${output.metadata.totalUniqueReusedRuns ?? "?"} unique run sets, some reused across multiple triples)`);
   lines.push(`- **Total triple/model combinations:** ${output.tripleModelMetrics.length}`);
   lines.push("");
 
@@ -295,7 +295,8 @@ async function analyze(opts: {
   console.log("Computing transitivity metrics...");
   const tripleModelMetrics: TransitivityMetrics[] = [];
   let totalNewRuns = 0;
-  let totalReusedRuns = 0;
+  let totalReusedRunUsages = 0; // counts each usage (may double-count across triples)
+  const reusedRunKeys = new Set<string>(); // tracks unique reused run keys
 
   for (const triple of TRIPLES) {
     const legs = getTripleLegs(triple);
@@ -316,11 +317,13 @@ async function analyze(opts: {
         triple.id, "AC", legMap["AC"]?.reusablePairId ?? null, modelId, lookup,
       );
 
-      // Track reuse
+      // Track reuse — count both usages and unique runs
       for (const [legId, runs] of [["AB", runsAB], ["BC", runsBC], ["AC", runsAC]] as [string, string[][]][]) {
         const reusable = legMap[legId]?.reusablePairId;
         if (reusable && runs.length > 0) {
-          totalReusedRuns += runs.length;
+          totalReusedRunUsages += runs.length;
+          // Track unique reused run key (pairId::modelId)
+          reusedRunKeys.add(`${reusable}::${modelId}`);
         } else {
           totalNewRuns += runs.length;
         }
@@ -424,7 +427,8 @@ async function analyze(opts: {
       triples: TRIPLES.map((t) => t.id),
       models: MODELS.map((m) => m.id),
       totalNewRuns,
-      totalReusedRuns,
+      totalReusedRuns: totalReusedRunUsages,
+      totalUniqueReusedRuns: reusedRunKeys.size,
     },
     tripleModelMetrics,
     tripleTypeAggregations,
