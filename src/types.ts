@@ -730,3 +730,233 @@ export interface ConvergenceAnalysisOutput {
     }>;
   } | null;
 }
+
+// ── Phase 6: Navigational Salience & Forced Crossings Types ──────
+
+export type Phase6PairCategory =
+  | "bridge-present"
+  | "bridge-absent"
+  | "forced-crossing"
+  | "same-axis";
+
+export interface Phase6SaliencePair {
+  id: string;
+  from: string;
+  to: string;
+  knownBridge: string | null;
+  bridgeFreqRange: string; // e.g. "0.00-1.00"
+  rationale: string;
+  targetReps: number;
+  category: "bridge-present" | "bridge-absent";
+}
+
+export interface Phase6ForcedCrossingPair {
+  id: string;
+  from: string;
+  to: string;
+  bridge: string | null;
+  pairType: "forced-crossing" | "same-axis";
+  status: "validated" | "exploratory" | "comparison";
+  bridgeFreq: string; // e.g. "0.95-1.00"
+  notes?: string;
+  targetReps: number; // per model per direction
+}
+
+export interface Phase6PositionalPair {
+  id: string;
+  from: string;
+  to: string;
+  knownBridge: string | null;
+  expectedPosition: string; // e.g. "early (2-3)", "middle (3-5)"
+  source: "reuse-5c" | "forced-crossing" | "position-contrast";
+  targetReps: number; // per model per direction (0 = reuse only)
+}
+
+export interface WaypointFrequencyEntry {
+  waypoint: string;
+  count: number;
+  frequency: number; // count / totalRuns
+}
+
+export interface SalienceLandscape {
+  pairId: string;
+  modelId: string;
+  totalRuns: number;
+  uniqueWaypoints: number;
+  /** Waypoints ranked by frequency (descending) */
+  rankedWaypoints: WaypointFrequencyEntry[];
+  /** Shannon entropy of the waypoint frequency distribution */
+  entropy: number;
+  /** Top-3 waypoints by frequency */
+  top3: string[];
+  /** Whether the distribution significantly departs from uniform (KS test) */
+  ksTestPValue: number;
+  ksTestRejectsUniform: boolean;
+}
+
+export interface SalienceAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalRuns: number;
+  };
+  /** Per-pair/model salience landscapes */
+  landscapes: SalienceLandscape[];
+  /** KS test summary: how many pairs reject uniformity */
+  ksTestSummary: {
+    totalPairs: number;
+    rejectingPairs: number;
+    /** After Bonferroni correction */
+    rejectingPairsBonferroni: number;
+    primaryTestPasses: boolean; // ≥6 of 8 pairs reject uniformity
+  };
+  /** Cross-model top-3 agreement per pair */
+  crossModelAgreement: Array<{
+    pairId: string;
+    /** All 4C2=6 model pair Jaccard values on top-3 sets */
+    pairwiseJaccards: Array<{
+      modelA: string;
+      modelB: string;
+      jaccard: number;
+    }>;
+    meanJaccard: number;
+  }>;
+  /** Retroactive cue-strength calibration */
+  retroactiveCalibration: Array<{
+    family: string;
+    pairId: string;
+    intuitiveTopBridge: string;
+    empiricalTopBridge: string;
+    match: boolean;
+  }>;
+  /** Novel waypoints discovered (>20% frequency, not previously identified) */
+  novelWaypoints: Array<{
+    pairId: string;
+    modelId: string;
+    waypoint: string;
+    frequency: number;
+  }>;
+}
+
+export interface ForcedCrossingAsymmetryResult {
+  pairId: string;
+  modelId: string;
+  pairType: "forced-crossing" | "same-axis";
+  asymmetryIndex: number;
+  asymmetryIndexCI: [number, number];
+  forwardRunCount: number;
+  reverseRunCount: number;
+  /** Bridge concept identified in forward paths */
+  bridgeInForward: string[];
+  /** Bridge concept identified in reverse paths */
+  bridgeInReverse: string[];
+  /** Position of bridge in forward paths (mean position index) */
+  bridgePositionForward: number | null;
+  /** Position of bridge in reverse paths (mean position index) */
+  bridgePositionReverse: number | null;
+  /** Whether bridge appears at same structural position (±1) in fwd vs rev */
+  bridgePositionConsistent: boolean | null;
+}
+
+export interface ForcedCrossingAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalRuns: number;
+  };
+  /** Per-pair/model asymmetry results */
+  pairModelResults: ForcedCrossingAsymmetryResult[];
+  /** Primary test: forced-crossing vs same-axis mean asymmetry */
+  primaryTest: {
+    forcedCrossingMeanAsymmetry: number;
+    forcedCrossingAsymmetryCI: [number, number];
+    sameAxisMeanAsymmetry: number;
+    sameAxisAsymmetryCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    significantlyLower: boolean; // CI on difference excludes zero
+  };
+  /** Secondary: comparison with Phase 2 baseline (0.811) */
+  secondaryBaseline: {
+    forcedCrossingMeanAsymmetry: number;
+    phase2Baseline: number;
+    difference: number;
+    differenceCI: [number, number];
+  };
+  /** Per-model analysis */
+  perModelAnalysis: Array<{
+    modelId: string;
+    forcedCrossingMeanAsymmetry: number;
+    sameAxisMeanAsymmetry: number;
+    reduction: number;
+  }>;
+  /** Bridge positional consistency */
+  bridgePositionalConsistency: {
+    consistentFraction: number; // fraction with ±1 match
+    totalPairsAnalyzed: number;
+  };
+}
+
+export interface PositionalBridgeProfile {
+  pairId: string;
+  modelId: string;
+  knownBridge: string;
+  /** Per-position bridge frequency (7 positions for 7-waypoint paths) */
+  perPositionBridgeFreq: number[];
+  /** Modal position (0-indexed) where bridge appears most often */
+  modalPosition: number;
+  /** Bridge frequency at modal position */
+  modalFrequency: number;
+  /** Peak-detection W-shape contrast: modal freq - mean of neighbors */
+  peakDetectionContrast: number;
+  /** Fixed-midpoint (position 3) W-shape contrast for comparison */
+  fixedMidpointContrast: number;
+  runCount: number;
+}
+
+export interface PositionalAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-pair/model positional profiles */
+  profiles: PositionalBridgeProfile[];
+  /** Primary test: peak-detection vs fixed-midpoint contrast */
+  primaryTest: {
+    peakDetectionMeanContrast: number;
+    peakDetectionContrastCI: [number, number];
+    fixedMidpointMeanContrast: number;
+    fixedMidpointContrastCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    significantlyPositive: boolean;
+  };
+  /** Positional prediction from semantic distance ratios */
+  positionalPrediction: {
+    correlationR: number | null;
+    correlationP: number | null;
+    dataPoints: Array<{
+      pairId: string;
+      semanticDistanceRatio: number;
+      modalPosition: number;
+    }>;
+  };
+  /** Cross-model positional agreement */
+  crossModelPositionalAgreement: Array<{
+    pairId: string;
+    modalPositions: Array<{ modelId: string; position: number }>;
+    positionSD: number;
+    pairDetermined: boolean; // SD < 1.0
+  }>;
+  /** Forced-crossing position analysis */
+  forcedCrossingPositional: {
+    forcedCrossingPositionSD: number;
+    nonForcedPositionSD: number;
+    forcedLowerVariance: boolean;
+  } | null;
+}

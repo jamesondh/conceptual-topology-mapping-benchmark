@@ -2,7 +2,7 @@
 
 ## Current Phase
 Phase 5: Cue-Strength Thresholds and Conceptual Dimensionality — **COMPLETE**
-Phase 6: Navigational Salience and Forced Crossings — **SPEC READY** (awaiting implementation)
+Phase 6: Navigational Salience and Forced Crossings — **IMPLEMENTED** (awaiting data collection)
 
 ## Context
 - Research survey complete (`research.md`)
@@ -31,12 +31,15 @@ Phase 6: Navigational Salience and Forced Crossings — **SPEC READY** (awaiting
 - **Bridge frequency and transitivity are decoupled** — Different aspects of compositional structure
 - See `findings/05-analysis.md` for full interpretive analysis
 
-## Phase 6 Plan
+## Phase 6 Implementation
 Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
-- **Part A: Navigational salience mapping** (~1,200 runs) — Empirical waypoint frequency distributions for 8 well-studied pairs. Heavy-tail test. Cross-model agreement.
-- **Part B: Forced-crossing asymmetry** (~640 runs) — Forward/reverse paths for 4 forced-crossing + 4 same-axis pairs. Test bottleneck asymmetry reduction.
-- **Part C: Positional bridge scanning** (~480 runs) — Peak-detection replacement for fixed-midpoint W-shape test. Bridge position regression on semantic distance.
-- Total: ~2,320 runs, ~$7.50-10.50, ~18-22 min
+- **Part A: Navigational salience mapping** (~1,200 runs) — `experiments/06a-salience.ts`, `analysis/06a-salience.ts`
+- **Part B: Forced-crossing asymmetry** (~640 runs) — `experiments/06b-forced-crossing.ts`, `analysis/06b-forced-crossing.ts`
+- **Part C: Positional bridge scanning** (~400 new + reuse) — `experiments/06c-positional.ts`, `analysis/06c-positional.ts`
+- Types added to `src/types.ts`, metrics to `src/metrics.ts`, data to `src/data/pairs-phase6.ts`
+- Dry-run verified: all experiment scripts produce correct run counts (1200 + 640 + 400)
+- Typecheck passes clean
+- Run: `bun run phase6` (~$7.50-10.50, ~18-22 min)
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
@@ -46,9 +49,8 @@ Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`
 - All major claims cataloged with evidence tiers in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
-None — Phase 6 spec ready, awaiting implementation
+None
 
 ## Next Steps
-- Implement Phase 6 (types, experiments, analyses)
 - Run `bun run phase6` (~$7.50-10.50, ~18-22 min)
 - Write interpretive analysis after data collected

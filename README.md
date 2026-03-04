@@ -175,13 +175,13 @@ Loan-bank-shore shows 0.95-1.00 bridge frequency (non-Gemini) — *higher* than 
 
 ## Status
 
-**Phase 5 complete. Phase 6 spec ready.** Cumulative: 9,500+ API runs across 4 models and 5 phases.
+**Phase 5 complete. Phase 6 implemented, awaiting data collection.** Cumulative: 9,500+ API runs across 4 models and 5 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
 - **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
 - **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
 - **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
-- **Phase 6 (ready):** Navigational salience mapping, forced-crossing asymmetry, positional bridge scanning. ~2,320 planned runs. Run: `bun run phase6`.
+- **Phase 6 (implemented):** Navigational salience mapping, forced-crossing asymmetry, positional bridge scanning. ~2,240 new runs + Phase 5C reuse. Run: `bun run phase6`.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

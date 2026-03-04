@@ -365,6 +365,24 @@ export function computeDistributionalEntropy(
   return entropy;
 }
 
+/**
+ * Count waypoint frequencies across repeated paths for salience mapping.
+ * Returns a Map from waypoint string to the number of paths it appears in
+ * (each waypoint counted at most once per path).
+ */
+export function countWaypointFrequencies(
+  runs: string[][],
+): Map<string, number> {
+  const freqMap = new Map<string, number>();
+  for (const run of runs) {
+    const unique = new Set(run);
+    for (const wp of unique) {
+      freqMap.set(wp, (freqMap.get(wp) ?? 0) + 1);
+    }
+  }
+  return freqMap;
+}
+
 // ── Semantic Similarity (Embedding-Based) ────────────────────────────
 
 const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";

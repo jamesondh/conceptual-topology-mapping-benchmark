@@ -25,6 +25,13 @@
     "convergence-5c": "bun run experiments/05c-convergence.ts",
     "analyze-convergence": "bun run analysis/05c-convergence.ts",
     "phase5": "bun run experiments/05a-cue-strength.ts && bun run analysis/05a-cue-strength.ts && bun run experiments/05b-dimensionality.ts && bun run analysis/05b-dimensionality.ts && bun run experiments/05c-convergence.ts && bun run analysis/05c-convergence.ts",
+    "salience": "bun run experiments/06a-salience.ts",
+    "analyze-salience": "bun run analysis/06a-salience.ts",
+    "forced-crossing": "bun run experiments/06b-forced-crossing.ts",
+    "analyze-forced-crossing": "bun run analysis/06b-forced-crossing.ts",
+    "positional": "bun run experiments/06c-positional.ts",
+    "analyze-positional": "bun run analysis/06c-positional.ts",
+    "phase6": "bun run experiments/06a-salience.ts && bun run analysis/06a-salience.ts && bun run experiments/06b-forced-crossing.ts && bun run analysis/06b-forced-crossing.ts && bun run experiments/06c-positional.ts && bun run analysis/06c-positional.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

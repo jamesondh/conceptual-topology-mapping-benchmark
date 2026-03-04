@@ -1050,3 +1050,228 @@ export function computeWShapeContrast(perPositionMatchRate: number[]): number {
 
   return midValue - neighborMean;
 }
+
+// ── Phase 6: KS Test, Peak Detection, Positional Variance ────────────
+
+/**
+ * Compute waypoint frequency distribution from a set of runs.
+ * Returns waypoints ranked by frequency (descending).
+ */
+export function computeWaypointFrequencies(
+  runs: string[][],
+): Array<{ waypoint: string; count: number; frequency: number }> {
+  const freqMap = new Map<string, number>();
+  for (const run of runs) {
+    // Count each unique waypoint once per run
+    const unique = new Set(run);
+    for (const wp of unique) {
+      freqMap.set(wp, (freqMap.get(wp) ?? 0) + 1);
+    }
+  }
+
+  const totalRuns = runs.length;
+  const entries = Array.from(freqMap.entries())
+    .map(([waypoint, count]) => ({
+      waypoint,
+      count,
+      frequency: totalRuns > 0 ? count / totalRuns : 0,
+    }))
+    .sort((a, b) => b.frequency - a.frequency || a.waypoint.localeCompare(b.waypoint));
+
+  return entries;
+}
+
+/**
+ * Compute Shannon entropy of a waypoint frequency distribution.
+ * Uses the frequency (proportion of runs) for each waypoint.
+ * Higher entropy = more uniform/diverse; lower entropy = more peaked/concentrated.
+ */
+export function computeSalienceEntropy(
+  frequencies: Array<{ frequency: number }>,
+): number {
+  if (frequencies.length === 0) return 0;
+
+  // Normalize frequencies to a proper probability distribution
+  const totalFreq = frequencies.reduce((sum, f) => sum + f.frequency, 0);
+  if (totalFreq === 0) return 0;
+
+  let entropy = 0;
+  for (const f of frequencies) {
+    const p = f.frequency / totalFreq;
+    if (p > 0) {
+      entropy -= p * Math.log2(p);
+    }
+  }
+  return entropy;
+}
+
+/**
+ * Kolmogorov-Smirnov test against a uniform distribution.
+ *
+ * Tests whether the observed waypoint frequency distribution significantly
+ * departs from uniform using a chi-squared goodness-of-fit test.
+ *
+ * This is more appropriate than KS for categorical frequency data.
+ * Compares observed waypoint counts against the expectation that all
+ * waypoints are equally likely.
+ *
+ * @param frequencies - Array of waypoint frequencies (each has count and frequency)
+ * @param totalRuns - Total number of runs (sample size for chi-squared)
+ * @returns { chiSquared: test statistic, pValue: approximate p-value, df: degrees of freedom }
+ */
+export function ksTestUniform(
+  frequencies: Array<{ frequency: number; count?: number }>,
+  totalRuns?: number,
+): { d: number; pValue: number } {
+  if (frequencies.length <= 1) return { d: 0, pValue: 1 };
+
+  const k = frequencies.length; // number of categories
+  const df = k - 1;
+
+  // Determine total sample size from counts if available, else from totalRuns param
+  const totalFreq = frequencies.reduce((sum, f) => sum + f.frequency, 0);
+  if (totalFreq === 0) return { d: 0, pValue: 1 };
+
+  // If we have counts, use them directly; otherwise reconstruct from frequencies
+  let observedCounts: number[];
+  let n: number;
+  if (frequencies[0]?.count !== undefined && frequencies[0].count > 0) {
+    observedCounts = frequencies.map(f => (f as { count: number }).count);
+    n = observedCounts.reduce((s, c) => s + c, 0);
+  } else if (totalRuns && totalRuns > 0) {
+    n = totalRuns;
+    observedCounts = frequencies.map(f => Math.round(f.frequency * n));
+  } else {
+    // Fall back: normalize frequencies to probabilities and use category count
+    n = k * 10; // rough approximation
+    const probs = frequencies.map(f => f.frequency / totalFreq);
+    observedCounts = probs.map(p => Math.round(p * n));
+  }
+
+  // Expected count under uniform: n / k
+  const expected = n / k;
+
+  // Chi-squared statistic: sum((O_i - E_i)^2 / E_i)
+  let chiSquared = 0;
+  for (const obs of observedCounts) {
+    chiSquared += (obs - expected) * (obs - expected) / expected;
+  }
+
+  // Approximate p-value using Wilson-Hilferty chi-squared approximation
+  // P(X^2 > chiSquared) where X^2 ~ chi^2(df)
+  // Using the cube-root transformation: Z ≈ ((chiSquared/df)^(1/3) - (1 - 2/(9*df))) / sqrt(2/(9*df))
+  let pValue: number;
+  if (df <= 0) {
+    pValue = 1;
+  } else {
+    const z = Math.pow(chiSquared / df, 1 / 3) - (1 - 2 / (9 * df));
+    const se = Math.sqrt(2 / (9 * df));
+    const zScore = z / se;
+
+    // Normal CDF approximation (Abramowitz-Stegun)
+    const t = 1 / (1 + 0.2316419 * Math.abs(zScore));
+    const d = 0.3989422804014327; // 1/sqrt(2*pi)
+    const poly = t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+    const normalCdf = zScore >= 0
+      ? 1 - d * Math.exp(-0.5 * zScore * zScore) * poly
+      : d * Math.exp(-0.5 * zScore * zScore) * poly;
+
+    pValue = 1 - normalCdf;
+  }
+
+  pValue = Math.max(0, Math.min(1, pValue));
+
+  // Return chi-squared as 'd' for interface compatibility
+  return { d: chiSquared, pValue };
+}
+
+/**
+ * Compute peak-detection W-shape contrast.
+ *
+ * Instead of checking only the fixed midpoint (position 3 of 7),
+ * finds the empirically highest bridge frequency position and computes
+ * the contrast there: peakFreq - mean(leftNeighbor, rightNeighbor).
+ *
+ * @param perPositionBridgeFreq - Bridge frequency at each of 7 positions
+ * @returns { peakContrast, peakPosition, fixedMidpointContrast }
+ */
+export function computePeakDetectionContrast(
+  perPositionBridgeFreq: number[],
+): { peakContrast: number; peakPosition: number; fixedMidpointContrast: number } {
+  if (perPositionBridgeFreq.length < 3) {
+    return { peakContrast: 0, peakPosition: 0, fixedMidpointContrast: 0 };
+  }
+
+  const n = perPositionBridgeFreq.length;
+
+  // Find peak position (excluding first and last positions, which are endpoint-dominated)
+  let peakPosition = 1; // start from position 1
+  let peakValue = perPositionBridgeFreq[1];
+  for (let i = 2; i < n - 1; i++) {
+    if (perPositionBridgeFreq[i] > peakValue) {
+      peakValue = perPositionBridgeFreq[i];
+      peakPosition = i;
+    }
+  }
+
+  // Peak contrast: peak value minus mean of neighbors
+  const leftNeighbor = peakPosition > 0 ? perPositionBridgeFreq[peakPosition - 1] : 0;
+  const rightNeighbor = peakPosition < n - 1 ? perPositionBridgeFreq[peakPosition + 1] : 0;
+  const peakContrast = peakValue - (leftNeighbor + rightNeighbor) / 2;
+
+  // Fixed midpoint contrast (position 3 for 7-waypoint paths)
+  const midIdx = Math.floor(n / 2);
+  const midValue = perPositionBridgeFreq[midIdx];
+  const midLeft = midIdx > 0 ? perPositionBridgeFreq[midIdx - 1] : 0;
+  const midRight = midIdx < n - 1 ? perPositionBridgeFreq[midIdx + 1] : 0;
+  const fixedMidpointContrast = midValue - (midLeft + midRight) / 2;
+
+  return { peakContrast, peakPosition, fixedMidpointContrast };
+}
+
+/**
+ * Compute per-position bridge frequency for a set of runs.
+ * For each position (0 to waypointCount-1), counts what fraction of runs
+ * have the bridge concept at that position.
+ *
+ * Uses fuzzy matching (same as bridgeConceptMatchesExported).
+ */
+export function computePerPositionBridgeFreq(
+  runs: string[][],
+  bridgeConcept: string,
+  waypointCount: number = 7,
+): number[] {
+  const bridgeLower = bridgeConcept.toLowerCase();
+  const perPositionFreq: number[] = new Array(waypointCount).fill(0);
+
+  for (const run of runs) {
+    for (let pos = 0; pos < Math.min(run.length, waypointCount); pos++) {
+      if (bridgeConceptMatchesExported(run[pos].toLowerCase(), bridgeLower)) {
+        perPositionFreq[pos]++;
+      }
+    }
+  }
+
+  // Convert counts to frequencies
+  const totalRuns = runs.length;
+  if (totalRuns > 0) {
+    for (let i = 0; i < perPositionFreq.length; i++) {
+      perPositionFreq[i] /= totalRuns;
+    }
+  }
+
+  return perPositionFreq;
+}
+
+/**
+ * Compute positional variance (standard deviation) of modal bridge positions
+ * across models for a single pair.
+ */
+export function computePositionalVariance(
+  modalPositions: number[],
+): number {
+  if (modalPositions.length < 2) return 0;
+  const m = mean(modalPositions);
+  const variance = modalPositions.reduce((sum, pos) => sum + (pos - m) ** 2, 0) / (modalPositions.length - 1);
+  return Math.sqrt(variance);
+}

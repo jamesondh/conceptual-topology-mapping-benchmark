@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. Phases 1-5 complete; Phase 6 spec ready. Same process as word-convergence-game's 5 rounds.
+Exploration-first project. Phases 1-5 complete; Phase 6 implemented, awaiting data collection. Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -10,11 +10,11 @@ Exploration-first project. Phases 1-5 complete; Phase 6 spec ready. Same process
 - [x] **Phase 5: Cue-strength thresholds and conceptual dimensionality** — 3,720 new runs + 200 reused across 36 triples and 8 convergence pairs. Core findings: cue-strength gradient is real but ragged (12/16 monotonic); germination outperforms plant (process-naming > object-naming); Gemini threshold hypothesis fails; forced crossing discovery (loan-bank-shore at 0.95-1.00); fire is dead as bridge concept; W-shape fails in aggregate but Claude shows 0.52 contrast on music→mathematics; prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism. Revised bridge taxonomy adds process-naming, forced-crossing, and too-central categories. See `findings/05a-cue-strength.md`, `findings/05b-dimensionality.md`, `findings/05c-convergence.md`, and `findings/05-analysis.md`.
 
 ## In Progress
-- [ ] **Phase 6: Navigational salience mapping and forced crossings** — Spec complete, awaiting implementation. Three-part design following Phase 5's strongest signals. Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`.
-  - **Part A: Navigational salience mapping** (~1,200 runs) — Empirical waypoint frequency distributions for 8 well-studied pairs. Tests heavy-tail structure (KS test vs uniform). Cross-model top-3 waypoint agreement. Retroactive calibration of Phase 5A cue-strength ratings.
-  - **Part B: Forced-crossing asymmetry test** (~640 runs) — Forward/reverse 7-waypoint paths for 4 forced-crossing pairs (2 validated, 2 exploratory) + 4 same-axis comparison pairs. Pre-registered test: forced-crossing asymmetry significantly lower than same-axis (within-phase comparison).
-  - **Part C: Positional bridge scanning** (~480 runs) — Peak-detection replacement for Phase 5C's fixed-midpoint W-shape test. Bridge position regression on semantic distance ratios. Reuses Phase 5C data for 5 primary pairs.
-  - Total: ~2,320 runs, ~$7.50-10.50, ~18-22 min runtime.
+- [ ] **Phase 6: Navigational salience mapping and forced crossings** — Implementation complete, awaiting data collection. Three-part design following Phase 5's strongest signals. Spec: `.planning/phases/06-navigational-salience-and-forced-crossings/SPEC.md`.
+  - **Part A: Navigational salience mapping** (~1,200 runs) — `experiments/06a-salience.ts` + `analysis/06a-salience.ts`. Empirical waypoint frequency distributions for 8 pairs. KS test, cross-model agreement, retroactive calibration.
+  - **Part B: Forced-crossing asymmetry test** (~640 runs) — `experiments/06b-forced-crossing.ts` + `analysis/06b-forced-crossing.ts`. Forward/reverse paths for 4 forced-crossing + 4 same-axis pairs. Bootstrap CI on asymmetry difference.
+  - **Part C: Positional bridge scanning** (~400 new + reuse) — `experiments/06c-positional.ts` + `analysis/06c-positional.ts`. Peak-detection contrast, positional prediction, cross-model agreement. Reuses Phase 5C data for 5 primary pairs.
+  - Total: ~2,240 new runs + Phase 5C reuse, ~$7.50-10.50, ~18-22 min runtime.
   - Run: `bun run phase6`
 
 ## Deferred
