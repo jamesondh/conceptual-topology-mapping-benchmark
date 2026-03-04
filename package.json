@@ -14,6 +14,10 @@
     "transitivity": "bun run experiments/03b-transitivity.ts",
     "analyze-transitivity": "bun run analysis/03b-transitivity.ts",
     "phase3": "bun run analysis/03a-positional-convergence.ts && bun run experiments/03b-transitivity.ts && bun run analysis/03b-transitivity.ts",
+    "bridge-agreement": "bun run analysis/04a-bridge-agreement.ts",
+    "targeted-bridges": "bun run experiments/04b-targeted-bridges.ts",
+    "analyze-targeted-bridges": "bun run analysis/04b-targeted-bridges.ts",
+    "phase4": "bun run analysis/04a-bridge-agreement.ts && bun run experiments/04b-targeted-bridges.ts && bun run analysis/04b-targeted-bridges.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

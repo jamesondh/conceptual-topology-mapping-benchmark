@@ -381,3 +381,128 @@ export interface TransitivityAnalysisOutput {
     triangleInequalityHoldsFraction: number;
   }>;
 }
+
+// ── Phase 4: Cross-Model Bridge Topology Types ─────────────────────
+
+export type Phase4DiagnosticType =
+  | "polysemy-retest"
+  | "polysemy-financial"
+  | "cross-domain-concrete"
+  | "abstract-retest"
+  | "abstract-bridge"
+  | "concrete-hierarchical"
+  | "random-control";
+
+export interface Phase4Triple extends ConceptTriple {
+  /** Target repetitions per model per leg */
+  targetReps: number;
+  /** Diagnostic category for Phase 4 analysis */
+  diagnosticType: Phase4DiagnosticType;
+  /** Bridge concept to test for on A→C path */
+  bridgeConcept: string;
+  /** Predicted bridge frequencies by model: { modelId: [low, high] } */
+  predictedBridgeFreq?: Record<string, [number, number]>;
+  /** Reusable legs with source phase info */
+  reusableLegsWithSource?: Record<string, { pairId: string; phase: string; expectedReps: number }>;
+}
+
+export interface ModelPairBridgeAgreement {
+  modelA: string;
+  modelB: string;
+  /** Per-triple absolute bridge frequency differences */
+  perTripleBridgeDiffs: Array<{
+    tripleId: string;
+    freqA: number;
+    freqB: number;
+    absDiff: number;
+  }>;
+  /** Mean absolute bridge frequency difference across triples */
+  meanAbsBridgeDiff: number;
+  /** Binary agreement rate (both find bridge or both miss) */
+  binaryAgreementRate: number;
+  /** Pearson correlation of bridge frequency vectors */
+  pearsonCorrelation: number | null;
+}
+
+export interface CrossModelJaccardResult {
+  modelA: string;
+  modelB: string;
+  tripleId: string;
+  /** Mean cross-model Jaccard on A→C path */
+  crossModelJaccard: number;
+  crossModelJaccardCI: [number, number];
+  /** Bridge-removed Jaccard (circularity control) */
+  bridgeRemovedJaccard: number;
+  bridgeRemovedJaccardCI: [number, number];
+}
+
+export interface BridgeAgreementOutput {
+  metadata: {
+    timestamp: string;
+    triples: string[];
+    models: string[];
+    nonControlTriples: string[];
+    totalObservations: number;
+  };
+  /** Per model-pair bridge agreement metrics */
+  modelPairAgreements: ModelPairBridgeAgreement[];
+  /** Per (model-pair, triple) cross-model Jaccard */
+  crossModelJaccards: CrossModelJaccardResult[];
+  /** Correlation: bridge freq diff vs cross-model Jaccard */
+  bridgeVsPathCorrelation: {
+    pearsonR: number;
+    /** After removing bridge concept from waypoints */
+    bridgeRemovedPearsonR: number;
+    observations: number;
+  };
+  /** Gemini isolation index */
+  geminiIsolation: {
+    geminiPairMeanDiff: number;
+    nonGeminiPairMeanDiff: number;
+    isolationIndex: number;
+    isolationIndexCI: [number, number];
+  };
+}
+
+export interface Phase4TargetedBridgesOutput {
+  metadata: {
+    timestamp: string;
+    triples: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per triple/model bridge metrics (reuses TransitivityMetrics) */
+  tripleModelMetrics: TransitivityMetrics[];
+  /** Per triple prediction evaluation */
+  predictions: Array<{
+    tripleId: string;
+    diagnosticType: Phase4DiagnosticType;
+    bridgeConcept: string;
+    perModel: Array<{
+      modelId: string;
+      bridgeFrequency: number;
+      bridgeFrequencyCI: [number, number];
+      predictedRange: [number, number] | null;
+      matchesPrediction: boolean | null;
+    }>;
+  }>;
+  /** Temporal drift check for top-up triples */
+  temporalDrift: Array<{
+    tripleId: string;
+    legId: string;
+    modelId: string;
+    withinBatchJaccard: number;
+    crossBatchJaccard: number;
+    driftDetected: boolean;
+  }>;
+  /** Gemini fragmentation characterization */
+  geminiCharacterization: {
+    concreteTriples: Array<{ tripleId: string; bridgeFreq: number }>;
+    abstractTriples: Array<{ tripleId: string; bridgeFreq: number }>;
+    polysemyTriples: Array<{ tripleId: string; bridgeFreq: number }>;
+    concreteSuccess: boolean;
+    abstractFailure: boolean;
+    fragmentationBoundary: string;
+  };
+}

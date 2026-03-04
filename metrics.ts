@@ -776,3 +776,153 @@ function bridgeConceptMatches(waypoint: string, bridge: string): boolean {
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+// ── Phase 4: Cross-Model Bridge Topology Metrics ─────────────────
+
+/**
+ * Compute cross-model Jaccard: for all pairs of runs (one from model X, one from model Y),
+ * compute Jaccard and return the mean. Measures how similar two models' paths are.
+ */
+export function computeCrossModelJaccard(
+  runsModelA: string[][],
+  runsModelB: string[][],
+): { mean: number; ci: [number, number] } {
+  if (runsModelA.length === 0 || runsModelB.length === 0) {
+    return { mean: 0, ci: [0, 0] };
+  }
+
+  const meanVal = meanCrossJaccard(runsModelA, runsModelB);
+  const ci = bootstrapCIFromRuns(runsModelA, runsModelB, (a, b) => meanCrossJaccard(a, b));
+
+  return { mean: meanVal, ci };
+}
+
+function meanCrossJaccard(groupA: string[][], groupB: string[][]): number {
+  const jaccards: number[] = [];
+  for (const a of groupA) {
+    for (const b of groupB) {
+      const result = computeJaccard(a, b);
+      jaccards.push(result.similarity);
+    }
+  }
+  return mean(jaccards);
+}
+
+/**
+ * Compute bridge-removed Jaccard: recompute cross-model Jaccard after removing
+ * the bridge concept token from all waypoint sets. If the correlation between
+ * bridge agreement and path similarity persists after removal, it's not an artifact
+ * of shared bridge tokens mechanically inflating Jaccard.
+ */
+export function computeBridgeRemovedJaccard(
+  runsModelA: string[][],
+  runsModelB: string[][],
+  bridgeConcept: string,
+): { mean: number; ci: [number, number] } {
+  const bridgeLower = bridgeConcept.toLowerCase();
+  
+  // Remove bridge concept from all runs using same fuzzy matching as bridgeConceptMatches
+  const cleanA = runsModelA.map(run => 
+    run.filter(wp => !bridgeConceptMatchesExported(wp.toLowerCase(), bridgeLower))
+  );
+  const cleanB = runsModelB.map(run => 
+    run.filter(wp => !bridgeConceptMatchesExported(wp.toLowerCase(), bridgeLower))
+  );
+
+  return computeCrossModelJaccard(cleanA, cleanB);
+}
+
+/**
+ * Exported version of bridge concept matching for use in Phase 4 metrics.
+ * Check if a waypoint matches a bridge concept using fuzzy matching.
+ * Both inputs should be lowercased.
+ */
+export function bridgeConceptMatchesExported(waypoint: string, bridge: string): boolean {
+  if (waypoint === bridge) return true;
+  const bridgeRegex = new RegExp(`\\b${escapeRegex(bridge)}\\b`);
+  if (bridgeRegex.test(waypoint)) return true;
+  const tokens = waypoint.split(/[\s\-\/]+/);
+  if (tokens.includes(bridge)) return true;
+  return false;
+}
+
+/**
+ * Compute Pearson correlation coefficient between two numeric arrays.
+ * Returns null if either array has zero variance (all identical values).
+ */
+export function pearsonCorrelation(x: number[], y: number[]): number | null {
+  if (x.length !== y.length || x.length < 2) return null;
+
+  const n = x.length;
+  const meanX = mean(x);
+  const meanY = mean(y);
+
+  let ssXY = 0;
+  let ssXX = 0;
+  let ssYY = 0;
+
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    ssXY += dx * dy;
+    ssXX += dx * dx;
+    ssYY += dy * dy;
+  }
+
+  if (ssXX === 0 || ssYY === 0) return null; // Zero variance
+  return ssXY / Math.sqrt(ssXX * ssYY);
+}
+
+/**
+ * Compute bridge concept frequency for a set of A→C runs.
+ * Returns the fraction of runs where the bridge concept appears.
+ * Uses fuzzy matching (word boundary, token matching).
+ */
+export function computeBridgeFrequency(
+  runsAC: string[][],
+  bridgeConcept: string,
+): number {
+  if (runsAC.length === 0) return 0;
+  const bridgeLower = bridgeConcept.toLowerCase();
+  let count = 0;
+  for (const run of runsAC) {
+    if (run.some(wp => bridgeConceptMatchesExported(wp.toLowerCase(), bridgeLower))) {
+      count++;
+    }
+  }
+  return count / runsAC.length;
+}
+
+/**
+ * Compute bootstrap CI for a bridge frequency (binomial proportion).
+ * Resamples runs and recomputes the proportion each time.
+ */
+export function bootstrapBridgeFrequencyCI(
+  runsAC: string[][],
+  bridgeConcept: string,
+  nBootstrap = 1000,
+): [number, number] {
+  if (runsAC.length === 0) return [0, 0];
+  
+  const bridgeLower = bridgeConcept.toLowerCase();
+  const bootstrapStats: number[] = [];
+  
+  for (let i = 0; i < nBootstrap; i++) {
+    const sample: string[][] = [];
+    for (let j = 0; j < runsAC.length; j++) {
+      sample.push(runsAC[Math.floor(_rng() * runsAC.length)]);
+    }
+    let count = 0;
+    for (const run of sample) {
+      if (run.some(wp => bridgeConceptMatchesExported(wp.toLowerCase(), bridgeLower))) {
+        count++;
+      }
+    }
+    bootstrapStats.push(count / sample.length);
+  }
+  
+  bootstrapStats.sort((a, b) => a - b);
+  const lower = bootstrapStats[Math.floor(nBootstrap * 0.025)];
+  const upper = bootstrapStats[Math.floor(nBootstrap * 0.975)];
+  return [lower, upper];
+}
