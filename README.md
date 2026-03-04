@@ -58,6 +58,15 @@ bun run bridge-agreement         # Part A: 0 API calls (analyzes Phase 3 data)
 bun run targeted-bridges         # Part B: ~1520 API calls
 bun run analyze-targeted-bridges # Analyze targeted bridge results
 bun run phase4                   # Run all Phase 4 in sequence
+
+# 8. Phase 5: Cue-strength, dimensionality, and convergence
+bun run cue-strength             # Part A: ~1680 API calls
+bun run analyze-cue-strength     # Analyze cue-strength gradient results
+bun run dimensionality           # Part B: ~960 API calls
+bun run analyze-dimensionality   # Analyze dimensionality probing results
+bun run convergence-5c           # Part C: ~640 API calls (7-waypoint paths)
+bun run analyze-convergence      # Analyze convergence profiles + W-shape
+bun run phase5                   # Run all Phase 5 in sequence
 ```
 
 ## What It Measures
@@ -72,6 +81,9 @@ bun run phase4                   # Run all Phase 4 in sequence
 - **Transitivity** — Do paths A→B→C compose into A→C? (Phase 3B: triangle inequality, bridge concept frequency)
 - **Cross-model bridge agreement** — Do models agree on which concepts are navigational bridges? (Phase 4A: inter-model correlation, Gemini isolation)
 - **Targeted bridge topology** — Do predicted bridge concepts appear on direct paths? (Phase 4B: concrete vs abstract bridging, Gemini fragmentation characterization)
+- **Cue-strength thresholds** — Is there a measurable cue-strength threshold below which bridge frequency drops to zero? (Phase 5A: logistic curve fitting, Gemini threshold comparison)
+- **Conceptual dimensionality** — How many independent navigational axes does conceptual space have? (Phase 5B: same-axis vs cross-axis bridge frequency, polysemy vs non-polysemy)
+- **Triple-anchor convergence** — Do bridge concepts create a third convergence anchor in paths? (Phase 5C: W-shape detection in 7-waypoint paths)
 
 ## Concept Pairs
 
@@ -102,17 +114,24 @@ scheduler.ts                      # Global request scheduler with per-model rate
 metrics.ts                        # Asymmetry metrics, permutation tests, bootstrap CIs
 triples.ts                        # Phase 3B concept triple definitions
 triples-phase4.ts                 # Phase 4 triple definitions with predictions
+triples-phase5.ts                 # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
 experiments/01-prompt-selection.ts # Prompt format comparison
 experiments/01-pilot.ts           # Main pilot batch runner
 experiments/02-reversals.ts       # Phase 2: reverse elicitation + polysemy supplementary
 experiments/03b-transitivity.ts   # Phase 3B: transitivity experiment
 experiments/04b-targeted-bridges.ts # Phase 4B: targeted bridge topology experiment
+experiments/05a-cue-strength.ts   # Phase 5A: cue-strength gradient experiment
+experiments/05b-dimensionality.ts # Phase 5B: dimensionality probing experiment
+experiments/05c-convergence.ts    # Phase 5C: triple-anchor convergence experiment
 analysis/01-pilot.ts              # Phase 1 analysis + findings generation
 analysis/02-reversals.ts          # Phase 2 reversal analysis + findings generation
 analysis/03a-positional-convergence.ts # Phase 3A: positional convergence analysis
 analysis/03b-transitivity.ts      # Phase 3B: transitivity analysis
 analysis/04a-bridge-agreement.ts  # Phase 4A: cross-model bridge agreement analysis
 analysis/04b-targeted-bridges.ts  # Phase 4B: targeted bridge topology analysis
+analysis/05a-cue-strength.ts     # Phase 5A: cue-strength gradient analysis
+analysis/05b-dimensionality.ts   # Phase 5B: dimensionality probing analysis
+analysis/05c-convergence.ts      # Phase 5C: convergence profile + W-shape analysis
 results/                          # Experiment output (gitignored)
 findings/                         # Markdown analysis writeups
 research.md                       # Literature survey
@@ -128,12 +147,12 @@ research.md                       # Literature survey
 
 ## Status
 
-**Phase 4 complete. Phase 5 spec ready.** Cumulative: 5,800+ API runs across 4 models.
+**Phase 4 complete. Phase 5 implementation ready.** Cumulative: 5,800+ API runs across 4 models.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
 - **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
 - **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation. Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries, not at abstract concepts per se.
-- **Phase 5 (next):** Cue-strength thresholds, conceptual dimensionality probing, triple-anchor convergence. ~3,280 planned runs.
+- **Phase 5 (ready):** Implementation complete. Cue-strength thresholds (logistic fitting), conceptual dimensionality probing (same-axis vs cross-axis), triple-anchor convergence (W-shape detection). ~3,280 planned runs. Run: `bun run phase5`.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

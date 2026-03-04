@@ -26,7 +26,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 - Results in `results/` (JSON, gitignored)
 - Findings in `findings/` (markdown writeups per phase)
 - Concept pair definitions in `pairs.ts`
-- Concept triple definitions in `triples.ts` (Phase 3B) and `triples-phase4.ts` (Phase 4)
+- Concept triple definitions in `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), and `triples-phase5.ts` (Phase 5)
 - Types in `types.ts`, canonicalization in `canonicalize.ts`
 - Core engine in `index.ts` (also serves as CLI entry point)
 
@@ -49,6 +49,13 @@ bun run bridge-agreement         # Phase 4A: cross-model bridge agreement analys
 bun run targeted-bridges         # Phase 4B: targeted bridge topology experiment (~1520 API calls)
 bun run analyze-targeted-bridges # Phase 4B: analyze targeted bridge results
 bun run phase4                   # Run all Phase 4 in sequence (4A → 4B → analysis)
+bun run cue-strength             # Phase 5A: cue-strength gradient experiment (~1680 API calls)
+bun run analyze-cue-strength     # Phase 5A: analyze cue-strength results
+bun run dimensionality           # Phase 5B: dimensionality probing experiment (~960 API calls)
+bun run analyze-dimensionality   # Phase 5B: analyze dimensionality results
+bun run convergence-5c           # Phase 5C: triple-anchor convergence experiment (~640 API calls)
+bun run analyze-convergence      # Phase 5C: analyze convergence results
+bun run phase5                   # Run all Phase 5 in sequence (5A → 5B → 5C)
 ```
 
 ## Models

@@ -18,6 +18,13 @@
     "targeted-bridges": "bun run experiments/04b-targeted-bridges.ts",
     "analyze-targeted-bridges": "bun run analysis/04b-targeted-bridges.ts",
     "phase4": "bun run analysis/04a-bridge-agreement.ts && bun run experiments/04b-targeted-bridges.ts && bun run analysis/04b-targeted-bridges.ts",
+    "cue-strength": "bun run experiments/05a-cue-strength.ts",
+    "analyze-cue-strength": "bun run analysis/05a-cue-strength.ts",
+    "dimensionality": "bun run experiments/05b-dimensionality.ts",
+    "analyze-dimensionality": "bun run analysis/05b-dimensionality.ts",
+    "convergence-5c": "bun run experiments/05c-convergence.ts",
+    "analyze-convergence": "bun run analysis/05c-convergence.ts",
+    "phase5": "bun run experiments/05a-cue-strength.ts && bun run analysis/05a-cue-strength.ts && bun run experiments/05b-dimensionality.ts && bun run analysis/05b-dimensionality.ts && bun run experiments/05c-convergence.ts && bun run analysis/05c-convergence.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -506,3 +506,227 @@ export interface Phase4TargetedBridgesOutput {
     fragmentationBoundary: string;
   };
 }
+
+// ── Phase 5: Cue-Strength, Dimensionality & Convergence Types ───────
+
+export type CueStrengthLevel = "very-high" | "high" | "medium" | "low";
+
+export type AxisLabel = string; // e.g., "physics", "weight", "illumination", "financial", "geographic"
+
+export type AxisPattern = "same-axis" | "cross-axis" | "partial-overlap";
+
+export type Phase5DiagnosticType =
+  | "cue-strength"
+  | "dimensionality"
+  | "convergence"
+  | "random-control";
+
+export type ConvergencePairType =
+  | "bridge-present"
+  | "bridge-absent"
+  | "bridge-variable"
+  | "no-bridge-control";
+
+export interface Phase5CueStrengthTriple {
+  id: string;
+  A: string;
+  B: string;
+  C: string;
+  family: string; // e.g., "physical-causation", "biological-growth"
+  cueLevel: CueStrengthLevel;
+  /** Numeric cue level for logistic fitting (1=low, 2=medium, 3=high, 4=very-high) */
+  cueLevelNumeric: number;
+  diagnosticType: "cue-strength" | "random-control";
+  bridgeConcept: string;
+  notes?: string;
+  /** Target reps per model per leg */
+  targetReps: { AC: number; AB: number; BC: number };
+  /** Predicted bridge frequency ranges by model */
+  predictedBridgeFreq?: Record<string, [number, number]>;
+  /** Reusable legs from prior phases */
+  reusableLegsWithSource?: Record<string, { pairId: string; phase: string; expectedReps: number }>;
+}
+
+export interface Phase5DimensionalityTriple {
+  id: string;
+  A: string;
+  B: string; // focal concept (bridge)
+  C: string;
+  focalConcept: string; // "light", "bank", or "fire"
+  axisA: AxisLabel; // axis from A to B
+  axisC: AxisLabel; // axis from B to C
+  axisPattern: AxisPattern;
+  diagnosticType: "dimensionality" | "random-control";
+  bridgeConcept: string; // same as B — the focal concept IS the bridge
+  notes?: string;
+  targetReps: { AC: number; AB?: number; BC?: number };
+  predictedBridgeFreq?: Record<string, [number, number]>;
+}
+
+export interface Phase5ConvergencePair {
+  id: string;
+  from: string;
+  to: string;
+  pairType: ConvergencePairType;
+  /** Expected bridge concept (if any) */
+  expectedBridge?: string;
+  /** Which models are expected to show the bridge (for bridge-variable pairs) */
+  bridgeModels?: string[];
+  notes?: string;
+  targetReps: number; // per model per direction
+}
+
+export interface LogisticFitResult {
+  /** Threshold parameter: cue level at which bridge freq = 0.50 */
+  threshold: number;
+  /** Steepness parameter (slope at threshold) */
+  steepness: number;
+  /** R² of the fit */
+  r2: number;
+  /** Fitted values at each cue level */
+  fittedValues: Array<{ cueLevel: number; fitted: number; observed: number }>;
+}
+
+export interface CueStrengthFamilyResult {
+  family: string;
+  modelId: string;
+  /** Bridge frequencies at each cue level within this family */
+  cueLevelFrequencies: Array<{
+    tripleId: string;
+    cueLevel: CueStrengthLevel;
+    cueLevelNumeric: number;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+  }>;
+  /** Whether bridge frequency monotonically decreases across cue levels */
+  monotonicDecrease: boolean;
+}
+
+export interface CueStrengthAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    triples: string[];
+    models: string[];
+    families: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-triple/model bridge metrics */
+  tripleModelMetrics: TransitivityMetrics[];
+  /** Per-family results */
+  familyResults: CueStrengthFamilyResult[];
+  /** Per-model logistic fit */
+  logisticFits: Array<{
+    modelId: string;
+    fit: LogisticFitResult;
+  }>;
+  /** Gemini threshold comparison */
+  geminiThresholdComparison: {
+    geminiThreshold: number;
+    otherMeanThreshold: number;
+    thresholdDifference: number;
+    thresholdDifferenceCI: [number, number];
+    significantlyHigher: boolean;
+  } | null;
+  /** Control validation */
+  controlValidation: Array<{
+    tripleId: string;
+    modelId: string;
+    bridgeFrequency: number;
+    pass: boolean;
+  }>;
+}
+
+export interface DimensionalityAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    triples: string[];
+    models: string[];
+    focalConcepts: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-triple/model bridge frequency */
+  tripleModelBridgeFreqs: Array<{
+    tripleId: string;
+    modelId: string;
+    focalConcept: string;
+    axisPattern: AxisPattern;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+  }>;
+  /** Same-axis vs cross-axis comparison */
+  axisComparison: {
+    sameAxisMeanFreq: number;
+    crossAxisMeanFreq: number;
+    delta: number;
+    deltaCI: [number, number];
+    significantlyPositive: boolean;
+  };
+  /** Per focal concept comparison */
+  perFocalConcept: Array<{
+    focalConcept: string;
+    sameAxisMeanFreq: number;
+    crossAxisMeanFreq: number;
+    delta: number;
+    isPolysemous: boolean;
+  }>;
+  /** Per-model dimension count estimate */
+  perModelDimensions: Array<{
+    modelId: string;
+    focalConcept: string;
+    /** Number of cross-axis triples with bridge freq < 0.10 */
+    independentAxes: number;
+    totalCrossAxisTriples: number;
+  }>;
+  /** Control validation */
+  controlValidation: Array<{
+    tripleId: string;
+    modelId: string;
+    bridgeFrequency: number;
+    pass: boolean;
+  }>;
+}
+
+export interface ConvergenceProfileMetrics {
+  pairId: string;
+  modelId: string;
+  direction: "forward" | "reverse";
+  /** Per-position mirror-match rate (7 positions for 7-waypoint paths) */
+  perPositionMatchRate: number[];
+  /** W-shape contrast: convergence at pos 4 minus mean of pos 3 and 5 (0-indexed: pos 3 minus mean of pos 2 and 4) */
+  wShapeContrast: number;
+  runCount: number;
+}
+
+export interface ConvergenceAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    waypointCount: number;
+    totalNewRuns: number;
+  };
+  /** Per-pair/model convergence profiles */
+  profiles: ConvergenceProfileMetrics[];
+  /** W-shape comparison: bridge-present vs bridge-absent */
+  wShapeComparison: {
+    bridgePresentMeanContrast: number;
+    bridgePresentContrastCI: [number, number];
+    bridgeAbsentMeanContrast: number;
+    bridgeAbsentContrastCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    significantlyPositive: boolean;
+  };
+  /** Bridge-variable pair analysis (music→mathematics) */
+  bridgeVariableAnalysis: {
+    pairId: string;
+    perModel: Array<{
+      modelId: string;
+      wShapeContrast: number;
+      hasBridge: boolean;
+    }>;
+  } | null;
+}

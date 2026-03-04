@@ -911,10 +911,10 @@ export function bootstrapBridgeFrequencyCI(
   nBootstrap = 1000,
 ): [number, number] {
   if (runsAC.length === 0) return [0, 0];
-  
+
   const bridgeLower = bridgeConcept.toLowerCase();
   const bootstrapStats: number[] = [];
-  
+
   for (let i = 0; i < nBootstrap; i++) {
     const sample: string[][] = [];
     for (let j = 0; j < runsAC.length; j++) {
@@ -928,9 +928,125 @@ export function bootstrapBridgeFrequencyCI(
     }
     bootstrapStats.push(count / sample.length);
   }
-  
+
   bootstrapStats.sort((a, b) => a - b);
   const lower = bootstrapStats[Math.floor(nBootstrap * 0.025)];
   const upper = bootstrapStats[Math.floor(nBootstrap * 0.975)];
   return [lower, upper];
+}
+
+// ── Phase 5: Logistic Fit & W-Shape Metrics ──────────────────────────
+
+/**
+ * Fit a logistic curve to (cueLevel, bridgeFrequency) data points.
+ * Uses iterative gradient descent to find threshold and steepness parameters.
+ *
+ * Model: f(x) = 1 / (1 + exp(-steepness * (x - threshold)))
+ *
+ * @param data - Array of { cueLevel: number, bridgeFrequency: number } points
+ * @returns LogisticFitResult with threshold, steepness, R², and fitted values
+ */
+export function fitLogistic(
+  data: Array<{ cueLevel: number; bridgeFrequency: number }>,
+): import("./types.ts").LogisticFitResult {
+  if (data.length < 2) {
+    return {
+      threshold: 0,
+      steepness: 0,
+      r2: 0,
+      fittedValues: data.map((d) => ({
+        cueLevel: d.cueLevel,
+        fitted: d.bridgeFrequency,
+        observed: d.bridgeFrequency,
+      })),
+    };
+  }
+
+  // Initialize parameters
+  let threshold = mean(data.map((d) => d.cueLevel));
+  let steepness = 2.0;
+  const learningRate = 0.01;
+  const iterations = 5000;
+
+  // Logistic function
+  const logistic = (x: number, t: number, s: number) =>
+    1 / (1 + Math.exp(-s * (x - t)));
+
+  // Gradient descent
+  for (let iter = 0; iter < iterations; iter++) {
+    let gradT = 0;
+    let gradS = 0;
+
+    for (const d of data) {
+      const predicted = logistic(d.cueLevel, threshold, steepness);
+      const error = predicted - d.bridgeFrequency;
+      const sigmoidDeriv = predicted * (1 - predicted);
+
+      // For f(x) = 1/(1+exp(-s*(x-t))):
+      //   df/dt = -s * sigmoid' (derivative of sigmoid w.r.t. threshold)
+      //   df/ds = (x-t) * sigmoid' (derivative of sigmoid w.r.t. steepness)
+      // MSE gradient: dL/dparam = error * df/dparam
+      gradT += error * (-steepness) * sigmoidDeriv;
+      gradS += error * (d.cueLevel - threshold) * sigmoidDeriv;
+    }
+
+    threshold -= learningRate * gradT / data.length;
+    steepness -= learningRate * gradS / data.length;
+
+    // Clamp steepness to prevent divergence
+    steepness = Math.max(0.01, Math.min(50, steepness));
+  }
+
+  // Compute R²
+  const meanY = mean(data.map((d) => d.bridgeFrequency));
+  let ssTot = 0;
+  let ssRes = 0;
+  const fittedValues: import("./types.ts").LogisticFitResult["fittedValues"] = [];
+
+  for (const d of data) {
+    const fitted = logistic(d.cueLevel, threshold, steepness);
+    ssTot += (d.bridgeFrequency - meanY) ** 2;
+    ssRes += (d.bridgeFrequency - fitted) ** 2;
+    fittedValues.push({
+      cueLevel: d.cueLevel,
+      fitted,
+      observed: d.bridgeFrequency,
+    });
+  }
+
+  const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+  return { threshold, steepness, r2, fittedValues };
+}
+
+/**
+ * Compute the W-shape contrast statistic for a convergence profile.
+ *
+ * For a 7-waypoint path, the W-shape hypothesis predicts convergence peaks
+ * at positions 1, ~4, and 7 (1-indexed). The contrast measures whether
+ * the middle position (4, 0-indexed: 3) has higher convergence than its
+ * neighbors (3 and 5, 0-indexed: 2 and 4).
+ *
+ * contrast = matchRate[3] - mean(matchRate[2], matchRate[4])
+ *
+ * Positive contrast = W-shape evidence (bridge creates third anchor)
+ * Near-zero or negative = U-shape (standard dual-anchor pattern)
+ *
+ * @param perPositionMatchRate - Array of 7 match rates (one per waypoint position)
+ * @returns W-shape contrast statistic
+ */
+export function computeWShapeContrast(perPositionMatchRate: number[]): number {
+  if (perPositionMatchRate.length < 5) return 0;
+
+  // For 7-waypoint paths: middle = position 3 (0-indexed), neighbors = positions 2 and 4
+  const midIdx = Math.floor(perPositionMatchRate.length / 2);
+  const leftIdx = midIdx - 1;
+  const rightIdx = midIdx + 1;
+
+  if (rightIdx >= perPositionMatchRate.length) return 0;
+
+  const midValue = perPositionMatchRate[midIdx];
+  const neighborMean = (perPositionMatchRate[leftIdx] + perPositionMatchRate[rightIdx]) / 2;
+
+  return midValue - neighborMean;
 }
