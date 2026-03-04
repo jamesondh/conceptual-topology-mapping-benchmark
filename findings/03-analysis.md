@@ -18,7 +18,7 @@ Three findings that matter:
 
 2. **Conceptual space is compositional -- for the right relationships.** Hierarchical and polysemy-extend triples show high transitivity and frequent bridge concept appearance. The path from animal to poodle really does pass through "dog." But this compositionality is relationship-dependent: semantic chains show intermediate transitivity, and the temperature axis (hot-energy-cold) shows near-zero transitivity because "energy" is not on the temperature gradient.
 
-3. **The triangle inequality mostly holds.** 29 of 32 triple/model combinations satisfy d(A,C) <= d(A,B) + d(B,C). The three violations are all in Gemini, the model with the most fragmented topology. This is remarkably close to metric behavior for a space we know violates the symmetry axiom.
+3. **The triangle inequality mostly holds.** 29 of 32 triple/model combinations satisfy d(A,C) <= d(A,B) + d(B,C). Two substantial violations occur in Gemini (the model with the most fragmented topology), plus one marginal violation in Claude (hot-energy-cold, slack -0.023). This is remarkably close to metric behavior for a space we know violates the symmetry axiom.
 
 ---
 
@@ -137,7 +137,7 @@ Phase 2 established that symmetry fails: d(A,B) is not equal to d(B,A). Phase 3B
 
 **29 of 32 triple/model combinations satisfy the triangle inequality (90.6%).**
 
-The three violations all involve Gemini:
+The three violations involve two models — Gemini (2 substantial) and Claude (1 marginal):
 - music-harmony-mathematics (Gemini): d(AC)=0.606 > d(AB)+d(BC) = 0.168+0.119 = 0.287, slack = -0.319
 - bank-river-ocean (Gemini): d(AC)=0.619 > d(AB)+d(BC) = 0.558+0.000 = 0.558, slack = -0.061
 - hot-energy-cold (Claude): d(AC)=0.089 > d(AB)+d(BC) = 0.067+0.000 = 0.067, slack = -0.023
@@ -161,9 +161,9 @@ This is the formal justification for calling these spaces "quasimetric" rather t
 
 ### Gemini's Violations as Fragmentation Evidence
 
-That all three triangle inequality violations (excluding the marginal Claude case) occur in Gemini is consistent with the fragmentation hypothesis from Phase 2. If Gemini's conceptual topology is compartmentalized -- strong local structure within neighborhoods but weak global connections -- then the triangle inequality would fail precisely when the three concepts span different neighborhoods. Going from music to mathematics directly might activate a completely different set of bridges than going through harmony, because Gemini's topology does not support smooth interpolation across domain boundaries.
+That both substantial triangle inequality violations occur in Gemini (with the only other violation being a marginal Claude case) is consistent with the fragmentation hypothesis from Phase 2. If Gemini's conceptual topology is compartmentalized -- strong local structure within neighborhoods but weak global connections -- then the triangle inequality would fail precisely when the three concepts span different neighborhoods. Going from music to mathematics directly might activate a completely different set of bridges than going through harmony, because Gemini's topology does not support smooth interpolation across domain boundaries.
 
-The other three models satisfy the triangle inequality in all cases. Claude, GPT, and Grok all have sufficiently connected conceptual topologies that going through an intermediate concept always produces a path that is at least as "long" as the direct route. Their spaces are navigable in the triangle inequality sense, even if direction-dependent.
+GPT and Grok satisfy the triangle inequality in all cases, and Claude has only one marginal violation. These three models have sufficiently connected conceptual topologies that going through an intermediate concept almost always produces a path that is at least as "long" as the direct route. Their spaces are navigable in the triangle inequality sense, even if direction-dependent.
 
 ---
 

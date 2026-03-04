@@ -28,7 +28,7 @@
 | 4 | wp4 | wp2 | 0.0851 |
 | 5 | wp5 | wp1 | 0.1288 |
 
-The positive convergence slope supports the **starting-point hypothesis**: paths diverge most at their starting points (position 1) and converge toward their endpoints (position 5). This is consistent with models constructing paths forward from the starting concept.
+The convergence slope is weakly positive but the confidence interval crosses zero, and only 50% of pair/model combinations show positive convergence. This does **not** cleanly support the starting-point hypothesis. Instead, the per-position rates reveal a **U-shaped pattern** (elevated match rates at positions 1 and 5, valley in the middle), suggesting a **dual-anchor effect** where both endpoints constrain nearby waypoints. See `findings/03-analysis.md` for the refined interpretation.
 
 ## 3. Category-Level Convergence
 

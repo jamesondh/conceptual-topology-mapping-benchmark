@@ -245,13 +245,22 @@ function generateFindings(output: PositionalConvergenceOutput): string {
   }
   lines.push("");
 
-  // Interpretation
-  if (overall.meanConvergenceSlope > 0.001) {
+  // Interpretation — check CI for significance, not just slope sign
+  if (overall.meanConvergenceSlope > 0.001 && overall.convergenceSlopeCI[0] > 0) {
     lines.push(
-      "The positive convergence slope supports the **starting-point hypothesis**: " +
-      "paths diverge most at their starting points (position 1) and converge toward " +
-      "their endpoints (position 5). This is consistent with models constructing " +
-      "paths forward from the starting concept.",
+      "The convergence slope is significantly positive (CI excludes zero), supporting " +
+      "the **starting-point hypothesis**: paths diverge most at their starting points " +
+      "(position 1) and converge toward their endpoints (position 5).",
+    );
+  } else if (overall.meanConvergenceSlope > 0.001) {
+    lines.push(
+      "The convergence slope is weakly positive but the confidence interval crosses zero, " +
+      "and only " + (overall.positiveConvergenceFraction * 100).toFixed(0) + "% of pair/model " +
+      "combinations show positive convergence. This does **not** cleanly support the " +
+      "starting-point hypothesis. Instead, the per-position rates reveal a **U-shaped pattern** " +
+      "(elevated match rates at positions 1 and 5, valley in the middle), suggesting a " +
+      "**dual-anchor effect** where both endpoints constrain nearby waypoints. " +
+      "See `findings/03-analysis.md` for the refined interpretation.",
     );
   } else if (overall.meanConvergenceSlope < -0.001) {
     lines.push(

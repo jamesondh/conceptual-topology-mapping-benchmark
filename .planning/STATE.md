@@ -34,7 +34,7 @@ Phase 3: Positional Convergence + Transitive Path Structure — **COMPLETE**
 1. **Dual-anchor hypothesis** — Positional convergence shows U-shaped pattern (match rates 0.102 → 0.057 → 0.065 → 0.085 → 0.129). Both endpoints anchor the path, not just the start. Refines Phase 2's starting-point hypothesis.
 2. **Overall convergence slope near zero** (0.0082, CI crosses zero). Only 50% of combos show positive convergence. The starting-point hypothesis needs nuance.
 3. **Hierarchical triples are compositional** — Transitivity 0.175 vs random controls 0.036 (4.9× difference). "dog" appears on animal→poodle path 50-100% of the time; random bridges never appear.
-4. **Triangle inequality holds** — 29/32 cases (91%). All violations in Gemini. Conceptual space satisfies a key metric axiom.
+4. **Triangle inequality holds** — 29/32 cases (91%). Two substantial violations in Gemini, one marginal in Claude. Conceptual space satisfies a key metric axiom.
 5. **Bridge concept frequency is model-dependent** — Claude: "harmony" appears 100% on music→math; Gemini: 0%. Models have different navigational connectivity.
 6. **Semantic chains partially compositional** (0.073) but "energy" is NOT on hot→cold (0.036). Association ≠ being on-route.
 7. **Polysemy-extend confirms compositionality** — bank→river→ocean shows 0.150 transitivity, "river" appears 72.5% as bridge.
