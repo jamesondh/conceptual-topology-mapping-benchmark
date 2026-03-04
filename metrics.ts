@@ -39,6 +39,14 @@ export function setMetricsSeed(seed: number): void {
 }
 
 /**
+ * Get a seeded random number in [0, 1) using the metrics PRNG.
+ * Use this instead of Math.random() for reproducibility.
+ */
+export function seededRandom(): number {
+  return _rng();
+}
+
+/**
  * Fisher-Yates shuffle (unbiased, uses seeded PRNG).
  */
 function fisherYatesShuffle<T>(arr: T[]): T[] {

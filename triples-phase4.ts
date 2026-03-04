@@ -46,8 +46,8 @@ export const PHASE4_TRIPLES: Phase4Triple[] = [
       BA: "rev-polysemy-bank-river",
     },
     reusableLegsWithSource: {
-      AC: { pairId: "triple-bank-river-ocean-AC", phase: "phase3b", expectedReps: 10 },
-      CA: { pairId: "triple-bank-river-ocean-CA", phase: "phase3b", expectedReps: 10 },
+      AC: { pairId: "triple-bank-river-ocean--AC", phase: "phase3b", expectedReps: 10 },
+      CA: { pairId: "triple-bank-river-ocean--CA", phase: "phase3b", expectedReps: 10 },
     },
     predictedBridgeFreq: {
       claude: [0.80, 1.0],
@@ -116,10 +116,10 @@ export const PHASE4_TRIPLES: Phase4Triple[] = [
     reusableLegsWithSource: {
       AB: { pairId: "hierarchy-emotion-nostalgia", phase: "phase1", expectedReps: 10 },
       BA: { pairId: "rev-hierarchy-emotion-nostalgia", phase: "phase2", expectedReps: 10 },
-      BC: { pairId: "triple-emotion-nostalgia-melancholy-BC", phase: "phase3b", expectedReps: 10 },
-      CB: { pairId: "triple-emotion-nostalgia-melancholy-CB", phase: "phase3b", expectedReps: 10 },
-      AC: { pairId: "triple-emotion-nostalgia-melancholy-AC", phase: "phase3b", expectedReps: 10 },
-      CA: { pairId: "triple-emotion-nostalgia-melancholy-CA", phase: "phase3b", expectedReps: 10 },
+      BC: { pairId: "triple-emotion-nostalgia-melancholy--BC", phase: "phase3b", expectedReps: 10 },
+      CB: { pairId: "triple-emotion-nostalgia-melancholy--CB", phase: "phase3b", expectedReps: 10 },
+      AC: { pairId: "triple-emotion-nostalgia-melancholy--AC", phase: "phase3b", expectedReps: 10 },
+      CA: { pairId: "triple-emotion-nostalgia-melancholy--CA", phase: "phase3b", expectedReps: 10 },
     },
     predictedBridgeFreq: {
       claude: [0.30, 1.0],

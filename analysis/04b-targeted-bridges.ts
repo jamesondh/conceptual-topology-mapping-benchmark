@@ -121,12 +121,18 @@ function buildWaypointLookup(
  * Lookup waypoint runs for a leg, trying multiple key strategies:
  * 1. Phase 4 synthetic pair ID: `${tripleId}--${legId}`
  * 2. The reusable pair ID from the triple's reusableLegs
- * 3. Phase 3B synthetic pair IDs (e.g. "triple-bank-river-ocean--AC")
+ * 3. Phase 3B synthetic pair IDs — only for Phase 3 triples whose concepts match
  * 4. Top-up source pair ID from reusableLegsWithSource
+ *
+ * All added runs are filtered to ensure pair.from/pair.to match the expected
+ * direction (canonicalized to lowercase), preventing cross-contamination from
+ * reversed runs or unrelated concept pairs sharing the same leg suffix.
  */
 function getRunsForLeg(
   tripleId: string,
   legId: string,
+  from: string,
+  to: string,
   reusablePairId: string | null,
   topUpPairId: string | null,
   modelId: string,
@@ -134,11 +140,20 @@ function getRunsForLeg(
 ): TaggedResult[] {
   const candidates: TaggedResult[] = [];
   const seen = new Set<string>();
+  const fromLower = from.toLowerCase();
+  const toLower = to.toLowerCase();
 
   function addFromKey(key: string): void {
     const runs = lookup.get(key);
     if (!runs) return;
     for (const r of runs) {
+      // Filter to matching direction only
+      if (
+        r.pair.from.toLowerCase() !== fromLower ||
+        r.pair.to.toLowerCase() !== toLower
+      ) {
+        continue;
+      }
       const uid = r.runId ?? `${r.timestamp}-${r.pair.id}`;
       if (!seen.has(uid)) {
         seen.add(uid);
@@ -155,9 +170,22 @@ function getRunsForLeg(
     addFromKey(`${reusablePairId}::${modelId}`);
   }
 
-  // 3. Phase 3B synthetic pair IDs — look for matching Phase 3 triples
+  // 3. Phase 3B synthetic pair IDs — only check triples whose leg concepts match
   for (const p3Triple of PHASE3_TRIPLES) {
-    addFromKey(`${p3Triple.id}--${legId}::${modelId}`);
+    // Determine which concepts Phase 3 uses for this leg suffix
+    const legConcepts: Record<string, [string, string]> = {
+      AB: [p3Triple.A, p3Triple.B],
+      BC: [p3Triple.B, p3Triple.C],
+      AC: [p3Triple.A, p3Triple.C],
+    };
+    const [p3From, p3To] = legConcepts[legId] ?? ["", ""];
+    // Only add if the Phase 3 triple's leg matches our from/to concepts
+    if (
+      p3From.toLowerCase() === fromLower &&
+      p3To.toLowerCase() === toLower
+    ) {
+      addFromKey(`${p3Triple.id}--${legId}::${modelId}`);
+    }
   }
 
   // 4. Top-up source pair ID
@@ -307,10 +335,10 @@ function generateFindings(output: Phase4TargetedBridgesOutput): string {
   lines.push("## 2. Per-Triple Results");
   lines.push("");
   lines.push(
-    "| Triple | Model | Bridge Freq | 95% CI | Transitivity | Tri. Ineq. | Runs (AB/BC/AC) |",
+    "| Triple | Model | Bridge Freq | Transitivity | Transitivity CI | Tri. Ineq. | Runs (AB/BC/AC) |",
   );
   lines.push(
-    "|--------|-------|-------------|--------|-------------|------------|-----------------|",
+    "|--------|-------|-------------|-------------|-----------------|------------|-----------------|",
   );
 
   for (const triple of PHASE4_TRIPLES) {
@@ -320,8 +348,8 @@ function generateFindings(output: Phase4TargetedBridgesOutput): string {
     for (const m of metrics) {
       lines.push(
         `| ${m.tripleId} | ${m.modelId} | ${m.bridgeConceptFrequency.toFixed(2)} | ` +
-          `[${m.waypointTransitivityCI[0].toFixed(2)}, ${m.waypointTransitivityCI[1].toFixed(2)}] | ` +
           `${m.waypointTransitivity.toFixed(3)} | ` +
+          `[${m.waypointTransitivityCI[0].toFixed(2)}, ${m.waypointTransitivityCI[1].toFixed(2)}] | ` +
           `${m.triangleInequalityHolds ? "Y" : "N"} | ` +
           `${m.runCountAB}/${m.runCountBC}/${m.runCountAC} |`,
       );
@@ -641,6 +669,8 @@ async function analyze(opts: {
       const runsAB = getRunsForLeg(
         triple.id,
         "AB",
+        triple.A,
+        triple.B,
         legMap["AB"]?.reusablePairId ?? null,
         legMap["AB"]?.topUpPairId ?? null,
         modelId,
@@ -649,6 +679,8 @@ async function analyze(opts: {
       const runsBC = getRunsForLeg(
         triple.id,
         "BC",
+        triple.B,
+        triple.C,
         legMap["BC"]?.reusablePairId ?? null,
         legMap["BC"]?.topUpPairId ?? null,
         modelId,
@@ -657,6 +689,8 @@ async function analyze(opts: {
       const runsAC = getRunsForLeg(
         triple.id,
         "AC",
+        triple.A,
+        triple.C,
         legMap["AC"]?.reusablePairId ?? null,
         legMap["AC"]?.topUpPairId ?? null,
         modelId,

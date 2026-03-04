@@ -47,6 +47,17 @@ bun run reversals --concurrency 12  # Faster with higher concurrency
 
 # 5. Analyze reversal results
 bun run analyze-reversals
+
+# 6. Phase 3: Positional convergence + transitivity
+bun run analysis/03a-positional-convergence.ts  # Part A: 0 API calls
+bun run experiments/03b-transitivity.ts         # Part B: ~600 API calls
+bun run analysis/03b-transitivity.ts            # Analyze transitivity
+
+# 7. Phase 4: Cross-model bridge topology
+bun run bridge-agreement         # Part A: 0 API calls (analyzes Phase 3 data)
+bun run targeted-bridges         # Part B: ~1520 API calls
+bun run analyze-targeted-bridges # Analyze targeted bridge results
+bun run phase4                   # Run all Phase 4 in sequence
 ```
 
 ## What It Measures
@@ -57,6 +68,10 @@ bun run analyze-reversals
 - **Control baselines** — Identity pairs (trivial), random pairs (noise floor), nonsense (hallucination detection)
 - **Polysemy steering** — Do ambiguous words (bank↔river vs bank↔mortgage) produce clearly different paths?
 - **Directional asymmetry** — Is the path from A→B the same as B→A? (Phase 2: permutation tests, bootstrap CIs, direction-exclusive waypoints)
+- **Positional convergence** — Do forward and reverse paths converge at specific positions? (Phase 3A: dual-anchor hypothesis)
+- **Transitivity** — Do paths A→B→C compose into A→C? (Phase 3B: triangle inequality, bridge concept frequency)
+- **Cross-model bridge agreement** — Do models agree on which concepts are navigational bridges? (Phase 4A: inter-model correlation, Gemini isolation)
+- **Targeted bridge topology** — Do predicted bridge concepts appear on direct paths? (Phase 4B: concrete vs abstract bridging, Gemini fragmentation characterization)
 
 ## Concept Pairs
 
@@ -85,11 +100,19 @@ pairs.ts                          # Curated concept pairs with metadata
 canonicalize.ts                   # Extraction, canonicalization, metrics
 scheduler.ts                      # Global request scheduler with per-model rate limiting
 metrics.ts                        # Asymmetry metrics, permutation tests, bootstrap CIs
+triples.ts                        # Phase 3B concept triple definitions
+triples-phase4.ts                 # Phase 4 triple definitions with predictions
 experiments/01-prompt-selection.ts # Prompt format comparison
 experiments/01-pilot.ts           # Main pilot batch runner
 experiments/02-reversals.ts       # Phase 2: reverse elicitation + polysemy supplementary
+experiments/03b-transitivity.ts   # Phase 3B: transitivity experiment
+experiments/04b-targeted-bridges.ts # Phase 4B: targeted bridge topology experiment
 analysis/01-pilot.ts              # Phase 1 analysis + findings generation
 analysis/02-reversals.ts          # Phase 2 reversal analysis + findings generation
+analysis/03a-positional-convergence.ts # Phase 3A: positional convergence analysis
+analysis/03b-transitivity.ts      # Phase 3B: transitivity analysis
+analysis/04a-bridge-agreement.ts  # Phase 4A: cross-model bridge agreement analysis
+analysis/04b-targeted-bridges.ts  # Phase 4B: targeted bridge topology analysis
 results/                          # Experiment output (gitignored)
 findings/                         # Markdown analysis writeups
 research.md                       # Literature survey
@@ -105,6 +128,11 @@ research.md                       # Literature survey
 
 ## Status
 
-**Phase 1 complete.** 2,480 runs across 4 models and 21 pairs. Key finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT).
+**Phase 4 complete.** Cumulative: 5,800+ API runs across 4 models.
 
-**Phase 2 implemented.** Reversal experiment ready to run — tests directional asymmetry (A→B vs B→A) with permutation tests, bootstrap CIs, and category-level predictions. See `.planning/ROADMAP.md` for the full plan.
+- **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
+- **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
+- **Phase 3:** 600 runs. Dual-anchor effect, hierarchical compositionality (4.9× over random), triangle inequality holds 91%.
+- **Phase 4:** 1,520 runs. 81.3% prediction accuracy on bridge frequencies, universal concrete bridging, universal abstract bridge failure, pervasive Gemini fragmentation.
+
+See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

@@ -450,9 +450,9 @@ export interface BridgeAgreementOutput {
   crossModelJaccards: CrossModelJaccardResult[];
   /** Correlation: bridge freq diff vs cross-model Jaccard */
   bridgeVsPathCorrelation: {
-    pearsonR: number;
+    pearsonR: number | null;
     /** After removing bridge concept from waypoints */
-    bridgeRemovedPearsonR: number;
+    bridgeRemovedPearsonR: number | null;
     observations: number;
   };
   /** Gemini isolation index */

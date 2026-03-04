@@ -1,6 +1,6 @@
 # Phase 4A: Cross-Model Bridge Agreement Findings
 
-> Generated: 2026-03-04T02:53:04.297Z
+> Generated: 2026-03-04T04:24:39.851Z
 
 ## 1. Overview
 
@@ -110,7 +110,7 @@ Compares bridge agreement for Gemini-paired model pairs vs non-Gemini pairs.
 - **Gemini-paired mean |Δfreq|:** 0.336
 - **Non-Gemini mean |Δfreq|:** 0.200
 - **Isolation index (difference):** 0.136
-- **95% CI:** [-0.131, 0.381]
+- **95% CI:** [-0.092, 0.378]
 
 Gemini shows a **modest isolation trend**, though the confidence interval
 includes zero, so the effect may not be reliable.

@@ -22,6 +22,7 @@ import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import {
   setMetricsSeed,
+  seededRandom,
   computeCrossModelJaccard,
   computeBridgeRemovedJaccard,
   computeBridgeFrequency,
@@ -249,13 +250,15 @@ function generateFindings(output: BridgeAgreementOutput): string {
   lines.push("");
   lines.push(`Across ${output.bridgeVsPathCorrelation.observations} (model-pair, triple) observations:`);
   lines.push("");
-  lines.push(`- **Pearson r (bridge freq diff vs cross-model Jaccard):** ${output.bridgeVsPathCorrelation.pearsonR.toFixed(3)}`);
-  lines.push(`- **Pearson r (bridge-removed):** ${output.bridgeVsPathCorrelation.bridgeRemovedPearsonR.toFixed(3)}`);
-  lines.push("");
-
   const rFull = output.bridgeVsPathCorrelation.pearsonR;
   const rRemoved = output.bridgeVsPathCorrelation.bridgeRemovedPearsonR;
-  if (rFull < -0.2) {
+  lines.push(`- **Pearson r (bridge freq diff vs cross-model Jaccard):** ${rFull !== null ? rFull.toFixed(3) : "undefined (zero-variance)"}`);
+  lines.push(`- **Pearson r (bridge-removed):** ${rRemoved !== null ? rRemoved.toFixed(3) : "undefined (zero-variance)"}`);
+  lines.push("");
+
+  if (rFull === null) {
+    lines.push("Pearson r is undefined (zero-variance input). No linear relationship can be assessed.");
+  } else if (rFull < -0.2) {
     lines.push("Higher bridge frequency differences are associated with **lower** path similarity,");
     lines.push("suggesting that bridge agreement contributes to overall path convergence.");
   } else if (rFull > 0.2) {
@@ -266,10 +269,10 @@ function generateFindings(output: BridgeAgreementOutput): string {
   }
   lines.push("");
 
-  if (Math.abs(rFull) > 0.1 && Math.abs(rRemoved) < Math.abs(rFull) * 0.5) {
+  if (rFull !== null && rRemoved !== null && Math.abs(rFull) > 0.1 && Math.abs(rRemoved) < Math.abs(rFull) * 0.5) {
     lines.push("The bridge-removed correlation is substantially weaker, suggesting the");
     lines.push("correlation is partly driven by shared bridge tokens inflating Jaccard.");
-  } else if (Math.abs(rRemoved) >= Math.abs(rFull) * 0.5) {
+  } else if (rFull !== null && rRemoved !== null && Math.abs(rRemoved) >= Math.abs(rFull) * 0.5) {
     lines.push("The bridge-removed correlation persists at a similar magnitude, suggesting");
     lines.push("the relationship is not an artifact of shared bridge tokens.");
   }
@@ -606,12 +609,12 @@ async function analyze(opts: {
     // Resample Gemini diffs
     const gSample: number[] = [];
     for (let j = 0; j < geminiBootstrapData.length; j++) {
-      gSample.push(geminiBootstrapData[Math.floor(Math.random() * geminiBootstrapData.length)]);
+      gSample.push(geminiBootstrapData[Math.floor(seededRandom() * geminiBootstrapData.length)]);
     }
     // Resample non-Gemini diffs
     const ngSample: number[] = [];
     for (let j = 0; j < nonGeminiBootstrapData.length; j++) {
-      ngSample.push(nonGeminiBootstrapData[Math.floor(Math.random() * nonGeminiBootstrapData.length)]);
+      ngSample.push(nonGeminiBootstrapData[Math.floor(seededRandom() * nonGeminiBootstrapData.length)]);
     }
     isolationSamples.push(mean(gSample) - mean(ngSample));
   }
@@ -639,8 +642,8 @@ async function analyze(opts: {
     modelPairAgreements,
     crossModelJaccards,
     bridgeVsPathCorrelation: {
-      pearsonR: rFull ?? 0,
-      bridgeRemovedPearsonR: rRemoved ?? 0,
+      pearsonR: rFull,
+      bridgeRemovedPearsonR: rRemoved,
       observations: corrBridgeDiffs.length,
     },
     geminiIsolation: {

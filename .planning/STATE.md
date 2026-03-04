@@ -1,65 +1,57 @@
 # State
 
 ## Current Phase
-Phase 3: Positional Convergence + Transitive Path Structure — **COMPLETE**
+Phase 4: Cross-Model Bridge Topology + Targeted Gemini Investigation — **COMPLETE**
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
 
-## Phase 1 Summary
-
-### Key Findings
+## Phase 1-3 Summary (Condensed)
 1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
-2. **Polysemy → sense differentiation** — cross-pair Jaccard = 0.000 (artifact, fixed in Phase 2)
-3. **Cross-model paths are genuinely different** — all pairs show ~0.17-0.20 Jaccard
-4. **Controls validate cleanly** — nonsense near-zero, antonyms highest, random intermediate
+2. **Navigation is fundamentally asymmetric** — Mean asymmetry 0.811. Conceptual space is quasimetric.
+3. **Dual-anchor hypothesis** — Both endpoints anchor paths (U-shaped convergence pattern)
+4. **Hierarchical triples are compositional** — Transitivity 0.175 vs random controls 0.036 (4.9×)
+5. **Triangle inequality holds** — 91% of cases. Violations concentrated in Gemini.
+6. **Bridge concept frequency is model-dependent** — Claude: "harmony" 100% on music→math; Gemini: 0%.
 
-## Phase 2 Summary
-
-### Key Findings
-1. **Navigation is fundamentally asymmetric** — Overall mean asymmetry 0.811 (CI: [0.772, 0.848]). 73/84 significant at p<0.05.
-2. **Starting-point hypothesis** — Models construct forward from wherever they start.
-3. **Category predictions: 4/8 matched** — Conceptual space is quasimetric: d(A,B) ≠ d(B,A).
-4. **Gemini most direction-sensitive** (0.867), Claude least (0.780).
-
-## Phase 3 Summary
+## Phase 4 Summary
 
 ### Data Collected
-- **Part A (positional convergence)**: Pure analysis of existing data (0 new API calls). 84 pair/model combinations.
-- **Part B (transitivity)**: 600 new runs across 8 concept triples × 4 models × 10 reps. 15 new legs, 9 reused legs from Phase 1/2.
+- **Part A (bridge agreement)**: Pure analysis of Phase 3B data (0 new API calls). 6 model pairs × 8 triples.
+- **Part B (targeted bridges)**: 1,520 new runs across 8 concept triples × 4 models × 10-20 reps. 320 reused runs from prior phases.
 
 ### Key Findings
-1. **Dual-anchor hypothesis** — Positional convergence shows U-shaped pattern (match rates 0.102 → 0.057 → 0.065 → 0.085 → 0.129). Both endpoints anchor the path, not just the start. Refines Phase 2's starting-point hypothesis.
-2. **Overall convergence slope near zero** (0.0082, CI crosses zero). Only 50% of combos show positive convergence. The starting-point hypothesis needs nuance.
-3. **Hierarchical triples are compositional** — Transitivity 0.175 vs random controls 0.036 (4.9× difference). "dog" appears on animal→poodle path 50-100% of the time; random bridges never appear.
-4. **Triangle inequality holds** — 29/32 cases (91%). Two substantial violations in Gemini, one marginal in Claude. Conceptual space satisfies a key metric axiom.
-5. **Bridge concept frequency is model-dependent** — Claude: "harmony" appears 100% on music→math; Gemini: 0%. Models have different navigational connectivity.
-6. **Semantic chains partially compositional** (0.073) but "energy" is NOT on hot→cold (0.036). Association ≠ being on-route.
-7. **Polysemy-extend confirms compositionality** — bank→river→ocean shows 0.150 transitivity, "river" appears 72.5% as bridge.
-8. **Claude-Gemini axis persists** — Claude: dense, globally connected, rigid. Gemini: fragmented, locally specialized, direction-sensitive.
+1. **Prediction accuracy 81.3%** — 26/32 model×triple bridge frequency predictions matched. Misses concentrated on abstract triples and Gemini.
+2. **Concrete bridges are universal** — "spectrum" on light→color: 100% across all 4 models. "forest" on tree→ecosystem: 95-100% for 3 models.
+3. **Abstract bridges fail universally** — "metaphor" on language→thought: 0% for ALL models. Association ≠ navigational bridging.
+4. **Gemini fragmentation is pervasive** — Not limited to abstract concepts. Gemini misses "forest" (0.10) and "river" (0.00) even for concrete/polysemy triples. Only succeeds with strongly-cued bridges (deposit→savings: 1.00, spectrum→color: 1.00).
+5. **Inter-model bridge agreement** — Claude-GPT highest (r=0.772), Grok-Gemini lowest (r=0.340). Gemini isolation index: 0.136.
+6. **Controls validate perfectly** — Random bridge concepts never appear (0% across all 8 random-control observations).
+7. **No temporal drift** — Cross-batch Jaccard within 0.1 of within-batch for all top-up legs, validating data pooling across phases.
+8. **Polysemy sense consistency** — Financial sense of "bank" (deposit→savings) shows 100% bridge frequency across ALL models including Gemini, while geographic sense shows Gemini-specific failure.
 
 ### Infrastructure Built
-- `triples.ts` — 8 concept triple definitions with data reuse mapping
-- `analysis/03a-positional-convergence.ts` — positional convergence metrics
-- `experiments/03b-transitivity.ts` — transitivity experiment with scheduler
-- `analysis/03b-transitivity.ts` — transitivity analysis and findings
-- New metrics in `metrics.ts` — positional convergence, linear regression, waypoint transitivity, navigational distance, shortcuts/detours
+- `triples-phase4.ts` — 8 Phase 4 triple definitions with predictions and diagnostic types
+- `analysis/04a-bridge-agreement.ts` — cross-model bridge agreement analysis
+- `experiments/04b-targeted-bridges.ts` — targeted bridge experiment with top-up logic
+- `analysis/04b-targeted-bridges.ts` — targeted bridge analysis with prediction evaluation
+- New metrics in `metrics.ts` — cross-model Jaccard, bridge-removed Jaccard, Pearson correlation, bridge frequency bootstrap CI, seededRandom
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Two-part phase: Part A (free analysis, 0 API cost) → Part B (new experiment, ~$3)
-- Data reuse strategy: 18 of 48 legs reused from Phase 1/2
-- Consistency-based navigational distance: d(X→Y) = 1 - mean within-direction Jaccard
+- Two-part phase: Part A (free analysis, 0 API cost) → Part B (new experiment, ~$5)
+- Data reuse strategy with direction-filtered lookups (fixed cross-contamination bug from Phase 3 triple iteration)
+- Phase 3B pair ID format uses double-dash (`triple-id--legId`); Phase 4 triples reference this correctly
 
 ## Blockers
 None
 
 ## Next Steps
-- Phase 4 candidates (from analysis):
-  1. Dimensionality probing — how many independent axes structure each model's space?
-  2. Chain length scaling — how does transitivity change with 3-hop, 5-hop, 7-hop chains?
-  3. Cross-model bridge agreement — do models agree on which concepts are bridges?
-  4. Higher-resolution convergence — 7wp or 9wp paths for finer positional analysis
-  5. Targeted Gemini investigation — why all 3 triangle inequality violations?
+- Phase 5 candidates (from analysis):
+  1. **Dimensionality probing** — MDS on pairwise navigational distances to estimate dimensionality
+  2. **Chain length scaling** — 3-hop, 5-hop, 7-hop chains to test compositionality degradation
+  3. **Gemini cue threshold** — What makes a bridge "strong enough" for Gemini? Test gradient from concrete→abstract
+  4. **Higher-resolution convergence** — 7wp or 9wp paths for finer positional analysis
+  5. **Paper writing** — 4 phases of findings now available for writeup

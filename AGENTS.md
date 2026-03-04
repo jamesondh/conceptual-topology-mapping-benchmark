@@ -26,6 +26,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 - Results in `results/` (JSON, gitignored)
 - Findings in `findings/` (markdown writeups per phase)
 - Concept pair definitions in `pairs.ts`
+- Concept triple definitions in `triples.ts` (Phase 3B) and `triples-phase4.ts` (Phase 4)
 - Types in `types.ts`, canonicalization in `canonicalize.ts`
 - Core engine in `index.ts` (also serves as CLI entry point)
 
@@ -44,6 +45,10 @@ bun run pilot                    # Main pilot experiment on reporting pairs
 bun run analyze                  # Analyze pilot results and generate findings
 bun run reversals                # Phase 2: reverse elicitation + polysemy supplementary
 bun run analyze-reversals        # Analyze reversal results and generate findings
+bun run bridge-agreement         # Phase 4A: cross-model bridge agreement analysis (0 API calls)
+bun run targeted-bridges         # Phase 4B: targeted bridge topology experiment (~1520 API calls)
+bun run analyze-targeted-bridges # Phase 4B: analyze targeted bridge results
+bun run phase4                   # Run all Phase 4 in sequence (4A → 4B → analysis)
 ```
 
 ## Models
