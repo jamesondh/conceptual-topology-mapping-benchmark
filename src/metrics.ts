@@ -1462,6 +1462,122 @@ export function fisherZAggregate(correlations: number[]): number {
   return Math.tanh(meanZ);
 }
 
+// ── Phase 9: Dominance Ratio, Crossover Regression, Meta-Analytic ──
+
+/**
+ * Compute dominance ratio from salience landscape data.
+ * Dominance ratio = bridge frequency / strongest competitor frequency.
+ * A competitor is any non-bridge waypoint appearing at >threshold frequency
+ * in at least minModels of the provided model landscapes.
+ */
+export function computeDominanceRatio(
+  salienceLandscapes: Array<{ rankedWaypoints: Array<{ waypoint: string; frequency: number }> }>,
+  bridgeConcept: string,
+  threshold: number = 0.10,
+  minModels: number = 2,
+): { dominanceRatio: number; bridgeFreq: number; strongestCompetitor: string; strongestCompetitorFreq: number; competitors: string[] } {
+  const bridgeLower = bridgeConcept.toLowerCase();
+
+  // Compute cross-model mean bridge frequency
+  let bridgeFreqSum = 0;
+  for (const landscape of salienceLandscapes) {
+    for (const wp of landscape.rankedWaypoints) {
+      if (bridgeConceptMatchesExported(wp.waypoint.toLowerCase(), bridgeLower)) {
+        bridgeFreqSum += wp.frequency;
+        break;
+      }
+    }
+  }
+  const bridgeFreq = salienceLandscapes.length > 0 ? bridgeFreqSum / salienceLandscapes.length : 0;
+
+  // Find competitors: non-bridge waypoints appearing at >threshold in >=minModels
+  const waypointModelFreqs = new Map<string, number[]>();
+  for (const landscape of salienceLandscapes) {
+    for (const wp of landscape.rankedWaypoints) {
+      const wpLower = wp.waypoint.toLowerCase();
+      if (bridgeConceptMatchesExported(wpLower, bridgeLower)) continue;
+      if (wp.frequency > threshold) {
+        if (!waypointModelFreqs.has(wpLower)) waypointModelFreqs.set(wpLower, []);
+        waypointModelFreqs.get(wpLower)!.push(wp.frequency);
+      }
+    }
+  }
+
+  // Filter to competitors meeting minModels threshold, compute cross-model mean freq
+  const competitorFreqs: Array<{ waypoint: string; meanFreq: number }> = [];
+  for (const [wp, freqs] of waypointModelFreqs) {
+    if (freqs.length >= minModels) {
+      const meanFreq = freqs.reduce((s, f) => s + f, 0) / salienceLandscapes.length;
+      competitorFreqs.push({ waypoint: wp, meanFreq });
+    }
+  }
+  competitorFreqs.sort((a, b) => b.meanFreq - a.meanFreq);
+
+  const strongestCompetitor = competitorFreqs[0]?.waypoint ?? "";
+  const strongestCompetitorFreq = competitorFreqs[0]?.meanFreq ?? 0;
+  const dominanceRatio = strongestCompetitorFreq > 0 ? bridgeFreq / strongestCompetitorFreq : 99;
+
+  return {
+    dominanceRatio,
+    bridgeFreq,
+    strongestCompetitor,
+    strongestCompetitorFreq,
+    competitors: competitorFreqs.map(c => c.waypoint),
+  };
+}
+
+/**
+ * Bootstrap CI for a regression slope (survival ~ unconstrained frequency).
+ * Resamples (x, y) pairs and recomputes slope each time.
+ */
+export function bootstrapSlopeCI(
+  x: number[],
+  y: number[],
+  nBootstrap: number = 1000,
+): [number, number] {
+  if (x.length !== y.length || x.length < 3) return [0, 0];
+
+  const slopes: number[] = [];
+  for (let b = 0; b < nBootstrap; b++) {
+    const indices = Array.from({ length: x.length }, () => Math.floor(_rng() * x.length));
+    const bx = indices.map(i => x[i]);
+    const by = indices.map(i => y[i]);
+    const { slope } = linearRegression(bx, by);
+    slopes.push(slope);
+  }
+
+  slopes.sort((a, b) => a - b);
+  const lo = Math.floor(slopes.length * 0.025);
+  const hi = Math.floor(slopes.length * 0.975);
+  return [slopes[lo], slopes[hi]];
+}
+
+/**
+ * Inverse-variance weighted meta-analytic combination of two effect estimates.
+ * Each estimate has a point estimate and 95% CI.
+ * Returns pooled estimate and pooled CI.
+ */
+export function inverseVariancePool(
+  est1: number, ci1: [number, number],
+  est2: number, ci2: [number, number],
+): { pooled: number; pooledCI: [number, number] } {
+  // Approximate SE from CI width (CI = est ± 1.96*SE)
+  const se1 = (ci1[1] - ci1[0]) / (2 * 1.96);
+  const se2 = (ci2[1] - ci2[0]) / (2 * 1.96);
+
+  // Guard against zero or negative SE
+  const var1 = Math.max(se1 * se1, 1e-10);
+  const var2 = Math.max(se2 * se2, 1e-10);
+
+  const w1 = 1 / var1;
+  const w2 = 1 / var2;
+  const pooled = (w1 * est1 + w2 * est2) / (w1 + w2);
+  const pooledSE = Math.sqrt(1 / (w1 + w2));
+  const pooledCI: [number, number] = [pooled - 1.96 * pooledSE, pooled + 1.96 * pooledSE];
+
+  return { pooled, pooledCI };
+}
+
 /**
  * Compute bootstrap CI for the interaction effect:
  * (gemini gap) - (non-gemini gap)

@@ -1515,3 +1515,328 @@ export interface GaitNormAnalysisOutput {
     value: string;
   }>;
 }
+
+// --- Phase 9: Bridge Dominance, Transformation Chains, Pre-Fill Facilitation ---
+
+// Part A: Bridge Dominance Ratio
+
+export interface Phase9DominancePair {
+  id: string;
+  from: string;
+  to: string;
+  predictedBridge: string;
+  preFillConcept: string;
+  /** Source for unconstrained data ("phase8b" | "new") */
+  unconstrainedSource: string;
+  targetReps: {
+    salience: number;   // Gap-filling salience runs (0 if Phase 8B data sufficient)
+    preFill: number;    // Pre-fill displacement runs
+  };
+  notes?: string;
+}
+
+// Part B: Transformation-Chain Blindness
+
+export type TransformationPairType = "transformation-chain" | "gradient-midpoint";
+
+export interface Phase9TransformationPair {
+  id: string;
+  from: string;
+  to: string;
+  candidateBridge: string;
+  pairType: TransformationPairType;
+  /** For transformation: process name; for gradient: dimension name */
+  processOrDimension: string;
+  domain: string;
+  targetReps: number;
+  notes?: string;
+}
+
+// Part C: Pre-Fill Facilitation
+
+export type Phase9PreFillCondition = "unconstrained" | "congruent" | "incongruent" | "neutral";
+
+export interface Phase9FacilitationPair {
+  id: string;
+  from: string;
+  to: string;
+  bridge: string;
+  unconstrainedFreq: number | null;  // Known from prior data, null for pilot pairs
+  dominanceLevel: "dominant" | "moderate" | "moderate-high" | "marginal" | "pilot";
+  congruentPreFill: string;
+  incongruentPreFill: string;
+  neutralPreFill: string;
+  /** Which prior phase provides unconstrained data */
+  unconstrainedSource: string;
+  /** Which conditions need new data collection */
+  newConditions: Phase9PreFillCondition[];
+  targetReps: number;  // per model per condition
+  notes?: string;
+}
+
+// Part A: Dominance Analysis Output
+
+export interface DominancePairResult {
+  pairId: string;
+  bridge: string;
+  unconstrainedBridgeFreq: number;
+  strongestCompetitor: string;
+  strongestCompetitorFreq: number;
+  dominanceRatio: number;
+  competitorCount: number;
+  competitors: string[];
+  preFillSurvival: number;
+  preFillBridgeFreq: number;
+  source: string;  // "retrospective-6a-7a" | "retrospective-8a" | "prospective-9a"
+  perModelFreqs: Array<{
+    modelId: string;
+    unconstrainedFreq: number;
+    preFillFreq: number;
+    survival: number;
+    dominanceRatio: number;
+  }>;
+}
+
+export interface DominanceAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    retrospectivePairs: string[];
+    prospectivePairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Retrospective analysis (Stage 1) */
+  retrospective: {
+    pairResults: DominancePairResult[];
+    spearmanRho: number;
+    spearmanCI: [number, number];
+    evaluabilityGatePasses: boolean;  // rho > 0.40
+  };
+  /** Prospective analysis (Stage 2 new pairs) */
+  prospective: {
+    pairResults: DominancePairResult[];
+    evaluablePairCount: number;
+  };
+  /** Combined analysis (primary test) */
+  combined: {
+    allPairResults: DominancePairResult[];
+    spearmanRho: number;
+    spearmanCI: [number, number];
+    significantPositive: boolean;
+    nPairs: number;
+  };
+  /** Threshold analysis */
+  thresholdAnalysis: {
+    bestThreshold: number;
+    classificationAccuracy: number;
+    highDominanceSurvivalMean: number;
+    lowDominanceSurvivalMean: number;
+  };
+  /** Dominance ratio vs competitor count comparison */
+  dominanceVsCompetitorCount: {
+    dominanceRho: number;
+    competitorCountRho: number;
+    dominanceBetter: boolean;
+  };
+  /** Per-model dominance ratios */
+  perModelDominance: Array<{
+    modelId: string;
+    meanDominanceRatio: number;
+    meanCompetitorCount: number;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part B: Transformation Analysis Output
+
+export interface TransformationAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    transformationPairs: string[];
+    gradientPairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Bridge frequency matrix: 20 pairs x 4 models */
+  bridgeFreqMatrix: Array<{
+    pairId: string;
+    pairType: TransformationPairType;
+    modelId: string;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+    isZero: boolean;
+  }>;
+  /** Gradient vs transformation comparison (O17 third replication) */
+  gradientVsTransformation: {
+    gradientMean: number;
+    gradientCI: [number, number];
+    transformationMean: number;
+    transformationCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    gradientHigher: boolean;
+  };
+  /** Gemini interaction test (primary test) */
+  geminiInteraction: {
+    geminiGradientMean: number;
+    geminiTransformationMean: number;
+    geminiGap: number;
+    nonGeminiGradientMean: number;
+    nonGeminiTransformationMean: number;
+    nonGeminiGap: number;
+    interactionDifference: number;
+    interactionCI: [number, number];
+    significantInteraction: boolean;
+  };
+  /** Gemini zero-rate analysis */
+  geminiZeroRate: {
+    geminiTransformationZeros: number;
+    geminiTransformationTotal: number;
+    geminiGradientZeros: number;
+    geminiGradientTotal: number;
+    nonGeminiTransformationZeros: number;
+    nonGeminiGradientZeros: number;
+  };
+  /** Transformation-type analysis (biological vs manufacturing vs food vs leatherworking) */
+  transformationTypeAnalysis: Array<{
+    processType: string;
+    pairs: string[];
+    geminiMeanFreq: number;
+    geminiZeroCount: number;
+    nonGeminiMeanFreq: number;
+  }>;
+  /** Meta-analytic combination with Phase 8B */
+  metaAnalytic: {
+    phase9BInteraction: number;
+    phase9BCI: [number, number];
+    phase8BInteraction: number;
+    phase8BCI: [number, number];
+    pooledInteraction: number;
+    pooledCI: [number, number];
+    pooledSignificant: boolean;
+  };
+  /** Per-model gradient performance */
+  perModelGradient: Array<{
+    modelId: string;
+    gradientMean: number;
+    transformationMean: number;
+    gap: number;
+  }>;
+  /** Non-Gemini zero analysis */
+  nonGeminiZeroAnalysis: Array<{
+    modelId: string;
+    transformationZeros: number;
+    gradientZeros: number;
+  }>;
+  /** Gemini alternative routing for zero-freq transformation pairs */
+  geminiAlternativeRouting: Array<{
+    pairId: string;
+    topWaypoints: Array<{ waypoint: string; frequency: number }>;
+    routingType: "endpoint-jump" | "process-label" | "mixed";
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part C: Facilitation Analysis Output
+
+export interface FacilitationPairResult {
+  pairId: string;
+  bridge: string;
+  unconstrainedFreq: number;
+  dominanceLevel: string;
+  perCondition: Array<{
+    condition: Phase9PreFillCondition;
+    bridgeFreq: number;
+    bridgeFreqCI: [number, number];
+    survivalRate: number;  // preFillFreq / unconstrainedFreq
+  }>;
+  perModel: Array<{
+    modelId: string;
+    unconstrainedFreq: number;
+    congruentSurvival: number | null;
+    incongruentSurvival: number | null;
+    neutralSurvival: number | null;
+  }>;
+}
+
+export interface FacilitationAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    conditions: Phase9PreFillCondition[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Per-pair facilitation results */
+  pairResults: FacilitationPairResult[];
+  /** Primary test: crossover regression */
+  crossoverRegression: {
+    slope: number;
+    slopeCI: [number, number];
+    intercept: number;
+    r2: number;
+    significantNegativeSlope: boolean;
+  };
+  /** Crossover point estimation */
+  crossoverPoint: {
+    unconstrainedFreqAtUnity: number;
+    crossoverCI: [number, number];
+  };
+  /** Congruent vs incongruent for marginal bridges */
+  congruentVsIncongruent: {
+    marginalCongruentMeanSurvival: number;
+    marginalIncongruentMeanSurvival: number;
+    difference: number;
+    differenceCI: [number, number];
+    significantlyHigher: boolean;
+  };
+  /** Neutral pre-fill baseline */
+  neutralBaseline: {
+    dominantNeutralSurvival: number;
+    marginalNeutralSurvival: number;
+  };
+  /** Phase 7A comparison (pairs 1-8) */
+  phase7AComparison: Array<{
+    pairId: string;
+    phase7ASurvival: number;
+    phase9CSurvival: number;
+    difference: number;
+    replicates: boolean;  // within 0.15
+  }>;
+  /** Per-model facilitation */
+  perModelFacilitation: Array<{
+    modelId: string;
+    marginalFacilitationCount: number;  // how many marginal pairs show survival > 1.0
+    dominantDisplacementCount: number;  // how many dominant pairs show survival < 1.0
+  }>;
+  /** Pilot pair verification */
+  pilotVerification: Array<{
+    pairId: string;
+    unconstrainedBridgeFreq: number;
+    inRange: boolean;  // 0.20-0.50
+    retained: boolean;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}

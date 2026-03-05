@@ -46,6 +46,13 @@
     "gait-norm": "bun run experiments/08c-gait-norm.ts",
     "analyze-gait-norm": "bun run analysis/08c-gait-norm.ts",
     "phase8": "bun run experiments/08a-fragility.ts && bun run analysis/08a-fragility.ts && bun run experiments/08b-gradient.ts && bun run analysis/08b-gradient.ts && bun run experiments/08c-gait-norm.ts && bun run analysis/08c-gait-norm.ts",
+    "dominance": "bun run experiments/09a-dominance.ts",
+    "analyze-dominance": "bun run analysis/09a-dominance.ts",
+    "transformation": "bun run experiments/09b-transformation.ts",
+    "analyze-transformation": "bun run analysis/09b-transformation.ts",
+    "facilitation": "bun run experiments/09c-facilitation.ts",
+    "analyze-facilitation": "bun run analysis/09c-facilitation.ts",
+    "phase9": "bun run experiments/09a-dominance.ts && bun run analysis/09a-dominance.ts && bun run experiments/09b-transformation.ts && bun run analysis/09b-transformation.ts && bun run experiments/09c-facilitation.ts && bun run analysis/09c-facilitation.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
