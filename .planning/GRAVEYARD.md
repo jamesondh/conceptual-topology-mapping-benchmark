@@ -175,3 +175,51 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 **Resolution:** Forced-crossing bridges sit at frame junctions, and the timing of frame-crossing is model-dependent. Claude may cross early, GPT may cross late. The obligatory nature constrains *presence* (bridge always appears) but not *position* (bridge floats).
 
 **Lesson:** Obligatory ≠ stable. A concept can be mandatory on every path while still occupying different positions depending on the model's frame-activation sequence.
+
+---
+
+## Phase 7: Polysemous Curvature Hypothesis
+
+**What:** Predicted that polysemous-vertex triangles (loan-bank-river, deposit-bank-shore, photon-light-heavy, candle-light-feather) would show significantly higher triangle excess (curvature) than non-polysemous-vertex triangles, because polysemy should locally warp navigational geometry.
+
+**Why it failed:** Polysemous mean excess 0.499, non-polysemous mean excess 0.446. Difference 0.053, CI [-0.157, 0.263] comfortably includes zero. The two categories are indistinguishable. Additionally, the cross-model distance validity check failed (r = 0.170), meaning the distance metric itself is not reliable enough to support curvature claims.
+
+**Resolution:** Polysemy affects *which concepts appear* on paths (forced crossings, sense differentiation) but does not systematically warp *how far apart* concepts are. The triangle excess is high for all triangles (~0.47 mean), suggesting paths are generally "longer" than direct connections, but this is a universal property, not a polysemy-specific one.
+
+**Lesson:** A metric that fails validity checks (cross-model r = 0.170) cannot support the claims built on it. Always validate the measuring instrument before interpreting the measurements.
+
+---
+
+## Phase 7: Cross-Model Distance Validity
+
+**What:** Expected cross-model correlation of navigational distances to exceed r = 0.50, establishing that the waypoint-based distance metric measures something real and model-independent. This was a pre-condition for interpreting curvature differences.
+
+**Why it failed:** Mean cross-model distance correlation r = 0.170 — models assign wildly different navigational distances to the same concept pairs. Claude sees photon-light as 0.000 while GPT sees it as 0.729. Claude sees seed-germination-garden as having a zero-distance leg while Grok sees 0.788.
+
+**Resolution:** Navigational distances are fundamentally model-dependent quantities, not objective properties of concept pairs. This rules out cross-model curvature comparison. Within-model curvature profiles may still be interpretable (Gemini does show the most TI violations), but the strong claim — that polysemy warps geometry — requires a metric that agrees across observers.
+
+**Lesson:** The gait differences (R1) contaminate any attempt to build a shared distance metric. Models don't just navigate differently — they *measure* conceptual space differently.
+
+---
+
+## Phase 7: Too-Central as Binary Category
+
+**What:** Predicted that "too-central" bridges (fire, tree, dough) would show frequency < 0.15, clearly separated from "obvious-useful" bridges (warm, adolescent, speak) at > 0.40, with a gap > 0.35 and CI excluding zero.
+
+**Why it failed:** Too-central mean 0.496, obvious-useful mean 0.783. Difference 0.287 but CI [-0.063, 0.587] includes zero. The problem: acorn-timber "tree" has frequency 1.000 for Claude, GPT, and Grok (only Gemini at 0.000), and flour-bread "dough" is similarly high for 3/4 models. Only spark-ash "fire" is genuinely too-central.
+
+**Resolution:** "Too-central" is not a category of bridges — it's a property of specific bridge-pair combinations. "Fire" is too-central for spark-ash because both endpoints *directly imply* fire. "Tree" is NOT too-central for acorn-timber because acorn implies potential (not tree specifically) and timber implies processed wood (not tree specifically). The original categorization was based on intuition rather than the operational definition (both endpoints directly imply the bridge).
+
+**Lesson:** The most interesting finding is what it tells us about categorization itself: human intuition about which concepts are "too obvious" doesn't match model navigation. Only rain-ocean/water and spark-ash/fire meet the strict operational definition of too-central.
+
+---
+
+## Phase 7: Forced-Crossing "Bank" Resists Displacement
+
+**What:** Predicted that the forced-crossing bridge "bank" on loan-shore would survive pre-filling at > 0.90 frequency and shift only ~1 position, because bank is the obligatory bottleneck with no alternative route.
+
+**Why it failed:** Bank survival under pre-fill is 0.267 (far below 0.90). Mean positional shift is 0.791. Pre-filling with an alternative heading is enough to derail even obligatory bottleneck navigation.
+
+**Resolution:** Forced crossings are obligatory only in *unconstrained* navigation. When the first waypoint is pre-filled with a concept from a different semantic direction, models often fail to route back to the bottleneck. The pre-filled heading creates an alternative navigational trajectory that avoids the bottleneck entirely. This means "forced crossing" is about the *default* route, not an inescapable constraint.
+
+**Lesson:** Obligatory ≠ robust under perturbation. The bank bottleneck is the default navigational solution, but models can be pushed off this default by early anchoring. Confirms that waypoint 1 has outsized influence on the entire trajectory (consistent with early-anchoring mechanism).

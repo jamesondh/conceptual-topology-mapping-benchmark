@@ -2,7 +2,7 @@
 
 ## Current Phase
 Phase 6: Navigational Salience and Forced Crossings — **COMPLETE**
-Phase 7: Early Anchoring and Navigational Mechanics — **IMPLEMENTED** (awaiting experiment run)
+Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE**
 
 ## Context
 - Research survey complete (`research.md`)
@@ -38,27 +38,33 @@ Phase 7: Early Anchoring and Navigational Mechanics — **IMPLEMENTED** (awaitin
 - **Prediction accuracy ~40%** — Structural predictions succeed (~80%), point predictions fail (~25%)
 - See `findings/06-analysis.md` for full interpretive analysis
 
-## Phase 7 Implementation
-Spec: `.planning/phases/07-early-anchoring-and-navigational-mechanics/SPEC.md`
-- **Part A: Early-anchoring causal test** (~1,260 runs) — Pre-filled waypoint manipulation with 3 conditions (incongruent, congruent, neutral)
-- **Part B: Curvature estimation** (~760 runs) — Triangle inequality excess around polysemous vs non-polysemous hubs
-- **Part C: Too-central boundary** (~480 runs) — Gradient from "obvious and useful" to "obvious and redundant" bridges
-- Total: ~2,500 new runs, ~$8-12, ~20-25 min runtime
-- **Implementation:** Types, data definitions, experiment scripts (07a/07b/07c), analysis scripts (07a/07b/07c), package.json scripts all complete
-- **Codex review:** 10 issues found (2 critical, 3 high, 4 medium, 1 low). Critical and high issues fixed: pair-ID mismatches in 7C analysis, wrong reusable leg IDs in 7B, peak detection excluding position 0, index-aligned condition comparison, bank-ocean undersampling
+## Phase 7 Summary
+- **2,360 new runs + 920 reused** across 8 anchoring pairs (4 conditions each), 8 curvature triangles, 10 too-central pairs, 4 models
+- **Pre-filling causally displaces bridges** — Mean displacement 0.515, CI excludes zero; taxonomic control resists (0.140 vs 0.515); bridge survival 0.460 under pre-fill
+- **Incongruent vs congruent not cleanly separated** — Displacement 0.515 vs 0.436, but CI overlaps; directional-heading vs associative-primacy not resolved
+- **Claude shows highest displacement** (0.567), consistent with rigidity producing strongest anchoring effects
+- **Triangle inequality replicates at 90.6%** — Phase 3B was 91%, Phase 4B was 93.8%; structural constant of conceptual space
+- **Polysemous ≈ non-polysemous curvature** — Excess 0.499 vs 0.446, CI includes zero; polysemous curvature hypothesis falsified
+- **Cross-model distance validity FAILS** — r = 0.170, far below 0.50 threshold; navigational distances are not cross-model comparable
+- **Too-central vs obvious-useful gap NOT significant** — 0.496 vs 0.783, difference 0.287 but CI includes zero
+- **Rain-ocean "water" universally too-central** (0.000 all models) — Generalizes O6 beyond fire
+- **Gradient > causal-chain** (0.730 vs 0.496) — Spectrum midpoints more navigational than process intermediaries
+- **Gemini systematic zeros on "obvious" bridges** — tree, dough, speak, water, noon all 0.000 for Gemini while other models ≥ 0.80
+- **Prediction accuracy 45%** (9/20) — Continuing decline from characterization (81%) → mechanism (45%)
+- See `findings/07a-anchoring.md`, `findings/07b-curvature.md`, `findings/07c-too-central.md`
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
 - Phase 6 revised bridge model: "launching pad" not "narrow passage"
 - Phase 7 Part A adds 3 control conditions per Codex review recommendations
 - Phase 7 Part B includes distance-metric validity checks before curvature interpretation
-- Dead ends tracked in `GRAVEYARD.md` (15 entries across Phases 1-6)
+- Dead ends tracked in `GRAVEYARD.md` (20 entries across Phases 1-7)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
 None
 
 ## Next Steps
-- Run Phase 7 experiments (`bun run phase7` or individual sub-experiments)
-- Write interpretive analysis (findings/07-analysis.md)
-- Update CLAIMS.md with Phase 7 findings
+- Write Phase 7 interpretive analysis (`findings/07-analysis.md`)
+- Decide Phase 8 direction based on strongest Phase 7 signals
+- Consider paper writing (see `_deferred/paper.md`)

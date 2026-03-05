@@ -22,9 +22,9 @@ Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.2
 ### R2. Conceptual navigation is fundamentally asymmetric (quasimetric)
 **[robust]** — Phase 2 (primary), Phase 3B (triangle inequality), Phases 4-5 (consistent with).
 
-Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B) and 93.8% (Phase 4B). Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space.
+Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space.
 
-**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6
+**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`
 
 ### R3. Polysemy sense differentiation is genuine
 **[robust]** — Phase 1 (original, corrected in Phase 2), Phase 5B (extended).
@@ -226,10 +226,63 @@ Loan-shore asymmetry range is 0.026 across 4 models (0.826-0.852), while deposit
 
 **Sources:** `06-analysis.md` §2, `06b-forced-crossing.md`
 
+### O15. Pre-filling a waypoint causally displaces bridge concepts
+**[observed]** — Phase 7A (8 pairs, 4 models, 4 conditions, 1,240 new runs).
+
+Mean bridge displacement under pre-fill is 0.515 (CI [0.357, 0.664], excludes zero). Bridges are genuinely vulnerable to early anchoring — mean survival rate drops to 0.460 under pre-fill conditions (vs 0.807 unconstrained). Taxonomic bridges resist displacement (animal-poodle "dog" at 0.140 vs 0.515 heading-bridges), confirming hierarchical paths are structurally distinct. Claude shows the highest displacement (0.567), consistent with rigid gaits producing the strongest anchoring effects. However, the incongruent vs congruent distinction is not cleanly separated (0.515 vs 0.436, overlapping CIs), leaving the directional-heading vs associative-primacy mechanism unresolved.
+
+**Sources:** `07a-anchoring.md`
+
+### O16. "Water" for rain-ocean is universally too-central
+**[observed]** — Phase 7C (10 pairs, 4 models).
+
+Rain-ocean "water" frequency is 0.000 across all 4 models — the only pair with perfect cross-model agreement at zero. Generalizes the too-central phenomenon (O6) beyond "fire" to a second domain. Both cases share the same mechanism: both endpoints already imply the bridge, making it informationally redundant.
+
+**Sources:** `07c-too-central.md`
+
+### O17. Gradient-spectrum pairs show higher bridge frequency than causal-chain pairs
+**[observed]** — Phase 7C (6 gradient + 4 causal-chain pairs).
+
+Gradient pairs (continuous spectrum midpoints like warm, adolescent, speak) show mean bridge frequency 0.730 vs causal-chain pairs (sequential process intermediaries like fire, tree, dough) at 0.496. Continuous dimension midpoints are more navigational than process intermediaries, suggesting models prefer bridges that name a position on a spectrum over bridges that name a step in a causal sequence.
+
+**Sources:** `07c-too-central.md`
+
+### O18. Navigational distance metrics fail cross-model validity
+**[observed]** — Phase 7B (8 triangles, 4 models, 800 new runs).
+
+Cross-model distance correlation r = 0.170, far below the 0.50 validity threshold. Models' waypoint-based navigational distances are not comparable across models, undermining the curvature estimation approach. Claude (mean excess 0.225) and GPT/Grok (mean excess 0.680-0.689) occupy different ranges entirely. This is a methodological finding: curvature claims require within-model interpretation only.
+
+**Sources:** `07b-curvature.md`
+
 ---
 
-## Deferred Claims (Awaiting Phase 7+ Data)
+## Tier 3 Updates from Phase 7
+
+### H8. Bridge fragility is bimodal: "robust" vs "fragile" bridges
+**[hypothesis]** — Phase 7A.
+
+Some bridges survive pre-filling (emotion-melancholy "sadness" at 0.750 survival, light-color "spectrum" at 0.575) while others collapse entirely (music-mathematics "harmony" at 0.000 survival, seed-garden "germination" at 0.000). The pattern suggests two modes: bridges that represent the only navigational route (robust under perturbation) vs bridges that represent one of several routes (displaced by any alternative heading). Consistent with R6 (bottleneck > association) but not directly tested as a bimodal distribution.
+
+**Sources:** `07a-anchoring.md`
+
+---
+
+## Falsified (Phase 7)
+
+### ~~Polysemous curvature exceeds non-polysemous~~
+**[falsified]** — Phase 7B.
+
+Predicted polysemous-vertex triangles would show higher triangle excess (curvature) than non-polysemous. Observed: 0.499 vs 0.446, CI [-0.157, 0.263] includes zero. No significant difference. Polysemy does not systematically warp local geometry. **Graveyard entry: G16.**
+
+### ~~Too-central is a clean binary category~~
+**[falsified]** — Phase 7C.
+
+Predicted too-central bridges would have frequency < 0.15 and obvious-useful > 0.40, with a gap > 0.35. Observed gap 0.287, CI [-0.063, 0.587] includes zero. The too-central/obvious-useful distinction is not a binary; it's a gradient with substantial overlap. Acorn-timber "tree" is categorized as too-central but has 1.00 frequency for 3/4 models. **Graveyard entry: G18.**
+
+---
+
+## Deferred Claims (Awaiting Phase 8+ Data)
 
 - **Multiverse robustness** — How robust are R1-R7 across different waypoint counts, prompt formats, and temperature settings? Deferred to pre-paper robustness phase.
-- **Curvature around polysemous hubs** — Do polysemous concepts create regions of high curvature in conceptual space? Deferred (see `.planning/_deferred/curvature.md`).
 - **Cross-model bridge agreement as mechanism for path convergence** — Phase 4A found r=-0.283 between bridge frequency difference and cross-model Jaccard. Suggestive but limited sample. Needs larger triple set.
+- **Bridge fragility mechanism** — What determines whether a bridge survives pre-filling? H8 identifies the bimodal pattern but the underlying variable (route exclusivity? semantic distance? cue strength?) is unknown.
