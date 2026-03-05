@@ -1,8 +1,8 @@
 # State
 
 ## Current Phase
-Phase 6: Navigational Salience and Forced Crossings — **COMPLETE**
-Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE**
+Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE** (analysis written)
+Phase 8: Bridge Fragility and Gemini Gradient Blindness — **SPEC WRITTEN**, awaiting implementation
 
 ## Context
 - Research survey complete (`research.md`)
@@ -41,30 +41,31 @@ Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE**
 ## Phase 7 Summary
 - **2,360 new runs + 920 reused** across 8 anchoring pairs (4 conditions each), 8 curvature triangles, 10 too-central pairs, 4 models
 - **Pre-filling causally displaces bridges** — Mean displacement 0.515, CI excludes zero; taxonomic control resists (0.140 vs 0.515); bridge survival 0.460 under pre-fill
-- **Incongruent vs congruent not cleanly separated** — Displacement 0.515 vs 0.436, but CI overlaps; directional-heading vs associative-primacy not resolved
+- **Mechanism is primarily associative primacy** — Incongruent 0.515 vs congruent 0.436 vs neutral 0.536; CIs overlap; survival rates show some sensitivity (congruent 0.631 > incongruent 0.347)
+- **Bridge fragility is bimodal** — Harmony/germination collapse (0.000-0.025); sadness/dog survive (0.750-0.900); route exclusivity proposed as mechanism (H8)
 - **Claude shows highest displacement** (0.567), consistent with rigidity producing strongest anchoring effects
 - **Triangle inequality replicates at 90.6%** — Phase 3B was 91%, Phase 4B was 93.8%; structural constant of conceptual space
 - **Polysemous ≈ non-polysemous curvature** — Excess 0.499 vs 0.446, CI includes zero; polysemous curvature hypothesis falsified
 - **Cross-model distance validity FAILS** — r = 0.170, far below 0.50 threshold; navigational distances are not cross-model comparable
-- **Too-central vs obvious-useful gap NOT significant** — 0.496 vs 0.783, difference 0.287 but CI includes zero
+- **Too-central categorization was wrong** — Tree/dough are obvious-useful, not too-central; only fire and water qualify
 - **Rain-ocean "water" universally too-central** (0.000 all models) — Generalizes O6 beyond fire
 - **Gradient > causal-chain** (0.730 vs 0.496) — Spectrum midpoints more navigational than process intermediaries
 - **Gemini systematic zeros on "obvious" bridges** — tree, dough, speak, water, noon all 0.000 for Gemini while other models ≥ 0.80
-- **Prediction accuracy 45%** (9/20) — Continuing decline from characterization (81%) → mechanism (45%)
-- See `findings/07a-anchoring.md`, `findings/07b-curvature.md`, `findings/07c-too-central.md`
+- **Prediction accuracy 45%** (9/20) — Structural predictions ~75%, mechanistic predictions ~25%
+- See `findings/07-analysis.md` for full interpretive analysis
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
 - Phase 6 revised bridge model: "launching pad" not "narrow passage"
 - Phase 7 Part A adds 3 control conditions per Codex review recommendations
 - Phase 7 Part B includes distance-metric validity checks before curvature interpretation
-- Dead ends tracked in `GRAVEYARD.md` (20 entries across Phases 1-7)
+- Phase 7 analysis identifies associative primacy as primary mechanism, with possible congruence modulation
+- Dead ends tracked in `GRAVEYARD.md` (19 entries G1-G19 across Phases 1-7)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
 None
 
 ## Next Steps
-- Write Phase 7 interpretive analysis (`findings/07-analysis.md`)
-- Decide Phase 8 direction based on strongest Phase 7 signals
+- Implement Phase 8 (bridge fragility mechanism, Gemini gradient blindness, gait-normalized distance)
 - Consider paper writing (see `_deferred/paper.md`)

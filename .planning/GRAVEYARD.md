@@ -178,7 +178,7 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 
 ---
 
-## Phase 7: Polysemous Curvature Hypothesis
+## G16 — Phase 7: Polysemous Curvature Hypothesis
 
 **What:** Predicted that polysemous-vertex triangles (loan-bank-river, deposit-bank-shore, photon-light-heavy, candle-light-feather) would show significantly higher triangle excess (curvature) than non-polysemous-vertex triangles, because polysemy should locally warp navigational geometry.
 
@@ -190,7 +190,7 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 
 ---
 
-## Phase 7: Cross-Model Distance Validity
+## G17 — Phase 7: Cross-Model Distance Validity
 
 **What:** Expected cross-model correlation of navigational distances to exceed r = 0.50, establishing that the waypoint-based distance metric measures something real and model-independent. This was a pre-condition for interpreting curvature differences.
 
@@ -202,7 +202,7 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 
 ---
 
-## Phase 7: Too-Central as Binary Category
+## G18 — Phase 7: Too-Central as Binary Category
 
 **What:** Predicted that "too-central" bridges (fire, tree, dough) would show frequency < 0.15, clearly separated from "obvious-useful" bridges (warm, adolescent, speak) at > 0.40, with a gap > 0.35 and CI excluding zero.
 
@@ -214,7 +214,7 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 
 ---
 
-## Phase 7: Forced-Crossing "Bank" Resists Displacement
+## G19 — Phase 7: Forced-Crossing "Bank" Resists Displacement
 
 **What:** Predicted that the forced-crossing bridge "bank" on loan-shore would survive pre-filling at > 0.90 frequency and shift only ~1 position, because bank is the obligatory bottleneck with no alternative route.
 

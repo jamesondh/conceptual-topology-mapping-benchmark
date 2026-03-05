@@ -229,7 +229,7 @@ Loan-shore asymmetry range is 0.026 across 4 models (0.826-0.852), while deposit
 ### O15. Pre-filling a waypoint causally displaces bridge concepts
 **[observed]** — Phase 7A (8 pairs, 4 models, 4 conditions, 1,240 new runs).
 
-Mean bridge displacement under pre-fill is 0.515 (CI [0.357, 0.664], excludes zero). Bridges are genuinely vulnerable to early anchoring — mean survival rate drops to 0.460 under pre-fill conditions (vs 0.807 unconstrained). Taxonomic bridges resist displacement (animal-poodle "dog" at 0.140 vs 0.515 heading-bridges), confirming hierarchical paths are structurally distinct. Claude shows the highest displacement (0.567), consistent with rigid gaits producing the strongest anchoring effects. However, the incongruent vs congruent distinction is not cleanly separated (0.515 vs 0.436, overlapping CIs), leaving the directional-heading vs associative-primacy mechanism unresolved.
+Mean bridge displacement under pre-fill is 0.515 (CI [0.357, 0.664], excludes zero). Bridges are genuinely vulnerable to early anchoring — mean survival rate drops to 0.460 under pre-fill conditions (vs 0.807 unconstrained). Taxonomic bridges resist displacement (animal-poodle "dog" at 0.140 vs 0.515 heading-bridges), confirming hierarchical paths are structurally distinct. Claude shows the highest displacement (0.567), consistent with rigid gaits producing the strongest anchoring effects. The incongruent vs congruent distinction is not cleanly separated (displacement: 0.515 vs 0.436, overlapping CIs; but survival: incongruent 0.347 vs congruent 0.631), suggesting the mechanism is primarily associative primacy with a possible secondary congruence modulation. The directional-heading theory is largely falsified in its strong form.
 
 **Sources:** `07a-anchoring.md`
 
@@ -274,10 +274,20 @@ Some bridges survive pre-filling (emotion-melancholy "sadness" at 0.750 survival
 
 Predicted polysemous-vertex triangles would show higher triangle excess (curvature) than non-polysemous. Observed: 0.499 vs 0.446, CI [-0.157, 0.263] includes zero. No significant difference. Polysemy does not systematically warp local geometry. **Graveyard entry: G16.**
 
+### ~~Cross-model distance metrics are valid (r > 0.50)~~
+**[falsified]** — Phase 7B.
+
+Predicted navigational Jaccard distances would correlate across models at r > 0.50, reflecting a shared underlying geometry. Observed: r = 0.170. Claude's distances are incomparable with GPT's because their gaits (R1) produce fundamentally different scales. The distance metric is contaminated by model-specific navigational gait. **Graveyard entry: G17.**
+
 ### ~~Too-central is a clean binary category~~
 **[falsified]** — Phase 7C.
 
 Predicted too-central bridges would have frequency < 0.15 and obvious-useful > 0.40, with a gap > 0.35. Observed gap 0.287, CI [-0.063, 0.587] includes zero. The too-central/obvious-useful distinction is not a binary; it's a gradient with substantial overlap. Acorn-timber "tree" is categorized as too-central but has 1.00 frequency for 3/4 models. **Graveyard entry: G18.**
+
+### ~~Forced-crossing "bank" resists displacement (survival > 0.90)~~
+**[falsified]** — Phase 7A.
+
+Predicted the forced-crossing bottleneck "bank" on loan-shore would survive pre-filling at > 0.90 frequency because it is the only connection between financial and geographic domains. Observed: survival 0.267, shift 0.791 positions. The forced-crossing bottleneck is maintained by associative primacy, not topological necessity. **Graveyard entry: G19.**
 
 ---
 
