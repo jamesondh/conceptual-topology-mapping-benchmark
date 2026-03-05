@@ -209,11 +209,14 @@ The waypoint frequency distribution for any concept pair concentrates in a small
 Pre-filling the first waypoint with an alternative concept causes mean bridge displacement of 0.515 (CI excludes zero). Bridge fragility is bimodal: harmony and germination collapse under any pre-fill, while sadness and dog survive at >0.80. Taxonomic bridges resist displacement (0.140 vs 0.515 overall), suggesting hierarchical structure is more robust than associative routing.
 
 ### Navigational distance is model-dependent, not objective
-Cross-model correlation of navigational distances is only r = 0.170 — models don't just navigate differently, they *measure* conceptual space differently. Claude sees photon→light as distance 0.000 while GPT sees 0.729. This rules out cross-model curvature comparison but the triangle inequality still holds at 90.6%, replicating as a structural constant.
+Cross-model correlation of navigational distances is only r = 0.170 — models don't just navigate differently, they *measure* conceptual space differently. Claude sees photon→light as distance 0.000 while GPT sees 0.729. Gait normalization produces zero improvement (r stays at 0.212), proving the disagreement is ordinal, not scalar. Some model pairs actively anti-correlate (Grok-Gemini r = -0.580). Model-independent geometry is definitively blocked with path-based measurements, though the triangle inequality still holds at 90.6%, replicating as a structural constant.
+
+### Single-variable mechanistic models fail
+Eight phases of experiments show that navigational phenomena resist simple explanations. Competitor count doesn't predict bridge fragility. Gradient type doesn't predict Gemini's failures. Scale normalization doesn't rescue cross-model distances. The benchmark reliably discovers *what* happens (structural predictions succeed at ~75%) but cannot yet predict *why* (mechanistic predictions succeed at ~15%). Phase 8's prediction accuracy of 24% is the lowest in the benchmark, marking the transition from simple to complex models of conceptual navigation.
 
 ## Status
 
-**Phase 8 implemented, awaiting experiment execution.** Cumulative: 14,000+ API runs across 4 models and 7 phases (Phase 8 adds ~2,930 new runs).
+**Phase 8 complete. Phase 9 spec written, awaiting implementation.** Cumulative: 16,000+ API runs across 4 models and 8 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -222,7 +225,6 @@ Cross-model correlation of navigational distances is only r = 0.170 — models d
 - **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
 - **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
 - **Phase 7:** 2,360 runs + 920 reused. Pre-filling causally displaces bridges (0.515, CI excludes zero). Bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive). Taxonomic bridges resist displacement (0.140). Triangle inequality replicates at 90.6%. Cross-model distance validity fails (r=0.170). Too-central categorization was wrong — only fire/water qualify. Gradient > causal-chain bridges (0.730 vs 0.496). Gemini systematic zeros on obvious univocal bridges.
-
-- **Phase 8:** ~2,930 runs (pending execution). Bridge fragility mechanism (route exclusivity as predictor), Gemini gradient blindness (gradient-midpoint vs causal-chain), gait-normalized distance (rescuing cross-model geometry). Codex-reviewed implementation.
+- **Phase 8:** 2,690 runs + 2,960 reused. All three primary hypotheses fail: route exclusivity (rho=0.116), gradient blindness (interaction=0.046), gait normalization (zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges, transformation-chain blindness for Gemini, model-independent geometry definitively blocked. Prediction accuracy 24% (worst in benchmark) — single-variable mechanistic models are inadequate.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

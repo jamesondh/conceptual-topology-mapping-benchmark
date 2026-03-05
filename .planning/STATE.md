@@ -1,8 +1,8 @@
 # State
 
 ## Current Phase
-Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE** (analysis written)
-Phase 8: Bridge Fragility and Gemini Gradient Blindness — **IMPLEMENTED**, awaiting experiment execution
+Phase 8: Bridge Fragility and Gemini Gradient Blindness — **COMPLETE** (experiments run, analysis written)
+Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **SPEC WRITTEN**, awaiting implementation
 
 ## Context
 - Research survey complete (`research.md`)
@@ -19,61 +19,35 @@ Phase 8: Bridge Fragility and Gemini Gradient Blindness — **IMPLEMENTED**, awa
 7. **Prediction accuracy 81.3%** — Concrete bridges universal, abstract bridges fail universally.
 8. **Gemini fragmentation pervasive** — Frame-crossing hypothesis: Gemini fails at conceptual frame boundaries.
 
-## Phase 5 Summary
-- **3,720 new runs + 200 reused** across 36 triples, 8 convergence pairs, 4 models
-- Cue-strength gradient real but ragged (12/16 monotonic); germination > plant; Gemini threshold fails
-- Forced crossing discovery (loan-bank-shore at 0.95-1.00); fire is dead; W-shape aggregate null
-- Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism
-- See `findings/05-analysis.md` for full interpretive analysis
+## Phase 5-7 Summary (Condensed)
+- **Phase 5:** Cue-strength gradient real (12/16 monotonic); germination > plant; forced crossing discovery; fire dead; prediction accuracy drops to 42.9%
+- **Phase 6:** Salience non-uniform (7/8 KS reject); forced-crossing asymmetry falsified; bridges anchor early (position 1-2); GPT highest entropy
+- **Phase 7:** Pre-filling causally displaces bridges (0.515, CI excludes zero); bridge fragility bimodal; triangle inequality replicates at 90.6%; cross-model distance fails (r=0.170); gradient > causal-chain (0.730 vs 0.496)
 
-## Phase 6 Summary
-- **2,080 new runs + 280 reused** across 8 salience pairs, 8 asymmetry pairs, 10 positional pairs, 4 models
-- **Navigational salience distributions are non-uniform** — 7/8 pairs reject uniformity (KS test); H6 upgraded to O11
-- **Forced-crossing asymmetry hypothesis FAILS** — FC mean 0.817 ≈ SA mean 0.810 ≈ Phase 2 baseline 0.811; H4 falsified
-- **Bridge concepts anchor early (position 1-2, 0-indexed)** — Peak-detection contrast 0.345 vs fixed-midpoint -0.080; vindicates Phase 5C
-- **Animal-poodle exception** — Taxonomic bridges anchor at hierarchically appropriate position (4-5)
-- **Forced-crossing bridges are positionally unstable** — SD 1.71 vs 0.52 for non-forced
-- **GPT has highest entropy** (3.44), not Grok as predicted; Claude near-deterministic (2.59)
-- **Gemini routes bank-ocean through financial frame** — vault/treasure/gold, not geographic concepts
-- **Prediction accuracy ~40%** — Structural predictions succeed (~80%), point predictions fail (~25%)
-- See `findings/06-analysis.md` for full interpretive analysis
-
-## Phase 7 Summary
-- **2,360 new runs + 920 reused** across 8 anchoring pairs (4 conditions each), 8 curvature triangles, 10 too-central pairs, 4 models
-- **Pre-filling causally displaces bridges** — Mean displacement 0.515, CI excludes zero; taxonomic control resists (0.140 vs 0.515); bridge survival 0.460 under pre-fill
-- **Mechanism is primarily associative primacy** — Incongruent 0.515 vs congruent 0.436 vs neutral 0.536; CIs overlap; survival rates show some sensitivity (congruent 0.631 > incongruent 0.347)
-- **Bridge fragility is bimodal** — Harmony/germination collapse (0.000-0.025); sadness/dog survive (0.750-0.900); route exclusivity proposed as mechanism (H8)
-- **Claude shows highest displacement** (0.567), consistent with rigidity producing strongest anchoring effects
-- **Triangle inequality replicates at 90.6%** — Phase 3B was 91%, Phase 4B was 93.8%; structural constant of conceptual space
-- **Polysemous ≈ non-polysemous curvature** — Excess 0.499 vs 0.446, CI includes zero; polysemous curvature hypothesis falsified
-- **Cross-model distance validity FAILS** — r = 0.170, far below 0.50 threshold; navigational distances are not cross-model comparable
-- **Too-central categorization was wrong** — Tree/dough are obvious-useful, not too-central; only fire and water qualify
-- **Rain-ocean "water" universally too-central** (0.000 all models) — Generalizes O6 beyond fire
-- **Gradient > causal-chain** (0.730 vs 0.496) — Spectrum midpoints more navigational than process intermediaries
-- **Gemini systematic zeros on "obvious" bridges** — tree, dough, speak, water, noon all 0.000 for Gemini while other models ≥ 0.80
-- **Prediction accuracy 45%** (9/20) — Structural predictions ~75%, mechanistic predictions ~25%
-- See `findings/07-analysis.md` for full interpretive analysis
+## Phase 8 Summary
+- **2,690 new runs + 2,960 reused** across 14 fragility pairs, 20 gradient/causal pairs, 16 distance pairs, 4 models
+- **Route exclusivity hypothesis FAILS (G20)** — Competitor count does not predict bridge survival (rho = 0.116); sadness survives with 8 competitors, harmony collapses with 7
+- **Gemini gradient blindness FAILS BACKWARD (G21)** — Gemini zeros concentrate on causal-chain pairs (6/10), not gradient pairs (1/10); interaction 0.046 (CI includes zero)
+- **Gait normalization produces ZERO improvement (G22)** — Normalized r = 0.212 = raw r; disagreement is structural (ordinal), not scalar; model-independent geometry definitively blocked
+- **O17 replicates** — Gradient 0.770 vs causal 0.578, diff 0.193 (CI [0.010, 0.360])
+- **6/8 prospective pairs fail evaluability** — A priori bridge prediction remains unreliable after 8 phases
+- **Pre-fill facilitation discovered** — science-art "creativity" survival 5.200; pre-filling can INCREASE marginal bridge frequency (H11)
+- **Gemini's deficit is transformation-chain specific (H10)** — Fails on material/biological process intermediaries, succeeds on gradient midpoints
+- **New hypotheses:** H9 (dominance ratio predicts fragility), H10 (transformation-chain blindness), H11 (pre-fill facilitation crossover)
+- **Prediction accuracy 24%** (6/25) — Worst in benchmark history; single-variable mechanistic models fail
+- See `findings/08-analysis.md` for full interpretive analysis
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Phase 6 revised bridge model: "launching pad" not "narrow passage"
-- Phase 7 Part A adds 3 control conditions per Codex review recommendations
-- Phase 7 Part B includes distance-metric validity checks before curvature interpretation
-- Phase 7 analysis identifies associative primacy as primary mechanism, with possible congruence modulation
-- Dead ends tracked in `GRAVEYARD.md` (19 entries G1-G19 across Phases 1-7)
+- Phase 8 establishes that single-variable mechanistic models are inadequate
+- Dead ends tracked in `GRAVEYARD.md` (22 entries G1-G22 across Phases 1-8)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
-
-## Phase 8 Implementation Notes
-- 10 new/modified files: types.ts, metrics.ts, pairs-phase8.ts, 3 experiment scripts, 3 analysis scripts, package.json
-- Codex CLI review found 10 issues; 7 HIGH/MEDIUM fixed (missing data guard, sensitivity analysis, seeded RNG, prediction alignment, spec-matching thresholds, residual SD criterion)
-- 3 unfixed: pre-fill concurrency (same pattern as Phase 7, architectural choice), retrospective condition pooling (defensible), metadata run counting (low priority)
-- ~2,930 new API runs when experiments are executed
 
 ## Blockers
 None
 
 ## Next Steps
-- Execute Phase 8 experiments (`bun run fragility`, `bun run gradient`, `bun run gait-norm`)
-- Run Phase 8 analysis (`bun run analyze-fragility`, `bun run analyze-gradient`, `bun run analyze-gait-norm`)
-- Write Phase 8 findings
-- Consider paper writing (see `_deferred/paper.md`)
+- Implement Phase 9 (spec at `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`)
+- Execute Phase 9 experiments (dominance, transformation, facilitation)
+- Write Phase 9 findings and analysis
+- Consider paper writing — 8 phases of data support a four-act narrative (structure → topology → mechanism → limits)

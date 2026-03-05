@@ -223,3 +223,39 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 **Resolution:** Forced crossings are obligatory only in *unconstrained* navigation. When the first waypoint is pre-filled with a concept from a different semantic direction, models often fail to route back to the bottleneck. The pre-filled heading creates an alternative navigational trajectory that avoids the bottleneck entirely. This means "forced crossing" is about the *default* route, not an inescapable constraint.
 
 **Lesson:** Obligatory ≠ robust under perturbation. The bank bottleneck is the default navigational solution, but models can be pushed off this default by early anchoring. Confirms that waypoint 1 has outsized influence on the entire trajectory (consistent with early-anchoring mechanism).
+
+---
+
+## G20 — Phase 8: Route Exclusivity (Competitor Count) Predicts Bridge Fragility
+
+**What:** Predicted that bridges with more alternative waypoints (competitors at >20% frequency in salience landscapes) would show lower pre-fill survival, with Spearman rho < -0.70 retrospectively and < -0.60 combined across 14 pairs.
+
+**Why it failed:** Retrospective rho = 0.116 (slightly positive, opposite direction), combined rho = -0.121 (non-significant). The critical anomaly: sadness has 8 competitors yet survives at 0.807 (highest survival in the sample), while harmony has 7 competitors and collapses to 0.015. Competitor *count* is irrelevant because it does not distinguish between a bridge that dominates its alternatives (sadness towers over affect, mood, sentiment) and one that shares the landscape equally (harmony competes with rhythm, pattern, frequency at comparable frequencies).
+
+**Resolution:** The controlling variable is likely dominance ratio (bridge frequency / strongest competitor frequency), not raw competitor count. H9 proposes this replacement predictor. Additionally, 6 of 8 prospective pairs failed the evaluability gate (unconstrained bridge frequency < 0.40), confirming that a priori bridge prediction remains unreliable after 8 phases.
+
+**Lesson:** Counting alternatives ignores the distribution of traffic among them. A bridge with 8 weak competitors is more robust than one with 3 strong competitors. Quantity ≠ quality in the competitive landscape.
+
+---
+
+## G21 — Phase 8: Gemini Gradient Blindness
+
+**What:** Predicted that Gemini shows a selective deficit on gradient-midpoint bridges relative to causal-chain bridges, with the Gemini interaction (gradient - causal gap difference) at least 0.20 more negative than non-Gemini models, CI excluding zero. Predicted Gemini would produce zeros on >= 5/10 gradient pairs and <= 2/10 causal pairs.
+
+**Why it failed:** The result was backward. Gemini's zeros concentrate on causal-chain pairs (6/10), not gradient pairs (1/10). The interaction is 0.046 (CI [-0.339, 0.450]), statistically null. Gemini's proportional gradient advantage (gap = 0.227) is actually the largest of any model. Gemini succeeds on 9/10 gradient midpoints (warm, walk, lake, rock, rain, city, speak, adolescent, pebble-boulder) while failing on transformation intermediaries (cocoon, pottery, metal, flower, tree, dough).
+
+**Resolution:** Gemini's deficit is transformation-chain blindness (H10), not gradient blindness. Gemini handles continuous dimensions but cannot route through discrete transformation states in material/biological processes. This refines H1 (frame-crossing) by specifying the type of frame boundary that Gemini cannot cross.
+
+**Lesson:** When testing a specific mechanism, the opposite result is more informative than a null. Gemini's causal zeros (6/10) were the actual signal hiding in the Phase 7C data, but our framing focused on the wrong pair type.
+
+---
+
+## G22 — Phase 8: Gait Normalization Rescues Cross-Model Distance Metrics
+
+**What:** Predicted that dividing raw Jaccard distances by model-specific baselines (mean distance across 8 reference pairs) would raise cross-model correlation from r ~0.17 to r > 0.50, CI lower bound > 0.30.
+
+**Why it failed:** Normalization produces exactly zero improvement. Raw r = 0.212, normalized r = 0.212. Every pairwise model correlation is identical before and after normalization. The mathematical reason: dividing both variables by constants does not change Pearson correlation (r(X/a, Y/b) = r(X, Y)). The substantive reason: the cross-model disagreement is ordinal — models rank-order concept pair distances differently (Spearman = 0.287, also unchanged by normalization). Some model pairs actively anti-correlate (Grok-Gemini r = -0.580).
+
+**Resolution:** Model-independent geometry is definitively blocked with path-based measurements. The gait difference is not a scale factor but a structural reorganization of how each model measures conceptual space. Remaining options: embedding-based distances (different measurement modality), within-model-only analysis, or abandoning cross-model geometry entirely.
+
+**Lesson:** When a normalization has no effect, the diagnosis is that the problem is not what you thought. The disagreement was never about scale — it was about ordinal structure. Always check whether your proposed fix is mathematically capable of addressing the actual pattern in the data.
