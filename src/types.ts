@@ -1840,3 +1840,264 @@ export interface FacilitationAnalysisOutput {
     value: string;
   }>;
 }
+
+// --- Phase 10: Model Generality and Pre-Fill Relation Classes ---
+
+// Part A: Model Generality
+
+export type ModelReliabilityStatus = "reliable" | "slow" | "unparseable" | "unavailable" | "degraded";
+
+export interface Phase10CorePair {
+  id: string;
+  from: string;
+  to: string;
+  direction: "forward" | "reverse";
+  /** Which robust claims this pair tests */
+  tests: string[];
+  /** Expected bridge concept (for bridge frequency analysis) */
+  expectedBridge: string | null;
+  /** Prior bridge frequency (4-model mean from Phases 1-9) */
+  priorFreq: number | null;
+  targetReps: number;
+  notes?: string;
+}
+
+export interface Phase10ModelReliabilityResult {
+  modelId: string;
+  openRouterId: string;
+  displayName: string;
+  /** Probe results */
+  probeResults: Array<{
+    pairId: string;
+    success: boolean;
+    parsed: boolean;
+    waypointCount: number;
+    latencyMs: number;
+    error?: string;
+    promptFormat: PromptFormat;
+  }>;
+  /** Connectivity: fraction of probes that succeeded */
+  connectivityRate: number;
+  /** Parse: fraction of successful probes with valid waypoint extraction */
+  parseRate: number;
+  /** Median latency in ms */
+  medianLatencyMs: number;
+  /** Whether the model uses the fallback "direct" format */
+  usesDirectFormat: boolean;
+  /** Overall reliability classification */
+  status: ModelReliabilityStatus;
+  /** Reason for non-reliable status */
+  statusReason?: string;
+}
+
+export interface ModelGeneralityAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    newModels: string[];
+    originalModels: string[];
+    pairs: string[];
+    totalNewRuns: number;
+    reliableModelCount: number;
+  };
+  /** Model reliability reports */
+  reliabilityReports: Phase10ModelReliabilityResult[];
+  /** Gait profiles (R1 replication): intra-model Jaccard per model */
+  gaitProfiles: Array<{
+    modelId: string;
+    displayName: string;
+    meanIntraModelJaccard: number;
+    jaccardCI: [number, number];
+    isNewModel: boolean;
+    /** Per-pair intra-model Jaccard */
+    perPairJaccard: Array<{ pairId: string; jaccard: number }>;
+  }>;
+  /** Asymmetry (R2 replication): per model per pair */
+  asymmetryResults: Array<{
+    modelId: string;
+    pairId: string;
+    forwardPairId: string;
+    reversePairId: string;
+    asymmetryIndex: number;
+    asymmetryCI: [number, number];
+  }>;
+  /** Per-model mean asymmetry */
+  perModelAsymmetry: Array<{
+    modelId: string;
+    meanAsymmetry: number;
+    asymmetryCI: [number, number];
+    aboveThreshold: boolean; // > 0.60
+  }>;
+  /** Bridge frequency (R6 replication): per pair per model */
+  bridgeFrequencyMatrix: Array<{
+    pairId: string;
+    modelId: string;
+    expectedBridge: string | null;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+  }>;
+  /** Control validation (R5): stapler-monsoon */
+  controlValidation: Array<{
+    modelId: string;
+    topWaypoint: string;
+    topFrequency: number;
+    passesControl: boolean; // no single waypoint > 0.10
+    uniqueWaypoints: number;
+  }>;
+  /** Cohort comparison (primary test) */
+  cohortComparison: {
+    newCohortMeanBridgeFreq: number;
+    newCohortCI: [number, number];
+    originalCohortMeanBridgeFreq: number;
+    originalCohortCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    ciIncludesZero: boolean;
+  };
+  /** Pairwise model similarity (all models including original) */
+  modelSimilarityMatrix: Array<{
+    modelA: string;
+    modelB: string;
+    meanPairwiseJaccard: number;
+  }>;
+  /** Scale effect (Llama 8B if reliable) */
+  scaleEffect: {
+    llamaReliable: boolean;
+    llamaGaitJaccard: number | null;
+    llamaMeanBridgeFreq: number | null;
+    llamaMeanAsymmetry: number | null;
+    lowestGaitAmongAll: boolean | null;
+    highestEntropyAmongAll: boolean | null;
+  } | null;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part B: Pre-Fill Relation Classes
+
+export type RelationClass = "on-axis" | "same-domain" | "unrelated";
+
+export interface Phase10RelationClassPair {
+  id: string;
+  from: string;
+  to: string;
+  bridge: string;
+  unconstrainedFreq: number;
+  /** Pre-fill concepts for each relation class */
+  onAxisPreFill: string;
+  sameDomainPreFill: string;
+  unrelatedPreFill: string;
+  /** Rationale for each pre-fill classification */
+  onAxisRationale: string;
+  sameDomainRationale: string;
+  unrelatedRationale: string;
+  /** Source of unconstrained baseline data */
+  unconstrainedSource: string;
+  targetReps: number;
+  notes?: string;
+}
+
+export interface RelationClassAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    conditions: RelationClass[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Survival rate matrix: pair x model x condition */
+  survivalMatrix: Array<{
+    pairId: string;
+    modelId: string;
+    condition: RelationClass;
+    unconstrainedBridgeFreq: number;
+    preFillBridgeFreq: number;
+    survivalRate: number;
+    preFillBridgeFreqCI: [number, number];
+    runCount: number;
+  }>;
+  /** Aggregate survival by relation class */
+  aggregateSurvival: Array<{
+    condition: RelationClass;
+    meanSurvival: number;
+    survivalCI: [number, number];
+  }>;
+  /** Friedman test (primary test) */
+  friedmanTest: {
+    chiSquared: number;
+    pValue: number;
+    significant: boolean; // p < 0.05
+    df: number;
+    nPairs: number;
+  };
+  /** Post-hoc pairwise comparisons (Wilcoxon signed-rank) */
+  pairwiseComparisons: Array<{
+    classA: RelationClass;
+    classB: RelationClass;
+    meanDifference: number;
+    differenceCI: [number, number];
+    /** Wilcoxon signed-rank W statistic */
+    wilcoxonW: number;
+    pValue: number;
+    significant: boolean;
+  }>;
+  /** Ordering test: on-axis < unrelated < same-domain */
+  orderingTest: {
+    pairsWithCorrectOrder: number;
+    totalPairs: number;
+    proportion: number;
+  };
+  /** Warm/fermentation replication (Phase 9A comparison) */
+  warmFermentationReplication: Array<{
+    pairId: string;
+    condition: RelationClass;
+    phase10Survival: number;
+    phase9ASurvival: number | null;
+    difference: number | null;
+    replicates: boolean | null; // within 0.15
+  }>;
+  /** Per-model relation class separation */
+  perModelSeparation: Array<{
+    modelId: string;
+    onAxisMeanSurvival: number;
+    sameDomainMeanSurvival: number;
+    unrelatedMeanSurvival: number;
+    separationGap: number; // same-domain - on-axis
+  }>;
+  /** Interaction with bridge strength */
+  bridgeStrengthInteraction: {
+    correlationRho: number;
+    correlationCI: [number, number];
+    significant: boolean;
+    dataPoints: Array<{
+      pairId: string;
+      unconstrainedFreq: number;
+      onAxisSurvival: number;
+    }>;
+  };
+  /** Phase 7A taxonomy comparison */
+  phase7AComparison: {
+    phase7AWithinClassVariance: number | null;
+    phase10OnAxisVariance: number | null;
+    phase10SameDomainVariance: number | null;
+    phase10ReducesVariance: boolean | null;
+  };
+  /** Effect size */
+  effectSize: {
+    cohensD: number;
+    interpretation: "small" | "medium" | "large" | "very large";
+  };
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}

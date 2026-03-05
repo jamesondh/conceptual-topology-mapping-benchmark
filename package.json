@@ -53,6 +53,11 @@
     "facilitation": "bun run experiments/09c-facilitation.ts",
     "analyze-facilitation": "bun run analysis/09c-facilitation.ts",
     "phase9": "bun run experiments/09a-dominance.ts && bun run analysis/09a-dominance.ts && bun run experiments/09b-transformation.ts && bun run analysis/09b-transformation.ts && bun run experiments/09c-facilitation.ts && bun run analysis/09c-facilitation.ts",
+    "model-generality": "bun run experiments/10a-model-generality.ts",
+    "analyze-model-generality": "bun run analysis/10a-model-generality.ts",
+    "relation-classes": "bun run experiments/10b-relation-classes.ts",
+    "analyze-relation-classes": "bun run analysis/10b-relation-classes.ts",
+    "phase10": "bun run experiments/10a-model-generality.ts && bun run analysis/10a-model-generality.ts && bun run experiments/10b-relation-classes.ts && bun run analysis/10b-relation-classes.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

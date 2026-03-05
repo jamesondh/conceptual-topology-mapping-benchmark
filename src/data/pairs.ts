@@ -546,3 +546,35 @@ export const MODELS: ModelConfig[] = [
     displayName: "Gemini 3 Flash",
   },
 ];
+
+/**
+ * Phase 10A: New models for model generality testing.
+ * Separate from MODELS array for backward compatibility.
+ */
+export const NEW_MODELS: ModelConfig[] = [
+  {
+    id: "minimax",
+    openRouterId: "minimax/minimax-m2.5",
+    displayName: "MiniMax M2.5",
+  },
+  {
+    id: "kimi",
+    openRouterId: "moonshotai/kimi-k2.5",
+    displayName: "Moonshot Kimi K2.5",
+  },
+  {
+    id: "glm",
+    openRouterId: "z-ai/glm-5",
+    displayName: "GLM 5",
+  },
+  {
+    id: "qwen",
+    openRouterId: "qwen/qwen3.5-397b-a17b",
+    displayName: "Qwen 3.5 397B-A17B",
+  },
+  {
+    id: "llama",
+    openRouterId: "meta-llama/llama-3.1-8b-instruct",
+    displayName: "Llama 3.1 8B Instruct",
+  },
+];
