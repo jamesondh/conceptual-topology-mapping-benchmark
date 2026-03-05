@@ -79,7 +79,7 @@ bun run dominance                # Phase 9A: bridge dominance ratio experiment (
 bun run analyze-dominance        # Phase 9A: analyze dominance results
 bun run transformation           # Phase 9B: transformation-chain blindness experiment (~1260 API calls)
 bun run analyze-transformation   # Phase 9B: analyze transformation results
-bun run facilitation             # Phase 9C: pre-fill facilitation experiment (~960 API calls)
+bun run facilitation             # Phase 9C: pre-fill facilitation experiment (~1040 API calls)
 bun run analyze-facilitation     # Phase 9C: analyze facilitation results
 bun run phase9                   # Run all Phase 9 in sequence (9A → 9B → 9C)
 ```

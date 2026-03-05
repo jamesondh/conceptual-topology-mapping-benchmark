@@ -122,7 +122,7 @@ bun run dominance                # Part A: ~420 API calls (dominance ratio + pre
 bun run analyze-dominance        # Analyze dominance results
 bun run transformation           # Part B: ~1260 API calls (transformation vs gradient pairs)
 bun run analyze-transformation   # Analyze transformation results
-bun run facilitation             # Part C: ~960 API calls (pre-fill facilitation crossover)
+bun run facilitation             # Part C: ~1040 API calls (pre-fill facilitation crossover)
 bun run analyze-facilitation     # Analyze facilitation results
 bun run phase9                   # Run all Phase 9 in sequence
 ```
@@ -229,7 +229,7 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 
 ## Status
 
-**Phase 9 implemented, awaiting experiment execution.** Cumulative: 16,000+ API runs across 4 models and 8 phases. Phase 9 adds ~2,640 new runs.
+**Phase 9 implemented and code-reviewed, awaiting experiment execution.** Cumulative: 16,000+ API runs across 4 models and 8 phases. Phase 9 adds ~2,720 new runs.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -239,6 +239,6 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 - **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
 - **Phase 7:** 2,360 runs + 920 reused. Pre-filling causally displaces bridges (0.515, CI excludes zero). Bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive). Taxonomic bridges resist displacement (0.140). Triangle inequality replicates at 90.6%. Cross-model distance validity fails (r=0.170). Too-central categorization was wrong — only fire/water qualify. Gradient > causal-chain bridges (0.730 vs 0.496). Gemini systematic zeros on obvious univocal bridges.
 - **Phase 8:** 2,690 runs + 2,960 reused. All three primary hypotheses fail: route exclusivity (rho=0.116), gradient blindness (interaction=0.046), gait normalization (zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges, transformation-chain blindness for Gemini, model-independent geometry definitively blocked. Prediction accuracy 24% (worst in benchmark) — single-variable mechanistic models are inadequate.
-- **Phase 9:** ~2,640 planned runs. Tests three successor hypotheses from Phase 8: dominance ratio as fragility predictor (H9), Gemini transformation-chain blindness (H10), pre-fill facilitation crossover (H11). Implemented, awaiting execution.
+- **Phase 9:** ~2,720 planned runs. Tests three successor hypotheses from Phase 8: dominance ratio as fragility predictor (H9), Gemini transformation-chain blindness (H10), pre-fill facilitation crossover (H11). Implemented and code-reviewed, awaiting experiment execution.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

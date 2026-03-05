@@ -477,9 +477,9 @@ export const PHASE9C_PAIRS: Phase9FacilitationPair[] = [
     incongruentPreFill: "concrete",
     neutralPreFill: "experiment",
     unconstrainedSource: "Phase 8A",
-    newConditions: ["congruent", "neutral"],
+    newConditions: ["congruent", "incongruent", "neutral"],
     targetReps: 10,
-    notes: "Marginal bridge; congruent and neutral conditions only",
+    notes: "Marginal bridge; all three conditions",
   },
   {
     id: "p9c-student-professor",
@@ -492,9 +492,9 @@ export const PHASE9C_PAIRS: Phase9FacilitationPair[] = [
     incongruentPreFill: "glacier",
     neutralPreFill: "university",
     unconstrainedSource: "Phase 8A",
-    newConditions: ["congruent", "neutral"],
+    newConditions: ["congruent", "incongruent", "neutral"],
     targetReps: 10,
-    notes: "Marginal bridge; congruent and neutral conditions only",
+    notes: "Marginal bridge; all three conditions",
   },
   // Pilot pairs (no prior unconstrained data)
   {

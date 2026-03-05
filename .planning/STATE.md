@@ -1,7 +1,7 @@
 # State
 
 ## Current Phase
-Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **IMPLEMENTED**, awaiting experiment execution
+Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **IMPLEMENTED & REVIEWED**, awaiting experiment execution
 
 ## Context
 - Research survey complete (`research.md`)
@@ -34,11 +34,15 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 
 ## Phase 9 Implementation Status
 - **Spec:** `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`
-- **Implementation:** Complete — all experiment + analysis scripts, types, metrics, pair definitions
+- **Implementation:** Complete and code-reviewed — all experiment + analysis scripts, types, metrics, pair definitions
+- **Code review:** Codex review identified 6 issues (2 high, 4 medium); 2 real fixes applied, 4 false positives/by-design
+  - Fixed: marginal pairs (science-art, student-professor) now collect all 3 pre-fill conditions (was missing incongruent, making predictions P4/P6 untestable)
+  - Fixed: write failure handling in 09a/09c now returns success/failure and tracks write failures in final summary
+  - Verified correct: P4 directional test in 09b (already uses `>=`, not `Math.abs`), condition pooling in 09a (intentional for H9), evaluability gate in 09a (already uses raw frequency), per-model throttling (JS event loop makes it atomic)
 - **New files:** `pairs-phase9.ts`, 3 experiment scripts (`09a-dominance.ts`, `09b-transformation.ts`, `09c-facilitation.ts`), 3 analysis scripts
 - **Modified files:** `types.ts` (+325 lines), `metrics.ts` (+90 lines), `package.json` (+8 scripts)
-- **Estimated runs:** ~2,640 new API calls (Part A: ~420, Part B: ~1,260, Part C: ~960)
-- **Estimated cost:** ~$9-12 via OpenRouter
+- **Estimated runs:** ~2,720 new API calls (Part A: ~420, Part B: ~1,260, Part C: ~1,040)
+- **Estimated cost:** ~$9-13 via OpenRouter
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal

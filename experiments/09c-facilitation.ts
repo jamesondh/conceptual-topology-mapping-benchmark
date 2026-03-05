@@ -596,18 +596,22 @@ async function main() {
   let totalCompleted = 0;
   const experimentStartTime = Date.now();
 
+  let writeFailures = 0;
+
   // Helper: write a result atomically
-  async function writeResult(result: ElicitationResult): Promise<void> {
+  async function writeResult(result: ElicitationResult): Promise<boolean> {
     const resultPath = path.join(facilitationDir, `${result.runId}.json`);
     try {
       const tmpPath = `${resultPath}.tmp.${Date.now()}`;
       await writeFile(tmpPath, JSON.stringify(result, null, 2));
       await rename(tmpPath, resultPath);
+      return true;
     } catch (writeError: unknown) {
       console.error(
-        `Failed to write ${result.runId}:`,
+        `\u26a0 Failed to persist ${result.runId}:`,
         writeError instanceof Error ? writeError.message : writeError,
       );
+      return false;
     }
   }
 
@@ -649,7 +653,8 @@ async function main() {
           if (result.failureMode) {
             perModelFailed.set(modelId, (perModelFailed.get(modelId) ?? 0) + 1);
           }
-          await writeResult(result);
+          const written = await writeResult(result);
+          if (!written) writeFailures++;
           allNewResults.push(result);
           totalCompleted++;
           reportProgress();
@@ -740,7 +745,8 @@ async function main() {
             perModelFailed.set(modelId, (perModelFailed.get(modelId) ?? 0) + 1);
           }
 
-          await writeResult(result);
+          const written = await writeResult(result);
+          if (!written) writeFailures++;
           preFilledResults.push(result);
           allNewResults.push(result);
         } catch (error: unknown) {
@@ -765,7 +771,8 @@ async function main() {
           };
           perModelCompleted.set(modelId, (perModelCompleted.get(modelId) ?? 0) + 1);
           perModelFailed.set(modelId, (perModelFailed.get(modelId) ?? 0) + 1);
-          await writeResult(failResult);
+          const written = await writeResult(failResult);
+          if (!written) writeFailures++;
           preFilledResults.push(failResult);
           allNewResults.push(failResult);
         }
@@ -799,6 +806,9 @@ async function main() {
   console.log(`Successful:     ${successful.length}`);
   console.log(`Failed:         ${failed.length}`);
   console.log(`Success rate:   ${allNewResults.length > 0 ? ((successful.length / allNewResults.length) * 100).toFixed(1) : 0}%`);
+  if (writeFailures > 0) {
+    console.log(`\u26a0 Write failures: ${writeFailures} (results may need re-collection)`);
+  }
   console.log("");
 
   // Per-stage breakdown
