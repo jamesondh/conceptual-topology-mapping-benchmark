@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. 9 experimental phases complete (~18,000 API runs across 4 models), Phase 10 implemented and awaiting execution. Same process as word-convergence-game's 5 rounds.
+Exploration-first project. All 10 experimental phases complete (~19,000 API runs across 5 models). Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -13,15 +13,15 @@ Exploration-first project. 9 experimental phases complete (~18,000 API runs acro
 - [x] **Phase 8: Bridge fragility and Gemini gradient blindness** — 2,690 new runs + 2,960 reused across 14 fragility pairs, 20 gradient/causal pairs, 16 distance pairs. All three primary hypotheses fail: route exclusivity (G20, rho=0.116), gradient blindness (G21, interaction=0.046), gait normalization (G22, zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges (H11), transformation-chain blindness for Gemini (H10), dominance ratio as fragility predictor (H9). Prediction accuracy 24% (6/25), lowest in benchmark. See `findings/08a-fragility.md`, `findings/08b-gradient.md`, `findings/08c-gait-norm.md`, and `findings/08-analysis.md`.
 - [x] **Phase 9: Bridge dominance, transformation chains, and pre-fill facilitation** — 3,037 new runs + ~5,270 reused across 14 dominance pairs, 20 transformation/gradient pairs, 14 facilitation pairs. All three primary hypotheses fail: dominance ratio (G23, rho=0.157), transformation-chain blindness (G24, interaction=-0.290 reversed), facilitation crossover (G25 partial, slope CI includes zero). O17 fails third replication (transformation > gradient). Key discoveries: pre-fill content modulates survival magnitude for some pairs (O21, corrected comparison shows 5/8 Phase 7A pairs replicate), marginal bridges show massive facilitation under aligned pre-fill (O22, mean 3.761x), bridge specification quality outpredicts type classification (O23). Prediction accuracy 20% (5/25). See `findings/09a-dominance.md`, `findings/09b-transformation.md`, `findings/09c-facilitation.md`, and `findings/09-analysis.md`.
 
-## In Progress
-- [ ] **Phase 10: Model Generality and Pre-Fill Relation Classes** — Code implemented and code-reviewed. Part A: tests whether core structural findings (R1-R7) generalize to 5 new models (MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B) via probe reliability → full elicitation (~1200 API calls). Part B: tests three-way pre-fill relation class taxonomy (on-axis/same-domain/unrelated) for predicting bridge survival (960 API calls, 4 original models). Friedman + Wilcoxon non-parametric tests. Awaiting experiment execution.
+- [x] **Phase 10: Model Generality and Pre-Fill Relation Classes** — 1,140 new runs + 778 reused across 5 new models (10A) and 4 core models (10B). Part A: 4/5 new models failed on OpenRouter latency; only Llama 3.1 8B passed. R1 (gait 0.298) and R2 (asymmetry 0.785) replicate; bridge frequency does not generalize (Llama 0.200 vs original 0.817). Part B: Friedman test significant (p=0.034) — relation class affects bridge survival. Unrelated pre-fills most disruptive (0.388), on-axis (0.643) ≈ same-domain (0.708). Warm/fermentation replications perfect. Prediction accuracy 33% (6/18). Capstone finding: structural properties are universal, navigational content is model-specific. See `findings/10a-model-generality.md`, `findings/10b-relation-classes.md`, and `findings/10-analysis.md`.
 
 ## Next Priority
-- **Paper writing & positioning** — 10 phases support four-act narrative (structure → topology → mechanism → limits) plus generality test. 7 robust claims, 24 observations, 25 graveyard entries constitute a comprehensive empirical characterization.
+- **Paper writing & positioning** — 10 phases support five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 26 observations, 27 graveyard entries constitute a comprehensive empirical characterization.
 
 ## Deferred
 - Multiverse robustness analysis — R1-R7 across different waypoint counts, prompt formats, temperatures (pre-paper)
 - Embedding-based distance validation — may rescue cross-model geometry where path-based failed (O18, O19, G22)
+- Native API retesting — 4 failed probe models (Qwen, MiniMax, GLM, Kimi) may pass via native APIs bypassing OpenRouter latency
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many
 - ConceptNet path comparison / external anchoring
 - Multi-agent waypoint negotiation
@@ -32,3 +32,4 @@ Exploration-first project. 9 experimental phases complete (~18,000 API runs acro
 - Temporal stability replication (from Phase 6/7/8B analysis — 9/12 Phase 7C pairs replicate in 8B; Phase 9C shows 5/8 replicate with corrected congruent-to-congruent comparison)
 - Multi-variable bridge fragility model — both single-variable predictors failed (G20, G23); needs joint model of pre-fill content + bridge role + dominance
 - Gemini deficit characterization — three mechanistic attempts falsified (G7, G21, G24); needs different approach (possibly non-type-based)
+- Scale-dependent control thresholds — Llama 8B control failure suggests R5 thresholds need adjustment for smaller models

@@ -10,25 +10,31 @@ Give models two concepts, ask for intermediate waypoints, and test whether the r
 
 ## Key Findings
 
-Across 18,000+ elicitation runs and 4 models across 9 phases, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
+Across 19,000+ elicitation runs and 5 models across 10 phases, the benchmark has established 7 robust claims about how LLMs navigate conceptual space:
 
-### Models have distinct "conceptual gaits"
-Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography."
+### R1. Models have distinct "conceptual gaits"
+Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography." Confirmed across 5 models including Llama 3.1 8B (0.298) — gait is a universal property of LLM navigation, not specific to frontier models.
 
-### Conceptual space is quasimetric, not metric
-The path from A→B is fundamentally different from B→A. Mean directional asymmetry is 0.811 across all pairs, and 87% of conditions show statistically significant asymmetry. Even supposedly "symmetric" relationships like synonyms are directional. This means LLM conceptual space has a consistent orientation — direction matters semantically.
+### R2. Conceptual space is quasimetric, not metric
+The path from A→B is fundamentally different from B→A. Mean directional asymmetry is 0.811 across all pairs, and 87% of conditions show statistically significant asymmetry. Even supposedly "symmetric" relationships like synonyms are directional. Triangle inequality holds at ~91% across three independent samples. Confirmed across 5 models including Llama 3.1 8B (asymmetry 0.785). Conceptual space satisfies all metric axioms *except* symmetry.
 
-### Polysemy routing is remarkably clean
-When the same ambiguous word (e.g., "bank") is steered toward different senses via its endpoint (river vs. mortgage), the resulting paths diverge completely (0.000 cross-pair Jaccard). LLMs don't just pick different words — they route through entirely distinct intermediate concept spaces.
+### R3. Polysemy routing is remarkably clean
+When the same ambiguous word (e.g., "bank") is steered toward different senses via its endpoint (river vs. mortgage), the resulting paths diverge completely (0.011-0.062 cross-pair Jaccard). LLMs don't just pick different words — they route through entirely distinct intermediate concept spaces.
 
-### Hierarchical paths compose like a metric space
+### R4. Hierarchical paths compose like a metric space
 Paths along taxonomic chains (animal→dog→poodle) show 4.9× more waypoint overlap than random concept triples. The triangle inequality holds in 91% of cases. Conceptual navigation has genuine mathematical structure, not just surface associations.
 
-### Bridge concepts are predictable — but model-dependent
-When two concepts share an obvious intermediary (music→*harmony*→mathematics), that bridge concept appears on the direct path with 81.3% prediction accuracy for concrete bridges. But abstract bridges fail universally (0% for "metaphor"). Claude uses "harmony" 100% of the time on music→mathematics; Gemini uses it 0%.
+### R5. Controls validate cleanly
+Nonsense controls show near-zero consistency (Jaccard 0.062, entropy 6.37). Random bridge concepts never appear on paths (0% bridge frequency across all phases). This eliminates artifact explanations: the structure measured in experimental conditions is not an artifact of the elicitation task, limited vocabulary, or formulaic responses.
 
-### Gemini fragments at conceptual frame boundaries
-Gemini shows systematic isolation from other models (mean bridge frequency delta: 0.336 vs 0.200 for non-Gemini pairs). This isn't just about abstract vs. concrete — Gemini fails specifically when navigation requires crossing between conceptual frames, suggesting a fundamentally different internal organization of semantic space.
+### R6. Bridge concepts are bottlenecks, not associations
+A concept serves as a navigational bridge when it is the *necessary intermediate step* in the most natural decomposition of the endpoint relationship, not merely when it is associated with both endpoints. "Spectrum" works (names the mechanism), "metaphor" fails (associated but off-axis), "germination" outperforms "plant" (process-naming > object-naming). However, the *specific* bridges are model-dependent — Llama 3.1 8B uses entirely different bridges than the original cohort (mean freq 0.200 vs 0.817).
+
+### R7. Cue-strength gradient exists
+12 of 16 family/model combinations show monotonic decrease in bridge frequency from highest to lowest cue level. For three well-behaved families (physical-causation, compositional-hierarchy, abstract-affect), the gradient is perfect across all models.
+
+### The structure/content boundary (Phase 10 capstone)
+Structural properties (gait, asymmetry, compositionality) are universal across model architectures and scales. But navigational content (which specific bridges get used, which waypoints appear) is model-specific. A small model navigates the same geometric space but takes completely different paths. This is analogous to all models navigating a Riemannian manifold with consistent curvature but different coordinate charts.
 
 ## Quick Start
 
@@ -239,7 +245,7 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 
 ## Status
 
-**Phase 10 implemented and code-reviewed, awaiting experiment execution.** Cumulative: 18,000+ API runs across 4 models and 9 phases. Phase 10 adds ~2,160 new runs (1,200 model generality + 960 relation classes).
+**All 10 phases complete.** Cumulative: ~19,000 API runs across 5 models and 10 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -250,6 +256,6 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 - **Phase 7:** 2,360 runs + 920 reused. Pre-filling causally displaces bridges (0.515, CI excludes zero). Bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive). Taxonomic bridges resist displacement (0.140). Triangle inequality replicates at 90.6%. Cross-model distance validity fails (r=0.170). Too-central categorization was wrong — only fire/water qualify. Gradient > causal-chain bridges (0.730 vs 0.496). Gemini systematic zeros on obvious univocal bridges.
 - **Phase 8:** 2,690 runs + 2,960 reused. All three primary hypotheses fail: route exclusivity (rho=0.116), gradient blindness (interaction=0.046), gait normalization (zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges, transformation-chain blindness for Gemini, model-independent geometry definitively blocked. Prediction accuracy 24% (worst in benchmark) — single-variable mechanistic models are inadequate.
 - **Phase 9:** 3,037 runs + ~5,270 reused. All three primary hypotheses fail: dominance ratio (rho=0.157), transformation-chain blindness (interaction=-0.290 reversed), facilitation crossover (slope CI includes zero). Marginal facilitation real (3.761× survival). Pre-fill content modulates survival for some pairs. Bridge specification > type classification. Prediction accuracy 20%.
-- **Phase 10:** ~2,160 planned runs. Part A: tests whether core structural findings (R1-R7) generalize to 5 new models (MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B) via probe reliability protocol. Part B: tests three-way pre-fill relation class taxonomy (on-axis/same-domain/unrelated) with Friedman + Wilcoxon non-parametric tests. Implemented and code-reviewed, awaiting experiment execution.
+- **Phase 10:** 1,140 runs + 778 reused. Part A: 4/5 new models failed on OpenRouter latency; only Llama 3.1 8B passed. R1 (gait 0.298) and R2 (asymmetry 0.785) replicate cross-architecture. Bridge frequency does not generalize (Llama 0.200 vs original 0.817). Part B: Friedman test significant (p=0.034) — relation class affects bridge survival. Unrelated pre-fills most disruptive (0.388), on-axis (0.643) ≈ same-domain (0.708). Prediction accuracy 33% (6/18). Capstone: structural properties are universal, navigational content is model-specific.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

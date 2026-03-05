@@ -1,14 +1,14 @@
 # State
 
 ## Current Phase
-Phase 10: Model Generality and Pre-Fill Relation Classes — **IMPLEMENTED, AWAITING EXECUTION**
+Phase 10: Model Generality and Pre-Fill Relation Classes — **COMPLETE**
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
-- **All 9 phases complete. ~18,000 total API runs across 4 models.**
-- **Phase 10 code implemented and code-reviewed. Awaiting experiment execution.**
+- **All 10 phases complete. ~19,000 total API runs across 5 models.**
+- **Benchmark empirical program is complete. Paper writing is the next priority.**
 
 ## Phase 1-4 Summary (Condensed)
 1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
@@ -41,23 +41,25 @@ Phase 10: Model Generality and Pre-Fill Relation Classes — **IMPLEMENTED, AWAI
 - **New observations:** O21 (pre-fill content modulates magnitude), O22 (marginal facilitation), O23 (bridge specification > type), O24 (prediction plateau at ~20-24%)
 
 ## Phase 10 Summary
-- **Code implemented and code-reviewed. Awaiting experiment execution.**
-- **Part A — Model Generality:** Tests whether core structural findings (R1-R7) generalize to 5 new models (MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B) via OpenRouter. Two-stage design: probe reliability → full elicitation. 8 forward pairs + 4 reverse pairs, 10 reps each. ~1200 API calls (if all 5 models pass probes).
-- **Part B — Pre-Fill Relation Classes:** Tests three-way taxonomy (on-axis substitute, same-domain off-axis, unrelated) for predicting bridge survival under pre-fill. 8 pairs × 3 conditions × 4 original models × 10 reps = 960 API calls. Friedman test + Wilcoxon signed-rank for blocked non-parametric comparison.
-- **New files:** `src/data/pairs-phase10.ts`, `experiments/10a-model-generality.ts`, `experiments/10b-relation-classes.ts`, `analysis/10a-model-generality.ts`, `analysis/10b-relation-classes.ts`
-- **Codex review:** 7 issues identified, 6 fixed (data validity guards, probe resume, connectivity misreport, seeded bootstrap, batchId tagging, cohort granularity).
+- **1,140 new runs + 778 reused** across 5 new models (10A) and 4 core models (10B), 12 generality pairs and 8 relation-class pairs
+- **Part A — Model Generality (180 runs, Llama only):** 4/5 new models failed on OpenRouter latency (69-133s). Only Llama 3.1 8B passed (1.5s). R1 (gait) replicates at 0.298, R2 (asymmetry) replicates at 0.785, cross-model Jaccard 0.145 confirms shared structure. But bridge frequency gap is massive: Llama 0.200 vs original cohort 0.817 (CI excludes zero). **Structural universals confirmed; navigational content is model-specific.**
+- **Part B — Pre-Fill Relation Classes (960 runs):** Friedman test significant (p=0.034) — taxonomy captures real variance. Predicted ordering WRONG: actual is unrelated (0.388) < on-axis (0.643) ≈ same-domain (0.708). Unrelated pre-fills most disruptive. Warm/fermentation replications perfect (within 0.026 of Phase 9A).
+- **Prediction accuracy 33% (6/18)** — structural replications succeed, mechanism predictions fail. Consistent with benchmark pattern.
+- **New observations:** O25 (structure generalizes, content doesn't), O26 (relation class affects survival — unrelated most destructive)
+- **Graveyard:** G26 (bridge generalization fails), G27 (predicted ordering wrong)
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Phases 8-9 establish that single-variable mechanistic models are inadequate (6/6 hypotheses fail)
-- Dead ends tracked in `GRAVEYARD.md` (25 entries G1-G25 across Phases 1-9)
+- Phases 8-10 establish that single-variable mechanistic models are inadequate (8/8 hypotheses fail at primary test level)
+- Dead ends tracked in `GRAVEYARD.md` (27 entries G1-G27 across Phases 1-10)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
+- Structure/content boundary is the capstone finding: geometric structure is universal, navigational landmarks are model-specific
 
 ## Blockers
 None
 
 ## Next Steps
-- **Execute Phase 10** — Run `bun run model-generality` (probe stage first), then `bun run relation-classes`, then analysis scripts
-- **Paper writing** — 10 phases of data support a four-act narrative (structure → topology → mechanism → limits), plus generality test
+- **Paper writing** — 10 phases of data support a five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 26 observations, 27 graveyard entries.
 - Consider multiverse robustness analysis before paper (R1-R7 across different waypoint counts, prompts, temperatures)
 - Consider embedding-based distance approach (may rescue cross-model geometry where path-based failed)
+- Consider retesting failed probe models via native APIs (bypassing OpenRouter latency bottleneck)

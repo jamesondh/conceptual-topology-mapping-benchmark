@@ -297,3 +297,27 @@ The regression fails because the data is too heterogeneous to support a single-v
 **What survived:** The facilitation effect itself is real and large (O22: mean congruent survival 3.761 for marginal bridges). The displacement effect for dominant bridges is present but marginally fails the pre-registered threshold (mean survival 0.815 > 0.80 cutoff, largely due to corrected animal-poodle "dog" at 0.941). The qualitative distinction (marginal bridges can be facilitated, dominant bridges are generally displaced) holds. What fails is the regression model that predicts the crossover quantitatively.
 
 **Lesson:** The benchmark keeps finding that qualitative directional predictions succeed (~50% accuracy for structure) while quantitative predictions fail (~0% for mechanism). This is not coincidence — it reflects that the phenomenon has qualitative structure (bridges are either robust or fragile, facilitation or displacement) that is captured by coarse categories, but the specific outcome for any given pair depends on interaction effects (bridge × pre-fill content × model) that no single-variable regression can capture.
+
+---
+
+## G26 — Phase 10: Bridge Bottleneck Generalization to New Models
+
+**What:** Predicted that the new model cohort's mean bridge frequency CI would include zero (i.e., no significant difference from the original cohort), demonstrating that bridge bottleneck structure (R6) generalizes beyond the original four models.
+
+**Why it failed:** New cohort (Llama 3.1 8B) mean bridge frequency is 0.200, compared to the original cohort's 0.817. The difference is -0.617 (CI [-0.805, -0.383]), massive and statistically significant. Only 1/7 non-control pairs exceeds bridge frequency 0.40 (hot-cold "warm" at 0.733). Harmony, spectrum, dog, sadness, germination, and leather — all reliable bridges for the original four models — appear at low or zero frequency in Llama. The model routes through entirely different intermediaries.
+
+**Resolution:** Bridge bottleneck *structure* (that some concepts serve as navigational bottlenecks) is likely universal — R6's principle holds. But the *specific* bottleneck concepts are model-dependent navigational content. This crystallizes the benchmark's capstone finding: structural properties of conceptual navigation (gait, asymmetry, compositionality) generalize across architectures and scales, but navigational content (which bridges, which waypoints, which routes) does not. Note: this finding is based on a single new model; the 4 probe failures were OpenRouter infrastructure artifacts, not model capability failures.
+
+**Lesson:** Generality tests that depend on infrastructure (OpenRouter latency) can produce false negatives. The probe stage design was correct — it saved ~1,000 API calls — but the finding of non-generalization for bridge content may be overstated by having only one successful probe model. Native API access for the 4 failed models would provide a much stronger test.
+
+---
+
+## G27 — Phase 10: Predicted Relation Class Ordering (On-Axis < Unrelated < Same-Domain)
+
+**What:** Predicted that on-axis substitutes (concepts competing on the same semantic dimension as the bridge) would be the most disruptive pre-fills, with the ordering on-axis < unrelated < same-domain in >= 5/8 pairs. The logic: on-axis pre-fills directly compete with the bridge for the same navigational slot, unrelated pre-fills moderately disrupt, and same-domain pre-fills prime the right area without competing.
+
+**Why it failed:** The actual ordering is unrelated (0.388) < on-axis (0.643) ≈ same-domain (0.708). Only 1/8 pairs showed the predicted ordering. On-axis and same-domain are comparably protective (Wilcoxon p=0.889), while both are significantly better than unrelated (p=0.025 and p=0.036 respectively).
+
+**Resolution:** The disruption mechanism is about maintaining vs. destroying navigational context, not about dimensional competition. On-axis pre-fills, despite competing with the bridge on the same dimension, keep the model in the right conceptual neighborhood — the model continues navigating within the relevant semantic space and can still encounter the bridge (or functional equivalents). Unrelated pre-fills derail navigation entirely — the model must spend subsequent waypoints recovering from the irrelevant heading before re-entering the correct conceptual neighborhood. The Friedman test (p=0.034) confirming that relation class matters survives as a genuine finding (O26); the mechanism is just different than predicted.
+
+**Lesson:** The operationally meaningful distinction is binary (related vs. unrelated), not the three-way taxonomy. On-axis and same-domain pre-fills function similarly because both maintain navigational context. This mirrors the benchmark's broader pattern: coarse categorical distinctions capture the phenomena, while fine-grained mechanistic orderings fail.

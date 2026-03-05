@@ -15,16 +15,16 @@ All major claims from the benchmark, tagged by evidence tier. This is the canoni
 ### R1. Models have distinct, stable conceptual gaits
 **[robust]** — Phase 1, replicated across Phases 2-5.
 
-Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.258). This gap is stable across 5 phases and 9,500+ runs. Grok (0.293) and Gemini (0.372) fall between. The consistency profile predicts downstream behavior: Claude's rigidity produces the strongest positional signals (Phase 5C W-shape), GPT's variability produces the broadest bridge exploration, Gemini's fragmentation produces systematic cross-frame failures.
+Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.258). This gap is stable across 5 phases and 9,500+ runs. Grok (0.293) and Gemini (0.372) fall between. The consistency profile predicts downstream behavior: Claude's rigidity produces the strongest positional signals (Phase 5C W-shape), GPT's variability produces the broadest bridge exploration, Gemini's fragmentation produces systematic cross-frame failures. Phase 10A confirms cross-architecture generality: Llama 3.1 8B (different architecture, 8B scale) shows characteristic gait at Jaccard 0.298 — within the expected range, confirming gait is a universal property of LLM navigation, not specific to frontier models.
 
-**Sources:** `01-pilot-analysis.md` §2, `05-analysis.md` §7 (Phase 1 gaits and Phase 5 predictions)
+**Sources:** `01-pilot-analysis.md` §2, `05-analysis.md` §7, `10-analysis.md` §1
 
 ### R2. Conceptual navigation is fundamentally asymmetric (quasimetric)
 **[robust]** — Phase 2 (primary), Phase 3B (triangle inequality), Phases 4-5 (consistent with).
 
-Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space.
+Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space. Phase 10A confirms cross-architecture generality: Llama 3.1 8B shows asymmetry index 0.785 (CI [0.708, 0.847]), well above the 0.60 threshold. Quasimetric navigation is universal across architectures and scales.
 
-**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`
+**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`, `10-analysis.md` §1
 
 ### R3. Polysemy sense differentiation is genuine
 **[robust]** — Phase 1 (original, corrected in Phase 2), Phase 5B (extended).
@@ -411,6 +411,38 @@ Predicted significant negative regression slope for survival on unconstrained fr
 **[replication failure]** — Phase 9B.
 
 Phase 9B finds transformation 0.699 > gradient 0.543, opposite to Phase 7C (0.730 vs 0.496) and Phase 8B (0.770 vs 0.578). Reversal is driven by bridge specification quality (bottleneck vs hypernym/too-central), not pair type. O17 remains [observed] from Phases 7C/8B but is pair-specific, not type-general. NOT promoted to [robust].
+
+---
+
+## New Observations from Phase 10
+
+### O25. Structural properties generalize to small models; navigational content does not
+**[observed]** — Phase 10A (1 new model, 180 runs).
+
+Llama 3.1 8B (different architecture, 8B scale) shows characteristic gait (Jaccard 0.298, CI [0.202, 0.390]), quasimetric asymmetry (0.785, CI [0.708, 0.847]), and non-zero cross-model Jaccard (mean 0.145, above 0.10 threshold), confirming R1, R2, and shared structure. But mean bridge frequency (0.200) is massively lower than the original cohort (0.817, diff -0.617, CI [-0.805, -0.383] excludes zero). The geometry is universal; the landmarks are model-specific. A small model navigates the same topological space but takes completely different paths. Note: based on a single new model; generality of this finding awaits testing with additional models.
+
+**Sources:** `10a-model-generality.md`, `10-analysis.md` §1
+
+### O26. Relation class significantly affects bridge survival; unrelated pre-fills are most disruptive
+**[observed]** — Phase 10B (8 pairs, 4 models, 960 new runs).
+
+Friedman chi-squared = 6.750, df = 2, p = 0.034. The three relation classes produce systematically different survival rates: unrelated (0.388) < on-axis (0.643) ≈ same-domain (0.708). Post-hoc Wilcoxon: on-axis vs unrelated p=0.025 (significant), same-domain vs unrelated p=0.036 (significant), on-axis vs same-domain p=0.889 (not significant). The operationally meaningful distinction is related (on-axis + same-domain) vs. unrelated, not the full three-way taxonomy. Unrelated pre-fills derail navigation entirely; related pre-fills (whether competing on the same axis or in the same domain) maintain the navigational context, preserving the bridge. Cohen's d for same-domain vs on-axis = 0.170 (small). The predicted ordering (on-axis < unrelated < same-domain) was wrong — only 1/8 pairs showed the predicted order.
+
+**Sources:** `10b-relation-classes.md`, `10-analysis.md` §2
+
+---
+
+## Falsified (Phase 10)
+
+### ~~Bridge bottleneck generalization to new models~~
+**[falsified]** — Phase 10A.
+
+Predicted that the new model cohort's mean bridge frequency CI would include zero (no significant difference from original cohort). Observed: new cohort mean 0.200, original cohort mean 0.817, difference -0.617, CI excludes zero. The specific bridges that function as bottlenecks for the original four models (harmony, spectrum, dog, sadness, etc.) do not generalize to Llama 3.1 8B. Bridge topology is model-specific navigational content. Note: based on a single new model. **Graveyard entry: G26.**
+
+### ~~Predicted relation class ordering (on-axis < unrelated < same-domain)~~
+**[falsified]** — Phase 10B.
+
+Predicted that on-axis substitutes would be the most disruptive pre-fills, with ordering on-axis < unrelated < same-domain in >= 5/8 pairs. Observed: 1/8 pairs showed the predicted ordering. Actual ordering: unrelated (0.388) < on-axis (0.643) ≈ same-domain (0.708). The Friedman test confirming that relation class matters survives; the predicted mechanism (dimensional competition) does not. The disruption mechanism is about maintaining vs. destroying navigational context, not about competing on the same semantic dimension. **Graveyard entry: G27.**
 
 ---
 

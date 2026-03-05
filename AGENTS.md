@@ -91,7 +91,7 @@ bun run phase10                  # Run all Phase 10 in sequence (10A → 10B →
 
 ## Models
 
-Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tests 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Requires `OPENROUTER_API_KEY` env var.
+Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tested 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Only Llama 3.1 8B passed the probe reliability gate (others failed on OpenRouter latency). Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 
