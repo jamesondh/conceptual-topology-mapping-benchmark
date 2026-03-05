@@ -266,7 +266,7 @@ async function probeModel(
   }
 
   // Check connectivity
-  const successCount = semanticProbes.filter((p) => p.success).length;
+  let successCount = semanticProbes.filter((p) => p.success).length;
   if (successCount === 0) {
     console.log(`    -> UNAVAILABLE (0/${PROBE_COUNT} connected)`);
     return {
@@ -327,6 +327,8 @@ async function probeModel(
     // Direct format works -- use it
     usesDirectFormat = true;
     allProbes = directProbes;
+    // Recompute connectivity from direct probes so the rate reflects the format actually used
+    successCount = directProbes.filter((p) => p.success).length;
     console.log(`    Using "direct" format (${directParseCount}/${PROBE_COUNT} parsed)`);
   }
 
@@ -538,6 +540,15 @@ async function main() {
   const reliabilityResults: Phase10ModelReliabilityResult[] = [];
 
   for (const model of models) {
+    // Check for existing probe report (resume support)
+    const probeReportPath = path.join(probesDir, `probe-${model.id}.json`);
+    if (existsSync(probeReportPath)) {
+      const existingReport = JSON.parse(await readFile(probeReportPath, "utf-8")) as Phase10ModelReliabilityResult;
+      reliabilityResults.push(existingReport);
+      console.log(`  ${model.displayName}: Loaded existing probe report (status: ${existingReport.status})`);
+      continue;
+    }
+
     const reliability = await probeModel(model, PHASE10A_PROBE_PAIRS);
     reliabilityResults.push(reliability);
 

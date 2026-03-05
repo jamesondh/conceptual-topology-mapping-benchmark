@@ -582,6 +582,7 @@ async function analyze(opts: {
 
   for (const pair of PHASE10B_PAIRS) {
     const pairMeans: number[] = [];
+    let allConditionsHaveData = true;
 
     for (const condition of RELATION_CLASSES) {
       const condPairId = `${pair.id}--${condition}`;
@@ -619,6 +620,10 @@ async function analyze(opts: {
         });
       }
 
+      if (modelSurvivals.length === 0) {
+        allConditionsHaveData = false;
+      }
+
       const condMean = modelSurvivals.length > 0 ? mean(modelSurvivals) : 0;
       pairMeans.push(condMean);
 
@@ -627,7 +632,13 @@ async function analyze(opts: {
       );
     }
 
-    pairConditionMeans.push(pairMeans);
+    // Only include pairs where all 3 conditions have at least one model's data;
+    // otherwise the Friedman test would use fabricated zeros.
+    if (allConditionsHaveData) {
+      pairConditionMeans.push(pairMeans);
+    } else {
+      console.log(`  ${pair.id}: SKIPPED from Friedman test (missing data for one or more conditions)`);
+    }
   }
   console.log("");
 
@@ -672,7 +683,7 @@ async function analyze(opts: {
     pValue: friedmanResult.pValue,
     significant: friedmanSignificant,
     df: 2,
-    nPairs: PHASE10B_PAIRS.length,
+    nPairs: pairConditionMeans.length,
   };
 
   // ── 5. Post-hoc Pairwise Wilcoxon Signed-Rank ──────────────────

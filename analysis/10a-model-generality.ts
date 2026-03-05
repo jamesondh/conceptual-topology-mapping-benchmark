@@ -24,6 +24,7 @@ import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import {
   setMetricsSeed,
+  seededRandom,
   mean,
   bootstrapCI,
   computeWaypointFrequencies,
@@ -673,17 +674,22 @@ async function analyze(opts: {
 
   console.log("Step 6: Cohort comparison (primary test)...");
 
-  // New cohort: mean bridge frequency across all reliable new models x 7 non-control pairs
+  // New cohort: per-pair mean bridge frequency (averaging across reliable models),
+  // producing one value per non-control pair to match the original cohort's pair-level structure.
   const newCohortFreqs: number[] = [];
   for (const pair of PHASE10A_NON_CONTROL_FORWARD_PAIRS) {
+    const pairModelFreqs: number[] = [];
     for (const modelId of reliableNewModelIds) {
       const key = `${pair.id}::${modelId}`;
       const results = generalityLookup.get(key) ?? [];
       const runs = waypointsOnly(results);
       if (pair.expectedBridge && runs.length > 0) {
         const freq = computeBridgeFrequency(runs, pair.expectedBridge);
-        newCohortFreqs.push(freq);
+        pairModelFreqs.push(freq);
       }
+    }
+    if (pairModelFreqs.length > 0) {
+      newCohortFreqs.push(mean(pairModelFreqs));
     }
   }
 
@@ -717,12 +723,12 @@ async function analyze(opts: {
       // Resample new cohort
       const newSample: number[] = [];
       for (let i = 0; i < newCohortFreqs.length; i++) {
-        newSample.push(newCohortFreqs[Math.floor(Math.random() * newCohortFreqs.length)]);
+        newSample.push(newCohortFreqs[Math.floor(seededRandom() * newCohortFreqs.length)]);
       }
       // Resample original cohort
       const origSample: number[] = [];
       for (let i = 0; i < originalCohortFreqs.length; i++) {
-        origSample.push(originalCohortFreqs[Math.floor(Math.random() * originalCohortFreqs.length)]);
+        origSample.push(originalCohortFreqs[Math.floor(seededRandom() * originalCohortFreqs.length)]);
       }
       diffs.push(mean(newSample) - mean(origSample));
     }

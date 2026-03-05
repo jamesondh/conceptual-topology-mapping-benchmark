@@ -239,6 +239,7 @@ async function elicitPreFilled(
         retryCount,
         failureMode: errorMessage,
         runId,
+        batchId: "phase10b",
       };
     }
   }
@@ -283,6 +284,7 @@ async function elicitPreFilled(
     durationMs,
     retryCount,
     runId,
+    batchId: "phase10b",
     ...(providerRoute ? { providerRoute } : {}),
     ...(openRouterGenId ? { openRouterGenId } : {}),
     ...(failureMode ? { failureMode } : {}),
@@ -635,6 +637,7 @@ async function main() {
           retryCount: 0,
           failureMode: errorMsg,
           runId: crypto.randomUUID(),
+          batchId: "phase10b",
         };
         perModelCompleted.set(modelId, (perModelCompleted.get(modelId) ?? 0) + 1);
         perModelFailed.set(modelId, (perModelFailed.get(modelId) ?? 0) + 1);
