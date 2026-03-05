@@ -22,7 +22,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 ## Conventions
 
 - Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
-- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7), `pairs-phase8.ts` (Phase 8), `pairs-phase9.ts` (Phase 9)
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7), `pairs-phase8.ts` (Phase 8), `pairs-phase9.ts` (Phase 9), `pairs-phase10.ts` (Phase 10)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
@@ -82,11 +82,16 @@ bun run analyze-transformation   # Phase 9B: analyze transformation results
 bun run facilitation             # Phase 9C: pre-fill facilitation experiment (~1040 API calls)
 bun run analyze-facilitation     # Phase 9C: analyze facilitation results
 bun run phase9                   # Run all Phase 9 in sequence (9A → 9B → 9C)
+bun run model-generality         # Phase 10A: model generality probe + elicitation (~1200 API calls)
+bun run analyze-model-generality # Phase 10A: analyze model generality results
+bun run relation-classes         # Phase 10B: pre-fill relation class experiment (~960 API calls)
+bun run analyze-relation-classes # Phase 10B: analyze relation class results
+bun run phase10                  # Run all Phase 10 in sequence (10A → 10B → analysis)
 ```
 
 ## Models
 
-Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts`. Requires `OPENROUTER_API_KEY` env var.
+Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tests 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 

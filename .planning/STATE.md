@@ -1,13 +1,14 @@
 # State
 
 ## Current Phase
-Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **COMPLETE**
+Phase 10: Model Generality and Pre-Fill Relation Classes — **IMPLEMENTED, AWAITING EXECUTION**
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
 - **All 9 phases complete. ~18,000 total API runs across 4 models.**
+- **Phase 10 code implemented and code-reviewed. Awaiting experiment execution.**
 
 ## Phase 1-4 Summary (Condensed)
 1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
@@ -39,6 +40,13 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 - **Prediction accuracy 20%** (5/25) — Slightly below Phase 8's 24%. Mechanism ceiling confirmed.
 - **New observations:** O21 (pre-fill content modulates magnitude), O22 (marginal facilitation), O23 (bridge specification > type), O24 (prediction plateau at ~20-24%)
 
+## Phase 10 Summary
+- **Code implemented and code-reviewed. Awaiting experiment execution.**
+- **Part A — Model Generality:** Tests whether core structural findings (R1-R7) generalize to 5 new models (MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B) via OpenRouter. Two-stage design: probe reliability → full elicitation. 8 forward pairs + 4 reverse pairs, 10 reps each. ~1200 API calls (if all 5 models pass probes).
+- **Part B — Pre-Fill Relation Classes:** Tests three-way taxonomy (on-axis substitute, same-domain off-axis, unrelated) for predicting bridge survival under pre-fill. 8 pairs × 3 conditions × 4 original models × 10 reps = 960 API calls. Friedman test + Wilcoxon signed-rank for blocked non-parametric comparison.
+- **New files:** `src/data/pairs-phase10.ts`, `experiments/10a-model-generality.ts`, `experiments/10b-relation-classes.ts`, `analysis/10a-model-generality.ts`, `analysis/10b-relation-classes.ts`
+- **Codex review:** 7 issues identified, 6 fixed (data validity guards, probe resume, connectivity misreport, seeded bootstrap, batchId tagging, cohort granularity).
+
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
 - Phases 8-9 establish that single-variable mechanistic models are inadequate (6/6 hypotheses fail)
@@ -49,6 +57,7 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 None
 
 ## Next Steps
-- **Paper writing** — 9 phases of data support a four-act narrative (structure → topology → mechanism → limits)
+- **Execute Phase 10** — Run `bun run model-generality` (probe stage first), then `bun run relation-classes`, then analysis scripts
+- **Paper writing** — 10 phases of data support a four-act narrative (structure → topology → mechanism → limits), plus generality test
 - Consider multiverse robustness analysis before paper (R1-R7 across different waypoint counts, prompts, temperatures)
 - Consider embedding-based distance approach (may rescue cross-model geometry where path-based failed)

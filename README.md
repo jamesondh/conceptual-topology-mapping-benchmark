@@ -10,7 +10,7 @@ Give models two concepts, ask for intermediate waypoints, and test whether the r
 
 ## Key Findings
 
-Across 14,000+ elicitation runs and 4 models across 7 phases, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
+Across 18,000+ elicitation runs and 4 models across 9 phases, the benchmark has uncovered several surprising properties of how LLMs navigate conceptual space:
 
 ### Models have distinct "conceptual gaits"
 Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography."
@@ -125,6 +125,13 @@ bun run analyze-transformation   # Analyze transformation results
 bun run facilitation             # Part C: ~1040 API calls (pre-fill facilitation crossover)
 bun run analyze-facilitation     # Analyze facilitation results
 bun run phase9                   # Run all Phase 9 in sequence
+
+# 13. Phase 10: Model generality and pre-fill relation classes
+bun run model-generality         # Part A: ~1200 API calls (probe reliability + elicitation on 5 new models)
+bun run analyze-model-generality # Analyze model generality results
+bun run relation-classes         # Part B: ~960 API calls (on-axis/same-domain/unrelated pre-fill)
+bun run analyze-relation-classes # Analyze relation class results
+bun run phase10                  # Run all Phase 10 in sequence
 ```
 
 ## What It Measures
@@ -154,6 +161,8 @@ bun run phase9                   # Run all Phase 9 in sequence
 - **Bridge dominance ratio** — Does the ratio of bridge frequency to strongest competitor frequency predict bridge fragility? (Phase 9A: retrospective + prospective Spearman correlation, threshold analysis)
 - **Transformation-chain blindness** — Does Gemini selectively fail on transformation-chain bridges (material/biological processes) while succeeding on gradient-midpoint bridges? (Phase 9B: interaction test, meta-analytic combination with Phase 8B)
 - **Pre-fill facilitation** — Can pre-filling the first waypoint with a congruent concept *increase* bridge frequency for marginal bridges? (Phase 9C: crossover regression, congruent vs incongruent vs neutral conditions)
+- **Model generality** — Do core structural findings (distinct gaits, asymmetry, compositionality, bridge topology) generalize beyond the original 4 models to 5 new models? (Phase 10A: probe reliability protocol, gait/asymmetry/bridge comparison)
+- **Pre-fill relation classes** — Does the semantic relationship between a pre-fill concept and the target bridge predict survival? (Phase 10B: on-axis substitute vs same-domain off-axis vs unrelated, Friedman test)
 
 ## Concept Pairs
 
@@ -171,7 +180,7 @@ bun run phase9                   # Run all Phase 9 in sequence
 
 ## Models
 
-Four models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5.
+Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Phase 10 additionally tests 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B.
 
 ## Project Structure
 
@@ -191,6 +200,7 @@ src/
     pairs-phase7.ts               # Phase 7 pair definitions (anchoring, curvature, too-central)
     pairs-phase8.ts               # Phase 8 pair definitions (fragility, gradient, gait-norm)
     pairs-phase9.ts               # Phase 9 pair definitions (dominance, transformation, facilitation)
+    pairs-phase10.ts              # Phase 10 pair definitions (model generality, relation classes)
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -229,7 +239,7 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 
 ## Status
 
-**Phase 9 implemented and code-reviewed, awaiting experiment execution.** Cumulative: 16,000+ API runs across 4 models and 8 phases. Phase 9 adds ~2,720 new runs.
+**Phase 10 implemented and code-reviewed, awaiting experiment execution.** Cumulative: 18,000+ API runs across 4 models and 9 phases. Phase 10 adds ~2,160 new runs (1,200 model generality + 960 relation classes).
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -239,6 +249,7 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 - **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
 - **Phase 7:** 2,360 runs + 920 reused. Pre-filling causally displaces bridges (0.515, CI excludes zero). Bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive). Taxonomic bridges resist displacement (0.140). Triangle inequality replicates at 90.6%. Cross-model distance validity fails (r=0.170). Too-central categorization was wrong — only fire/water qualify. Gradient > causal-chain bridges (0.730 vs 0.496). Gemini systematic zeros on obvious univocal bridges.
 - **Phase 8:** 2,690 runs + 2,960 reused. All three primary hypotheses fail: route exclusivity (rho=0.116), gradient blindness (interaction=0.046), gait normalization (zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges, transformation-chain blindness for Gemini, model-independent geometry definitively blocked. Prediction accuracy 24% (worst in benchmark) — single-variable mechanistic models are inadequate.
-- **Phase 9:** ~2,720 planned runs. Tests three successor hypotheses from Phase 8: dominance ratio as fragility predictor (H9), Gemini transformation-chain blindness (H10), pre-fill facilitation crossover (H11). Implemented and code-reviewed, awaiting experiment execution.
+- **Phase 9:** 3,037 runs + ~5,270 reused. All three primary hypotheses fail: dominance ratio (rho=0.157), transformation-chain blindness (interaction=-0.290 reversed), facilitation crossover (slope CI includes zero). Marginal facilitation real (3.761× survival). Pre-fill content modulates survival for some pairs. Bridge specification > type classification. Prediction accuracy 20%.
+- **Phase 10:** ~2,160 planned runs. Part A: tests whether core structural findings (R1-R7) generalize to 5 new models (MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B) via probe reliability protocol. Part B: tests three-way pre-fill relation class taxonomy (on-axis/same-domain/unrelated) with Friedman + Wilcoxon non-parametric tests. Implemented and code-reviewed, awaiting experiment execution.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.
