@@ -453,7 +453,9 @@ async function analyze(opts: {
         totalReusedRuns += p6cResults.length + p5cResults.length;
       }
 
-      // Pre-fill runs: incongruent, congruent, neutral conditions
+      // Pre-fill runs: pool all conditions (incongruent, congruent, neutral).
+      // Intentional: H9 tests whether dominance ratio predicts overall fragility
+      // (displacement under any perturbation), not condition-specific effects.
       const modelPreFillRuns: string[][] = [];
       for (const cond of ["incongruent", "congruent", "neutral"] as const) {
         const condKey = `${retro.phase7AId}--${cond}::${modelId}`;
@@ -725,7 +727,9 @@ async function analyze(opts: {
     prospectivePairResults.push({
       pairId: pair.id,
       bridge: pair.predictedBridge,
-      unconstrainedBridgeFreq: domResult.bridgeFreq,
+      // Use directly computed frequency from raw runs (not domResult.bridgeFreq
+      // which derives from salience landscapes and may differ with uneven model counts)
+      unconstrainedBridgeFreq: unconstrainedFreq,
       strongestCompetitor: domResult.strongestCompetitor,
       strongestCompetitorFreq: domResult.strongestCompetitorFreq,
       dominanceRatio: domResult.dominanceRatio,

@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. Phases 1-8 complete; Phase 9 spec written, awaiting implementation. Same process as word-convergence-game's 5 rounds.
+Exploration-first project. Phases 1-8 complete; Phase 9 implemented, awaiting experiment execution. Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -12,8 +12,8 @@ Exploration-first project. Phases 1-8 complete; Phase 9 spec written, awaiting i
 - [x] **Phase 7: Early anchoring and navigational mechanics** — 2,360 new runs + 920 reused across 8 anchoring pairs (4 conditions), 8 curvature triangles, 10 too-central pairs. Core findings: pre-filling causally displaces bridges (displacement 0.515, CI excludes zero); mechanism is primarily associative primacy (incongruent/congruent/neutral not cleanly separated); bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive — H8: route exclusivity); taxonomic bridges resist displacement (0.140); triangle inequality replicates at 90.6% (structural constant); polysemous curvature hypothesis falsified; cross-model distance validity fails (r=0.170); too-central categorization was wrong (only fire/water qualify); gradient > causal-chain (0.730 vs 0.496); Gemini systematic zeros on obvious univocal bridges. See `findings/07a-anchoring.md`, `findings/07b-curvature.md`, `findings/07c-too-central.md`, and `findings/07-analysis.md`.
 - [x] **Phase 8: Bridge fragility and Gemini gradient blindness** — 2,690 new runs + 2,960 reused across 14 fragility pairs, 20 gradient/causal pairs, 16 distance pairs. All three primary hypotheses fail: route exclusivity (G20, rho=0.116), gradient blindness (G21, interaction=0.046), gait normalization (G22, zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges (H11), transformation-chain blindness for Gemini (H10), dominance ratio as fragility predictor (H9). Prediction accuracy 24% (6/25), lowest in benchmark. See `findings/08a-fragility.md`, `findings/08b-gradient.md`, `findings/08c-gait-norm.md`, and `findings/08-analysis.md`.
 
-## Spec Written (awaiting implementation)
-- [ ] **Phase 9: Bridge dominance, transformation chains, and pre-fill facilitation** — Part A: test dominance ratio (bridge freq / strongest competitor freq) as fragility predictor (H9); Part B: test Gemini's transformation-chain blindness with 10 new transformation + 10 gradient pairs (H10); Part C: test pre-fill facilitation crossover with 14 pairs spanning 0.10-1.00 unconstrained frequency (H11). ~2,640 new runs. Spec: `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`.
+## Implemented (awaiting execution)
+- [ ] **Phase 9: Bridge dominance, transformation chains, and pre-fill facilitation** — Part A: test dominance ratio (bridge freq / strongest competitor freq) as fragility predictor (H9), 2-stage retrospective + prospective design; Part B: test Gemini's transformation-chain blindness with 10 new transformation + 10 gradient pairs (H10), meta-analytic combination with Phase 8B; Part C: test pre-fill facilitation crossover with 14 pairs spanning 0.10-1.00 unconstrained frequency (H11), multi-condition pre-fill (congruent/incongruent/neutral). ~2,640 new runs, ~$9-12. Spec: `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`. Implementation: `experiments/09a-dominance.ts`, `experiments/09b-transformation.ts`, `experiments/09c-facilitation.ts`, `analysis/09a-dominance.ts`, `analysis/09b-transformation.ts`, `analysis/09c-facilitation.ts`.
 
 ## Deferred
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many
@@ -22,7 +22,7 @@ Exploration-first project. Phases 1-8 complete; Phase 9 spec written, awaiting i
 - Embedding-based distance validation — may rescue cross-model geometry where path-based failed (O18, O19, G22)
 - Multilingual conceptual topology
 - Curvature estimation — cross-model curvature definitively blocked by O18+O19+G22; within-model only viable
-- Paper writing & positioning — 8 phases support four-act narrative (structure → topology → mechanism → limits)
+- Paper writing & positioning — 9 phases support four-act narrative (structure → topology → mechanism → limits)
 - Chain length scaling (from Phase 4 recommendations)
 - Full-resolution cross-model agreement (from Phase 6 analysis)
 - Temporal stability replication (from Phase 6/7/8B analysis — 9/12 Phase 7C pairs replicate in 8B)

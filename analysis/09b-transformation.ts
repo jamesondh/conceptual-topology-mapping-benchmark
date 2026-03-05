@@ -1018,8 +1018,9 @@ async function analyze(opts: {
   });
 
   // P4: Gemini gap >= 0.15 larger than non-Gemini gap, interaction CI excludes zero
+  // Directional test: Gemini gap should be LARGER (more positive) than non-Gemini gap
   const p4Passes =
-    significantInteraction && Math.abs(interactionDifference) >= 0.15;
+    significantInteraction && interactionDifference >= 0.15;
   predictions.push({
     id: 4,
     description: "Gemini gap >= 0.15 larger than non-Gemini gap, interaction CI excludes zero",

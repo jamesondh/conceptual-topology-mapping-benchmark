@@ -1,8 +1,7 @@
 # State
 
 ## Current Phase
-Phase 8: Bridge Fragility and Gemini Gradient Blindness — **COMPLETE** (experiments run, analysis written)
-Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **SPEC WRITTEN**, awaiting implementation
+Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **IMPLEMENTED**, awaiting experiment execution
 
 ## Context
 - Research survey complete (`research.md`)
@@ -26,16 +25,20 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 
 ## Phase 8 Summary
 - **2,690 new runs + 2,960 reused** across 14 fragility pairs, 20 gradient/causal pairs, 16 distance pairs, 4 models
-- **Route exclusivity hypothesis FAILS (G20)** — Competitor count does not predict bridge survival (rho = 0.116); sadness survives with 8 competitors, harmony collapses with 7
-- **Gemini gradient blindness FAILS BACKWARD (G21)** — Gemini zeros concentrate on causal-chain pairs (6/10), not gradient pairs (1/10); interaction 0.046 (CI includes zero)
-- **Gait normalization produces ZERO improvement (G22)** — Normalized r = 0.212 = raw r; disagreement is structural (ordinal), not scalar; model-independent geometry definitively blocked
-- **O17 replicates** — Gradient 0.770 vs causal 0.578, diff 0.193 (CI [0.010, 0.360])
-- **6/8 prospective pairs fail evaluability** — A priori bridge prediction remains unreliable after 8 phases
-- **Pre-fill facilitation discovered** — science-art "creativity" survival 5.200; pre-filling can INCREASE marginal bridge frequency (H11)
-- **Gemini's deficit is transformation-chain specific (H10)** — Fails on material/biological process intermediaries, succeeds on gradient midpoints
-- **New hypotheses:** H9 (dominance ratio predicts fragility), H10 (transformation-chain blindness), H11 (pre-fill facilitation crossover)
-- **Prediction accuracy 24%** (6/25) — Worst in benchmark history; single-variable mechanistic models fail
-- See `findings/08-analysis.md` for full interpretive analysis
+- **Route exclusivity hypothesis FAILS (G20)** — Competitor count does not predict bridge survival (rho = 0.116)
+- **Gemini gradient blindness FAILS BACKWARD (G21)** — Gemini zeros concentrate on causal-chain pairs (6/10), not gradient pairs (1/10)
+- **Gait normalization produces ZERO improvement (G22)** — Normalized r = 0.212 = raw r
+- **O17 replicates** — Gradient 0.770 vs causal 0.578
+- **New hypotheses:** H9 (dominance ratio), H10 (transformation-chain blindness), H11 (pre-fill facilitation crossover)
+- **Prediction accuracy 24%** (6/25) — Single-variable mechanistic models fail
+
+## Phase 9 Implementation Status
+- **Spec:** `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`
+- **Implementation:** Complete — all experiment + analysis scripts, types, metrics, pair definitions
+- **New files:** `pairs-phase9.ts`, 3 experiment scripts (`09a-dominance.ts`, `09b-transformation.ts`, `09c-facilitation.ts`), 3 analysis scripts
+- **Modified files:** `types.ts` (+325 lines), `metrics.ts` (+90 lines), `package.json` (+8 scripts)
+- **Estimated runs:** ~2,640 new API calls (Part A: ~420, Part B: ~1,260, Part C: ~960)
+- **Estimated cost:** ~$9-12 via OpenRouter
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
@@ -47,7 +50,7 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 None
 
 ## Next Steps
-- Implement Phase 9 (spec at `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`)
-- Execute Phase 9 experiments (dominance, transformation, facilitation)
-- Write Phase 9 findings and analysis
-- Consider paper writing — 8 phases of data support a four-act narrative (structure → topology → mechanism → limits)
+- Execute Phase 9 experiments: `bun run phase9` (or individually: dominance → transformation → facilitation)
+- Write Phase 9 findings and interpretive analysis
+- Update CLAIMS.md and GRAVEYARD.md with Phase 9 results
+- Consider paper writing — 9 phases of data support a four-act narrative (structure → topology → mechanism → limits)

@@ -648,6 +648,11 @@ async function analyze(opts: {
   };
 
   // ── 5. Congruent vs Incongruent for Marginal Bridges ──────────────
+  // NOTE: Marginal pairs (p9c-science-art, p9c-student-professor) only collect
+  // ["congruent", "neutral"] conditions — no incongruent data. So incongruent
+  // comparisons for freq < 0.30 bridges will report "insufficient data".
+  // This is a design limitation: marginal pairs were prioritized for the
+  // congruent facilitation test (H11), not the incongruent comparison.
 
   console.log("5. Congruent vs incongruent for marginal bridges (freq < 0.30)...");
 
