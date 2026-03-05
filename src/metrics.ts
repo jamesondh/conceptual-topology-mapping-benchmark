@@ -1362,3 +1362,137 @@ export function computeInformationalRedundancy(
   const ci = bootstrapBridgeFrequencyCI(randomTargetRuns, candidateBridge);
   return { frequency: freq, ci };
 }
+
+// ── Phase 8: Bridge Fragility, Gradient Blindness, Gait Normalization ──
+
+/**
+ * Compute competitor count from salience landscape data.
+ * A competitor is any non-bridge waypoint appearing at >threshold frequency
+ * in at least minModels of the provided model landscapes.
+ */
+export function computeCompetitorCount(
+  salienceLandscapes: Array<{ rankedWaypoints: Array<{ waypoint: string; frequency: number }> }>,
+  bridgeConcept: string,
+  threshold: number = 0.20,
+  minModels: number = 2,
+): { count: number; competitors: string[] } {
+  const bridgeLower = bridgeConcept.toLowerCase();
+
+  // Count how many models each waypoint exceeds threshold in
+  const waypointModelCounts = new Map<string, number>();
+
+  for (const landscape of salienceLandscapes) {
+    for (const wp of landscape.rankedWaypoints) {
+      if (wp.frequency > threshold) {
+        const wpLower = wp.waypoint.toLowerCase();
+        if (bridgeConceptMatchesExported(wpLower, bridgeLower)) continue;
+        waypointModelCounts.set(wpLower, (waypointModelCounts.get(wpLower) ?? 0) + 1);
+      }
+    }
+  }
+
+  // Filter to waypoints meeting minModels threshold
+  const competitors: string[] = [];
+  for (const [wp, count] of waypointModelCounts) {
+    if (count >= minModels) {
+      competitors.push(wp);
+    }
+  }
+
+  return { count: competitors.length, competitors: competitors.sort() };
+}
+
+/**
+ * Compute Spearman rank correlation between two arrays.
+ * Returns rho in [-1, 1].
+ */
+export function spearmanCorrelation(x: number[], y: number[]): number {
+  if (x.length !== y.length || x.length < 2) return 0;
+
+  function rank(arr: number[]): number[] {
+    const sorted = arr.map((v, i) => ({ v, i })).sort((a, b) => a.v - b.v);
+    const ranks = new Array(arr.length);
+    let i = 0;
+    while (i < sorted.length) {
+      let j = i;
+      while (j < sorted.length && sorted[j].v === sorted[i].v) j++;
+      const avgRank = (i + j - 1) / 2 + 1;
+      for (let k = i; k < j; k++) ranks[sorted[k].i] = avgRank;
+      i = j;
+    }
+    return ranks;
+  }
+
+  const rx = rank(x);
+  const ry = rank(y);
+  return pearsonCorrelation(rx, ry) ?? 0;
+}
+
+/**
+ * Bootstrap CI for Spearman correlation.
+ */
+export function bootstrapSpearmanCI(
+  x: number[],
+  y: number[],
+  nBootstrap: number = 1000,
+): [number, number] {
+  if (x.length !== y.length || x.length < 3) return [0, 0];
+
+  const rhos: number[] = [];
+  for (let b = 0; b < nBootstrap; b++) {
+    const indices = Array.from({ length: x.length }, () => Math.floor(_rng() * x.length));
+    const bx = indices.map(i => x[i]);
+    const by = indices.map(i => y[i]);
+    rhos.push(spearmanCorrelation(bx, by));
+  }
+
+  rhos.sort((a, b) => a - b);
+  const lo = Math.floor(rhos.length * 0.025);
+  const hi = Math.floor(rhos.length * 0.975);
+  return [rhos[lo], rhos[hi]];
+}
+
+/**
+ * Fisher-z transformation for aggregating correlations.
+ */
+export function fisherZAggregate(correlations: number[]): number {
+  if (correlations.length === 0) return 0;
+  const zValues = correlations.map(r => Math.atanh(Math.max(-0.999, Math.min(0.999, r))));
+  const meanZ = mean(zValues);
+  return Math.tanh(meanZ);
+}
+
+/**
+ * Compute bootstrap CI for the interaction effect:
+ * (gemini gap) - (non-gemini gap)
+ * where gap = gradient mean - causal mean
+ */
+export function bootstrapInteractionCI(
+  geminiGradient: number[],
+  geminiCausal: number[],
+  nonGeminiGradient: number[],
+  nonGeminiCausal: number[],
+  nBootstrap: number = 1000,
+): [number, number] {
+  const interactions: number[] = [];
+
+  for (let b = 0; b < nBootstrap; b++) {
+    const gg = Array.from({ length: geminiGradient.length }, () =>
+      geminiGradient[Math.floor(_rng() * geminiGradient.length)]);
+    const gc = Array.from({ length: geminiCausal.length }, () =>
+      geminiCausal[Math.floor(_rng() * geminiCausal.length)]);
+    const ngg = Array.from({ length: nonGeminiGradient.length }, () =>
+      nonGeminiGradient[Math.floor(_rng() * nonGeminiGradient.length)]);
+    const ngc = Array.from({ length: nonGeminiCausal.length }, () =>
+      nonGeminiCausal[Math.floor(_rng() * nonGeminiCausal.length)]);
+
+    const geminiGap = mean(gg) - mean(gc);
+    const nonGeminiGap = mean(ngg) - mean(ngc);
+    interactions.push(geminiGap - nonGeminiGap);
+  }
+
+  interactions.sort((a, b) => a - b);
+  const lo = Math.floor(interactions.length * 0.025);
+  const hi = Math.floor(interactions.length * 0.975);
+  return [interactions[lo], interactions[hi]];
+}

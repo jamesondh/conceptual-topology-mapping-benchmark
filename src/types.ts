@@ -1240,3 +1240,278 @@ export interface TooCentralAnalysisOutput {
     value: string;
   }>;
 }
+
+// --- Phase 8: Bridge Fragility, Gemini Gradient Blindness, Gait-Normalized Distance ---
+
+// Part A: Bridge Fragility
+
+export type FragilityCompetitorLevel = "low" | "medium" | "high";
+
+export interface Phase8FragilityPair {
+  id: string;
+  from: string;
+  to: string;
+  predictedBridge: string;
+  predictedCompetitorCount: string; // e.g. "0-1", "3-4", "6-10"
+  competitorLevel: FragilityCompetitorLevel;
+  preFillConcept: string; // incongruent pre-fill
+  targetReps: {
+    salience: number;  // unconstrained runs for salience landscape
+    preFill: number;   // pre-filled runs for survival measurement
+  };
+  notes?: string;
+}
+
+export interface FragilityAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Retrospective analysis (6 pairs from Phase 6A + 7A overlap) */
+  retrospective: {
+    pairCompetitorCounts: Array<{
+      pairId: string;
+      bridge: string;
+      competitorCount: number;
+      competitors: string[];
+      preFillSurvival: number;
+    }>;
+    spearmanRho: number;
+    spearmanCI: [number, number];
+    significantNegative: boolean;
+  };
+  /** Prospective analysis (8 new pairs) */
+  prospective: {
+    pairMetrics: Array<{
+      pairId: string;
+      predictedBridge: string;
+      observedCompetitorCount: number;
+      predictedCompetitorCount: string;
+      competitorCountAccurate: boolean;
+      competitors: string[];
+      unconstrainedBridgeFreq: number;
+      unconstrainedBridgeFreqCI: [number, number];
+      preFillBridgeFreq: number;
+      preFillBridgeFreqCI: [number, number];
+      bridgeSurvival: number;
+      evaluable: boolean; // unconstrained freq >= 0.40
+      perModelFreqs: Array<{ modelId: string; unconstrainedFreq: number; preFillFreq: number; survival: number }>;
+    }>;
+    evaluablePairCount: number;
+  };
+  /** Combined correlation (14 pairs: 6 retrospective + 8 prospective) */
+  combinedCorrelation: {
+    spearmanRho: number;
+    spearmanCI: [number, number];
+    significantNegative: boolean;
+    nPairs: number;
+  };
+  /** Threshold analysis */
+  thresholdAnalysis: {
+    bestThreshold: number;
+    classificationAccuracy: number;
+    stepFunctionBetterThanLinear: boolean;
+  };
+  /** Per-model competitor counts */
+  perModelCompetitorCounts: Array<{
+    modelId: string;
+    meanCompetitorCount: number;
+  }>;
+  /** Cross-validation */
+  crossValidation: {
+    meanPredictionError: number;
+    leaveOneOutErrors: Array<{ pairId: string; predicted: number; actual: number; error: number }>;
+  };
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part B: Gemini Gradient Blindness
+
+export type GradientPairType = "gradient-midpoint" | "causal-chain";
+
+export interface Phase8GradientPair {
+  id: string;
+  from: string;
+  to: string;
+  candidateBridge: string;
+  pairType: GradientPairType;
+  dimension?: string; // for gradient pairs: temperature, vocal intensity, etc.
+  process?: string;   // for causal pairs: winemaking, metamorphosis, etc.
+  isPhase7CReplication: boolean;
+  targetReps: number;
+  notes?: string;
+}
+
+export interface GradientAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    pairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Bridge frequency matrix: 20 pairs x 4 models */
+  bridgeFreqMatrix: Array<{
+    pairId: string;
+    pairType: GradientPairType;
+    modelId: string;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+    isZero: boolean;
+  }>;
+  /** Gradient vs causal-chain comparison (replication of O17) */
+  gradientVsCausal: {
+    gradientMean: number;
+    gradientCI: [number, number];
+    causalMean: number;
+    causalCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    gradientHigher: boolean;
+  };
+  /** Gemini interaction test (primary test) */
+  geminiInteraction: {
+    geminiGradientMean: number;
+    geminiCausalMean: number;
+    geminiGap: number;
+    nonGeminiGradientMean: number;
+    nonGeminiCausalMean: number;
+    nonGeminiGap: number;
+    interactionDifference: number; // geminiGap - nonGeminiGap
+    interactionCI: [number, number];
+    significantInteraction: boolean;
+  };
+  /** Per-model gradient performance */
+  perModelGradient: Array<{
+    modelId: string;
+    gradientMean: number;
+    causalMean: number;
+    gap: number;
+  }>;
+  /** Gemini zero-rate analysis */
+  geminiZeroRate: {
+    geminiGradientZeros: number;
+    geminiGradientTotal: number;
+    geminiCausalZeros: number;
+    geminiCausalTotal: number;
+    nonGeminiGradientZeros: number;
+    nonGeminiCausalZeros: number;
+  };
+  /** Phase 7C replication check */
+  phase7CReplication: Array<{
+    pairId: string;
+    modelId: string;
+    phase7CFreq: number | null;
+    phase8BFreq: number;
+    difference: number | null;
+    replicates: boolean | null; // within 0.15
+  }>;
+  /** Gemini alternative routing for zero-freq pairs */
+  geminiAlternativeRouting: Array<{
+    pairId: string;
+    topWaypoints: Array<{ waypoint: string; frequency: number }>;
+    routingType: "related-non-midpoint" | "unrelated" | "mixed";
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part C: Gait-Normalized Distance
+
+export type DistancePairRole = "reference" | "test";
+
+export interface Phase8DistancePair {
+  id: string;
+  from: string;
+  to: string;
+  role: DistancePairRole;
+  expectedDistance: string; // e.g. "short", "medium", "long"
+  distanceType: string; // e.g. "tight-continuum", "taxonomic", "cross-domain"
+  reusableFrom?: string; // phase/dir to reuse data from
+  targetReps: number;
+  notes?: string;
+}
+
+export interface GaitNormAnalysisOutput {
+  metadata: {
+    timestamp: string;
+    referencePairs: string[];
+    testPairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Raw distance matrix: 16 pairs x 4 models */
+  rawDistanceMatrix: Array<{
+    pairId: string;
+    role: DistancePairRole;
+    modelId: string;
+    rawDistance: number;
+    runCount: number;
+  }>;
+  /** Baseline per model */
+  modelBaselines: Array<{
+    modelId: string;
+    baseline: number; // mean reference distance
+  }>;
+  /** Normalized distance matrix: 8 test pairs x 4 models */
+  normalizedDistanceMatrix: Array<{
+    pairId: string;
+    modelId: string;
+    normalizedDistance: number;
+  }>;
+  /** Raw cross-model correlation */
+  rawCorrelation: {
+    aggregateR: number;
+    pairwiseR: Array<{ modelA: string; modelB: string; r: number }>;
+  };
+  /** Normalized cross-model correlation (primary test) */
+  normalizedCorrelation: {
+    aggregateR: number;
+    aggregateCI: [number, number];
+    pairwiseR: Array<{ modelA: string; modelB: string; r: number }>;
+    primaryTestPasses: boolean; // r > 0.50 and CI lower > 0.30
+  };
+  /** Rank-order stability */
+  rankOrderStability: {
+    rawSpearmanAggregate: number;
+    normalizedSpearmanAggregate: number;
+    improvementFromNormalization: number;
+  };
+  /** Residual analysis */
+  residualAnalysis: Array<{
+    pairId: string;
+    maxModelDisagreement: number;
+    disagreementModels: [string, string];
+  }>;
+  /** Conditional curvature re-estimation (only if primary test passes) */
+  conditionalCurvature: {
+    attempted: boolean;
+    normalizedPolysemousExcess: number | null;
+    normalizedNonPolysemousExcess: number | null;
+    differenceCI: [number, number] | null;
+    nullReplicates: boolean | null;
+  };
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}

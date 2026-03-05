@@ -39,6 +39,13 @@
     "too-central": "bun run experiments/07c-too-central.ts",
     "analyze-too-central": "bun run analysis/07c-too-central.ts",
     "phase7": "bun run experiments/07a-anchoring.ts && bun run analysis/07a-anchoring.ts && bun run experiments/07b-curvature.ts && bun run analysis/07b-curvature.ts && bun run experiments/07c-too-central.ts && bun run analysis/07c-too-central.ts",
+    "fragility": "bun run experiments/08a-fragility.ts",
+    "analyze-fragility": "bun run analysis/08a-fragility.ts",
+    "gradient": "bun run experiments/08b-gradient.ts",
+    "analyze-gradient": "bun run analysis/08b-gradient.ts",
+    "gait-norm": "bun run experiments/08c-gait-norm.ts",
+    "analyze-gait-norm": "bun run analysis/08c-gait-norm.ts",
+    "phase8": "bun run experiments/08a-fragility.ts && bun run analysis/08a-fragility.ts && bun run experiments/08b-gradient.ts && bun run analysis/08b-gradient.ts && bun run experiments/08c-gait-norm.ts && bun run analysis/08c-gait-norm.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
