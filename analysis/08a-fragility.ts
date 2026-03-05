@@ -711,57 +711,45 @@ async function analyze(opts: {
     value: `rho=${combinedRho.toFixed(3)} [${combinedRhoCI[0].toFixed(3)}, ${combinedRhoCI[1].toFixed(3)}], n=${combinedCompetitors.length}`,
   });
 
-  // P3: Low-competitor pairs survival > 0.60
-  const lowCompPairs = [
-    ...retroPairCompetitorCounts.filter(p => p.competitorCount <= 2),
-    ...prospectiveMetrics.filter(m => m.evaluable && m.observedCompetitorCount <= 2),
-  ];
-  const lowCompSurvivals = lowCompPairs.map(p =>
-    "preFillSurvival" in p ? p.preFillSurvival : (p as typeof prospectiveMetrics[number]).bridgeSurvival,
-  );
+  // P3: Low-competitor pairs (question-answer, parent-child, cause-effect) survival > 0.60
+  const lowPairIds = PHASE8A_PAIRS.filter(p => p.competitorLevel === "low").map(p => p.id);
+  const lowCompMetrics = prospectiveMetrics.filter(m => m.evaluable && lowPairIds.includes(m.pairId));
+  const lowCompSurvivals = lowCompMetrics.map(m => m.bridgeSurvival);
   const lowCompMeanSurvival = lowCompSurvivals.length > 0 ? mean(lowCompSurvivals) : 0;
-  const p3Pass = lowCompMeanSurvival > 0.60;
+  const p3Pass = lowCompSurvivals.length > 0 && lowCompMeanSurvival > 0.60;
   predictions.push({
     id: 3,
-    description: "Low-competitor pairs (<=2) survival > 0.60",
+    description: "Low-competitor pairs (question-answer, parent-child, cause-effect) survival > 0.60",
     result: lowCompSurvivals.length > 0
       ? (p3Pass ? "confirmed" : "not confirmed")
       : "insufficient data",
     value: `mean survival=${lowCompMeanSurvival.toFixed(3)}, n=${lowCompSurvivals.length}`,
   });
 
-  // P4: High-competitor pairs survival < 0.30
-  const highCompPairs = [
-    ...retroPairCompetitorCounts.filter(p => p.competitorCount >= 5),
-    ...prospectiveMetrics.filter(m => m.evaluable && m.observedCompetitorCount >= 5),
-  ];
-  const highCompSurvivals = highCompPairs.map(p =>
-    "preFillSurvival" in p ? p.preFillSurvival : (p as typeof prospectiveMetrics[number]).bridgeSurvival,
-  );
+  // P4: High-competitor pairs (science-art, ocean-mountain, brain-computer) survival < 0.30
+  const highPairIds = PHASE8A_PAIRS.filter(p => p.competitorLevel === "high").map(p => p.id);
+  const highCompMetrics = prospectiveMetrics.filter(m => m.evaluable && highPairIds.includes(m.pairId));
+  const highCompSurvivals = highCompMetrics.map(m => m.bridgeSurvival);
   const highCompMeanSurvival = highCompSurvivals.length > 0 ? mean(highCompSurvivals) : 0;
-  const p4Pass = highCompMeanSurvival < 0.30;
+  const p4Pass = highCompSurvivals.length > 0 && highCompMeanSurvival < 0.30;
   predictions.push({
     id: 4,
-    description: "High-competitor pairs (>=5) survival < 0.30",
+    description: "High-competitor pairs (science-art, ocean-mountain, brain-computer) survival < 0.30",
     result: highCompSurvivals.length > 0
       ? (p4Pass ? "confirmed" : "not confirmed")
       : "insufficient data",
     value: `mean survival=${highCompMeanSurvival.toFixed(3)}, n=${highCompSurvivals.length}`,
   });
 
-  // P5: Medium-competitor pairs survival 0.25-0.60
-  const medCompPairs = [
-    ...retroPairCompetitorCounts.filter(p => p.competitorCount >= 3 && p.competitorCount <= 4),
-    ...prospectiveMetrics.filter(m => m.evaluable && m.observedCompetitorCount >= 3 && m.observedCompetitorCount <= 4),
-  ];
-  const medCompSurvivals = medCompPairs.map(p =>
-    "preFillSurvival" in p ? p.preFillSurvival : (p as typeof prospectiveMetrics[number]).bridgeSurvival,
-  );
+  // P5: Medium-competitor pairs (winter-summer, student-professor) survival 0.25-0.60
+  const medPairIds = PHASE8A_PAIRS.filter(p => p.competitorLevel === "medium").map(p => p.id);
+  const medCompMetrics = prospectiveMetrics.filter(m => m.evaluable && medPairIds.includes(m.pairId));
+  const medCompSurvivals = medCompMetrics.map(m => m.bridgeSurvival);
   const medCompMeanSurvival = medCompSurvivals.length > 0 ? mean(medCompSurvivals) : 0;
-  const p5Pass = medCompMeanSurvival >= 0.25 && medCompMeanSurvival <= 0.60;
+  const p5Pass = medCompSurvivals.length > 0 && medCompMeanSurvival >= 0.25 && medCompMeanSurvival <= 0.60;
   predictions.push({
     id: 5,
-    description: "Medium-competitor pairs (3-4) survival 0.25-0.60",
+    description: "Medium-competitor pairs (winter-summer, student-professor) survival 0.25-0.60",
     result: medCompSurvivals.length > 0
       ? (p5Pass ? "confirmed" : "not confirmed")
       : "insufficient data",

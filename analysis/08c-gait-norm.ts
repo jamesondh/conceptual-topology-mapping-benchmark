@@ -751,6 +751,20 @@ async function analyze(opts: {
       `  ${testPair.id}: max disagreement=${maxDisagreement.toFixed(3)} (${maxModels.join(" vs ")})`,
     );
   }
+
+  // Compute SD across test pairs for flagging >1 SD disagreement
+  const allNormDisagreements: number[] = [];
+  for (const entry of residualAnalysis) {
+    allNormDisagreements.push(entry.maxModelDisagreement);
+  }
+  const disagreementMean = allNormDisagreements.length > 0 ? mean(allNormDisagreements) : 0;
+  const disagreementSD = allNormDisagreements.length > 1
+    ? Math.sqrt(allNormDisagreements.reduce((s, v) => s + (v - disagreementMean) ** 2, 0) / (allNormDisagreements.length - 1))
+    : 0;
+  const sdThreshold = disagreementMean + disagreementSD;
+  const highDisagreementPairs = residualAnalysis.filter(e => e.maxModelDisagreement > sdThreshold);
+  console.log(`  Disagreement SD threshold (mean + 1 SD): ${sdThreshold.toFixed(4)}`);
+  console.log(`  Pairs exceeding 1 SD: ${highDisagreementPairs.map(e => e.pairId).join(", ") || "none"}`);
   console.log("");
 
   // ── Conditional Curvature Re-estimation ─────────────────────────
@@ -925,7 +939,7 @@ async function analyze(opts: {
   const gptBaseline = modelBaselines.find(b => b.modelId === "gpt")?.baseline ?? 0;
   const grokBaseline = modelBaselines.find(b => b.modelId === "grok")?.baseline ?? 0;
   const claudeLowest = modelBaselines.every(b => b.modelId === "claude" || b.baseline >= claudeBaseline);
-  const gptGrokHighest = gptBaseline > 0.60 || grokBaseline > 0.60;
+  const gptGrokHighest = gptBaseline > 0.60 && grokBaseline > 0.60;
   const p2Pass = claudeLowest && claudeBaseline < 0.40 && gptGrokHighest;
   predictions.push({
     id: 2,
@@ -1027,7 +1041,7 @@ async function analyze(opts: {
 
   // P8: If primary fails: model-independent geometry definitively blocked
   if (!primaryTestPasses) {
-    const geometryBlocked = normAggregateR <= 0.50 || normAggregateCI[0] <= 0.30;
+    const geometryBlocked = normAggregateR < 0.40;
     predictions.push({
       id: 8,
       description: "If primary fails: model-independent geometry definitively blocked",

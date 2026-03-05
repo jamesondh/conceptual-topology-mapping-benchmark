@@ -28,6 +28,7 @@ import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import {
   setMetricsSeed,
+  seededRandom,
   bootstrapCI,
   mean,
   computeBridgeFrequency,
@@ -501,11 +502,11 @@ async function analyze(opts: {
   for (let i = 0; i < nBootstrap; i++) {
     const sampleG: number[] = [];
     for (let j = 0; j < allGradientFreqs.length; j++) {
-      sampleG.push(allGradientFreqs[Math.floor(Math.random() * allGradientFreqs.length)]);
+      sampleG.push(allGradientFreqs[Math.floor(seededRandom() * allGradientFreqs.length)]);
     }
     const sampleC: number[] = [];
     for (let j = 0; j < allCausalFreqs.length; j++) {
-      sampleC.push(allCausalFreqs[Math.floor(Math.random() * allCausalFreqs.length)]);
+      sampleC.push(allCausalFreqs[Math.floor(seededRandom() * allCausalFreqs.length)]);
     }
     diffBootstrap.push(mean(sampleG) - mean(sampleC));
   }
@@ -606,6 +607,26 @@ async function analyze(opts: {
   console.log(`  Significant: ${significantInteraction}`);
   console.log("");
 
+  // ── 3b. Sensitivity: Interaction without known confound pairs ────
+  console.log("  Sensitivity: excluding acorn-timber, flour-bread confound pairs...");
+  const CONFOUND_IDS = new Set(["p8b-causal-acorn-timber", "p8b-causal-flour-bread"]);
+  const geminiCausalNoConfound = bridgeFreqMatrix
+    .filter(e => e.modelId === GEMINI_ID && e.pairType === "causal-chain" && !CONFOUND_IDS.has(e.pairId))
+    .map(e => e.bridgeFrequency);
+  const nonGeminiCausalNoConfound = bridgeFreqMatrix
+    .filter(e => e.modelId !== GEMINI_ID && e.pairType === "causal-chain" && !CONFOUND_IDS.has(e.pairId))
+    .map(e => e.bridgeFrequency);
+  const geminiGapNoConfound = mean(geminiGradientFreqs) - mean(geminiCausalNoConfound);
+  const nonGeminiGapNoConfound = mean(nonGeminiGradientFreqs) - mean(nonGeminiCausalNoConfound);
+  const interactionNoConfound = geminiGapNoConfound - nonGeminiGapNoConfound;
+  const interactionCINoConfound = bootstrapInteractionCI(
+    geminiGradientFreqs, geminiCausalNoConfound,
+    nonGeminiGradientFreqs, nonGeminiCausalNoConfound,
+  );
+  const significantNoConfound = interactionCINoConfound[1] < 0;
+  console.log(`  Without confounds: interaction=${interactionNoConfound.toFixed(4)} [${interactionCINoConfound[0].toFixed(4)}, ${interactionCINoConfound[1].toFixed(4)}], significant=${significantNoConfound}`);
+  console.log("");
+
   // ── 4. Per-Model Gradient Performance ─────────────────────────────
 
   console.log("Computing per-model gradient performance...");
@@ -686,7 +707,11 @@ async function analyze(opts: {
       const entry8B = bridgeFreqMatrix.find(
         (e) => e.pairId === pair.id && e.modelId === modelId,
       );
-      const phase8BFreq = entry8B?.bridgeFrequency ?? 0;
+      if (!entry8B) {
+        // Skip this model — no Phase 8B data available
+        continue;
+      }
+      const phase8BFreq = entry8B.bridgeFrequency;
 
       // Get Phase 7C frequency from too-central lookup
       let phase7CFreq: number | null = null;
