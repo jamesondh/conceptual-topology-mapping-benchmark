@@ -1,12 +1,13 @@
 # State
 
 ## Current Phase
-Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **IMPLEMENTED & REVIEWED**, awaiting experiment execution
+Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — **COMPLETE**
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
+- **All 9 phases complete. ~18,000 total API runs across 4 models.**
 
 ## Phase 1-4 Summary (Condensed)
 1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
@@ -23,38 +24,31 @@ Phase 9: Bridge Dominance, Transformation Chains, and Pre-Fill Facilitation — 
 - **Phase 6:** Salience non-uniform (7/8 KS reject); forced-crossing asymmetry falsified; bridges anchor early (position 1-2); GPT highest entropy
 - **Phase 7:** Pre-filling causally displaces bridges (0.515, CI excludes zero); bridge fragility bimodal; triangle inequality replicates at 90.6%; cross-model distance fails (r=0.170); gradient > causal-chain (0.730 vs 0.496)
 
-## Phase 8 Summary
-- **2,690 new runs + 2,960 reused** across 14 fragility pairs, 20 gradient/causal pairs, 16 distance pairs, 4 models
-- **Route exclusivity hypothesis FAILS (G20)** — Competitor count does not predict bridge survival (rho = 0.116)
-- **Gemini gradient blindness FAILS BACKWARD (G21)** — Gemini zeros concentrate on causal-chain pairs (6/10), not gradient pairs (1/10)
-- **Gait normalization produces ZERO improvement (G22)** — Normalized r = 0.212 = raw r
-- **O17 replicates** — Gradient 0.770 vs causal 0.578
-- **New hypotheses:** H9 (dominance ratio), H10 (transformation-chain blindness), H11 (pre-fill facilitation crossover)
-- **Prediction accuracy 24%** (6/25) — Single-variable mechanistic models fail
+## Phase 8 Summary (Condensed)
+- All three primary hypotheses fail: route exclusivity (G20), gradient blindness (G21), gait normalization (G22)
+- O17 replicates (gradient 0.770 vs causal 0.578)
+- Prediction accuracy 24% — single-variable mechanistic models fail
 
-## Phase 9 Implementation Status
-- **Spec:** `.planning/phases/09-bridge-dominance-and-transformation-chains/SPEC.md`
-- **Implementation:** Complete and code-reviewed — all experiment + analysis scripts, types, metrics, pair definitions
-- **Code review:** Codex review identified 6 issues (2 high, 4 medium); 2 real fixes applied, 4 false positives/by-design
-  - Fixed: marginal pairs (science-art, student-professor) now collect all 3 pre-fill conditions (was missing incongruent, making predictions P4/P6 untestable)
-  - Fixed: write failure handling in 09a/09c now returns success/failure and tracks write failures in final summary
-  - Verified correct: P4 directional test in 09b (already uses `>=`, not `Math.abs`), condition pooling in 09a (intentional for H9), evaluability gate in 09a (already uses raw frequency), per-model throttling (JS event loop makes it atomic)
-- **New files:** `pairs-phase9.ts`, 3 experiment scripts (`09a-dominance.ts`, `09b-transformation.ts`, `09c-facilitation.ts`), 3 analysis scripts
-- **Modified files:** `types.ts` (+325 lines), `metrics.ts` (+90 lines), `package.json` (+8 scripts)
-- **Estimated runs:** ~2,720 new API calls (Part A: ~420, Part B: ~1,260, Part C: ~1,040)
-- **Estimated cost:** ~$9-13 via OpenRouter
+## Phase 9 Summary
+- **3,037 new runs + ~5,270 reused** across 14 dominance pairs, 20 transformation/gradient pairs, 14 facilitation pairs, 4 models
+- **Dominance ratio hypothesis FAILS (G23)** — Combined rho=0.157, CI includes zero. Warm (ratio 1.00) destroyed, fermentation (ratio 1.07) bulletproof.
+- **Transformation-chain blindness FAILS BACKWARD (G24)** — Gemini transformation mean 0.667 > gradient mean 0.293. Interaction -0.290, wrong direction.
+- **Facilitation crossover FAILS primary test (G25 partial)** — Slope -3.355, CI includes zero. But facilitation for marginal bridges is real (mean 3.761x survival).
+- **O17 FAILS third replication** — Transformation 0.699 > gradient 0.543 (reversed). Pair-specific, not type-general.
+- **Pre-fill content modulates survival for some pairs (O21)** — Corrected Phase 7A comparison (congruent-to-congruent) shows 5/8 replicate. Content is secondary modulator, not primary driver.
+- **Prediction accuracy 20%** (5/25) — Slightly below Phase 8's 24%. Mechanism ceiling confirmed.
+- **New observations:** O21 (pre-fill content modulates magnitude), O22 (marginal facilitation), O23 (bridge specification > type), O24 (prediction plateau at ~20-24%)
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Phase 8 establishes that single-variable mechanistic models are inadequate
-- Dead ends tracked in `GRAVEYARD.md` (22 entries G1-G22 across Phases 1-8)
+- Phases 8-9 establish that single-variable mechanistic models are inadequate (6/6 hypotheses fail)
+- Dead ends tracked in `GRAVEYARD.md` (25 entries G1-G25 across Phases 1-9)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
 ## Blockers
 None
 
 ## Next Steps
-- Execute Phase 9 experiments: `bun run phase9` (or individually: dominance → transformation → facilitation)
-- Write Phase 9 findings and interpretive analysis
-- Update CLAIMS.md and GRAVEYARD.md with Phase 9 results
-- Consider paper writing — 9 phases of data support a four-act narrative (structure → topology → mechanism → limits)
+- **Paper writing** — 9 phases of data support a four-act narrative (structure → topology → mechanism → limits)
+- Consider multiverse robustness analysis before paper (R1-R7 across different waypoint counts, prompts, temperatures)
+- Consider embedding-based distance approach (may rescue cross-model geometry where path-based failed)

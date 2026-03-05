@@ -398,10 +398,10 @@ export const PHASE9C_PAIRS: Phase9FacilitationPair[] = [
     congruentPreFill: "puppy",
     incongruentPreFill: "equation",
     neutralPreFill: "creature",
-    unconstrainedSource: "Phase 6A",
+    unconstrainedSource: "Phase 7A",
     newConditions: ["congruent"],
     targetReps: 10,
-    notes: "Highest-dominance bridge; taxonomic hierarchy",
+    notes: "Highest-dominance bridge; taxonomic hierarchy. Unconstrained data from Phase 7A anchoring (no Phase 6A pair exists).",
   },
   // Moderate pairs (unconstrained freq 0.50-0.65)
   {

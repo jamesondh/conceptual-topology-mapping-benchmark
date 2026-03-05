@@ -259,3 +259,41 @@ Things we tried that didn't work, and why. Prevents re-treading and provides hon
 **Resolution:** Model-independent geometry is definitively blocked with path-based measurements. The gait difference is not a scale factor but a structural reorganization of how each model measures conceptual space. Remaining options: embedding-based distances (different measurement modality), within-model-only analysis, or abandoning cross-model geometry entirely.
 
 **Lesson:** When a normalization has no effect, the diagnosis is that the problem is not what you thought. The disagreement was never about scale — it was about ordinal structure. Always check whether your proposed fix is mathematically capable of addressing the actual pattern in the data.
+
+---
+
+## G23 — Phase 9: Dominance Ratio Predicts Bridge Fragility (H9)
+
+**What:** Predicted that the ratio of bridge unconstrained frequency to strongest competitor frequency would predict pre-fill survival, with Spearman rho > 0.50 across 14 combined pairs and CI excluding zero. Retrospective evaluability gate (rho > 0.40 on 8 existing pairs) passed at rho = 0.548.
+
+**Why it failed:** Combined rho = 0.157 (CI [-0.482, 0.691]), far from significant. The critical anomaly: warm (dominance ratio 1.00) is completely destroyed by all four models (0.000 survival) while fermentation (ratio 1.07) is bulletproof (1.017 survival). Virtually identical dominance ratios, completely opposite outcomes. The retrospective signal (rho = 0.548) collapsed prospectively because the 8-point retrospective sample was overfitting — cause-effect "mechanism" already violated the trend (ratio 1.25 but survival only 0.143).
+
+**Resolution:** The controlling variable is not dominance ratio but the semantic relationship between the pre-fill concept and the bridge. Warm's pre-fill ("cool") is on the same temperature gradient — it provides an alternative entry point that makes warm unnecessary. Fermentation's pre-fill ("harvest") is in the same domain but not on the same transformation chain — it cannot substitute for fermentation. After G20 (competitor count) and G23 (dominance ratio), both single-variable structural predictors of bridge fragility have failed. The phenomenon requires multi-variable models that account for pre-fill content and bridge structural role jointly.
+
+**Lesson:** Retrospective signals on small samples (N=8) do not generalize. The evaluability gate (rho > 0.40) was correctly designed to prevent over-commitment, but even passing the gate at rho = 0.548 wasn't enough — the combined sample showed the retrospective trend was illusory. Future work should require N >= 15 for retrospective validation before investing in prospective collection.
+
+---
+
+## G24 — Phase 9: Gemini Transformation-Chain Blindness (H10)
+
+**What:** Predicted that Gemini would show a significantly larger (gradient - transformation) deficit than non-Gemini models, with transformation mean < 0.30, gradient mean > 0.45, and interaction CI excluding zero. This was the most specific mechanistic characterization of Gemini's deficit attempted in the benchmark: Gemini can navigate continuous dimensions but cannot route through discrete transformation states.
+
+**Why it failed:** The result was reversed. Gemini transformation mean = 0.667 (vs predicted < 0.30), gradient mean = 0.293 (vs predicted > 0.45). Gemini shows a *larger* gap favoring transformation over gradient (0.374) than non-Gemini models (0.084). The interaction is -0.290, opposite direction. Gemini's zeros in Phase 9B cluster on gradient pairs (5/10), not transformation pairs (2/10) — the reverse of Phase 8B's pattern (6/10 causal zeros, 1/10 gradient zeros). The meta-analytic combination with Phase 8B gives pooled interaction = -0.113, firmly null.
+
+**Resolution:** Gemini's deficit is real (mean 0.480 vs ~0.67 non-Gemini, a ~30% reduction that persists across all phases) but has now resisted three successive mechanistic characterizations: (1) frame-crossing threshold (Phase 5, falsified — Gemini's threshold is lowest, not highest), (2) gradient blindness (Phase 8B/G21, falsified backward — zeros on causal pairs, not gradient), (3) transformation-chain blindness (Phase 9B/G24, falsified backward — better on transformation than gradient). The pattern across Phase 8B and Phase 9B is instructive: whatever pair type is designed to be "hard" for Gemini, Gemini does relatively better on it. This suggests the pair-type dimension is simply not where Gemini's deficit lives. It may be a bridge-specificity issue (Gemini fails on specific concepts regardless of type) or a stochasticity issue (Gemini has higher variance, and its zeros are distributed randomly across types).
+
+**Lesson:** When a hypothesis fails backward in two successive tests (G21: predicted gradient zeros, got causal zeros; G24: predicted transformation zeros, got gradient zeros), the pair-type classification itself is not capturing the relevant dimension. Abandon the type-based approach to Gemini characterization. The deficit is model-level, not type-level.
+
+---
+
+## G25 (partial) — Phase 9: Pre-Fill Facilitation Crossover Regression (H11)
+
+**What:** Predicted that regressing pre-fill survival on unconstrained bridge frequency would produce a significant negative slope (CI excluding zero), with a crossover point at approximately unconstrained frequency 0.40-0.50 where pre-filling transitions from facilitation to displacement.
+
+**Why it partially failed:** Slope = -3.355 (correct direction) but CI [-6.748, 0.723] includes zero. R-squared = 0.289 — 29% of variance explained, non-trivial but not the clean predictor promised. The crossover point is estimated at 0.790 (CI [0.228, 1.136]), far from the predicted 0.40-0.50 and with a CI spanning nearly the entire frequency range.
+
+The regression fails because the data is too heterogeneous to support a single-variable model. Within the marginal bridge category (unconstrained freq < 0.30), cooking (0.183) shows displacement (survival 0.136) while creativity (0.125) shows massive facilitation (survival 8.000). Same frequency range, opposite outcomes. The hidden variable is the pre-fill concept's relationship to the bridge — exactly the same finding as G23 for the dominance ratio.
+
+**What survived:** The facilitation effect itself is real and large (O22: mean congruent survival 3.761 for marginal bridges). The displacement effect for dominant bridges is present but marginally fails the pre-registered threshold (mean survival 0.815 > 0.80 cutoff, largely due to corrected animal-poodle "dog" at 0.941). The qualitative distinction (marginal bridges can be facilitated, dominant bridges are generally displaced) holds. What fails is the regression model that predicts the crossover quantitatively.
+
+**Lesson:** The benchmark keeps finding that qualitative directional predictions succeed (~50% accuracy for structure) while quantitative predictions fail (~0% for mechanism). This is not coincidence — it reflects that the phenomenon has qualitative structure (bridges are either robust or fragile, facilitation or displacement) that is captured by coarse categories, but the specific outcome for any given pair depends on interaction effects (bridge × pre-fill content × model) that no single-variable regression can capture.

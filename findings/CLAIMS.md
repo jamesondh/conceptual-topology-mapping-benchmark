@@ -309,6 +309,34 @@ Phase 8 prediction accuracy is 24% (6/25), the lowest in benchmark history. Repl
 
 **Sources:** `08-analysis.md` §5
 
+### O21. Pre-fill content modulates bridge survival magnitude for some pairs
+**[observed]** — Phase 9C (14 pairs, 4 pre-fill conditions, 1,600 new runs).
+
+Corrected Phase 7A comparison (congruent-to-congruent matching) shows 5/8 pairs replicate within 0.15 when different congruent pre-fill concepts are used. Three moderate-dominance pairs (bank-ocean, music-mathematics, loan-shore) show magnitude differences of 0.275-0.359 but no direction reversals. Pre-fill presence remains the primary driver of displacement; content produces a secondary modulation of survival magnitude for some pairs. O15 largely upheld.
+
+**Sources:** `09c-facilitation.md`, `09-analysis.md` §3
+
+### O22. Marginal bridges show large facilitation under semantically aligned pre-fill
+**[observed]** — Phase 9C (4 marginal pairs, mean congruent survival 3.761).
+
+Science-art "creativity" at 8.0x survival, student-professor "research" at 4.0x, problem-solution "analysis" at 2.9x. For bridges with low unconstrained frequency (0.125-0.267), congruent pre-fills can boost frequency by 3-8x. Effect is model-general (3/4 models show facilitation) but absent in Gemini. The facilitation effect is real and large but heterogeneous — cooking and outline show displacement despite being marginal.
+
+**Sources:** `09c-facilitation.md`, `09-analysis.md` §3
+
+### O23. Bridge specification quality predicts frequency better than gradient/transformation type
+**[observed]** — Phase 9B (20 pairs, 4 models, 1,197 runs).
+
+The O17 reversal (Phase 9B finds transformation 0.699 > gradient 0.543) is driven by bridge specification quality, not pair type. Obligatory bottleneck bridges (leather, pulp, steel, spectrum) show near-universal frequency regardless of being transformation or gradient type. Hypernym bridges (speaking, walking) and too-central bridges (sapling) fail regardless of type. The gradient/transformation distinction has less predictive power than whether the bridge is a genuine navigational bottleneck.
+
+**Sources:** `09b-transformation.md`, `09-analysis.md` §2
+
+### O24. Prediction accuracy plateaus at ~20-24% for mechanistic hypotheses
+**[observed]** — Phases 8-9 (50 evaluable predictions, 11 confirmed = 22%).
+
+Phase 8 hit 24% prediction accuracy (6/25) and Phase 9 hit 20% (5/25). The floor is stable at ~20-24% across two consecutive phases testing different variables. Confirmed predictions cluster as replications of known structural facts and qualitative directional calls. Zero novel mechanistic predictions confirmed across Phases 8-9 combined. The benchmark maps qualitative structure reliably but cannot predict quantitative mechanism with single-variable models.
+
+**Sources:** `08-analysis.md` §5, `09-analysis.md` §4
+
 ---
 
 ## Updated Hypotheses from Phase 8
@@ -320,32 +348,26 @@ The bimodal pattern survives: bridges are either robust or collapsed under pre-f
 
 **Sources:** `07a-anchoring.md`, `08a-fragility.md`, `08-analysis.md` §1
 
-### H9. Bridge survival is predicted by dominance ratio, not competitor count
-**[hypothesis]** — Phase 8A (proposed from route exclusivity failure).
+### ~~H9. Bridge survival is predicted by dominance ratio, not competitor count~~
+**[falsified]** — Phase 8A (proposed), Phase 9A (tested and falsified).
 
-Sadness survives despite 8 competitors because its unconstrained frequency (0.950) dominates the landscape — its strongest competitor may appear at only ~0.200 (dominance ratio ~4.75). Harmony collapses with 7 competitors because it shares the landscape equally with rhythm, pattern, frequency (dominance ratio ~1.38). The controlling variable is bridge frequency / strongest competitor frequency.
+Retrospective rho = 0.548 (CI [-0.190, 1.000], passed evaluability gate) but combined rho = 0.157 (CI [-0.482, 0.691], not significant). The critical anomaly: warm (ratio 1.00) is destroyed while fermentation (ratio 1.07) survives perfectly — same dominance ratio, opposite outcomes. The pre-fill's semantic relationship to the bridge, not the bridge's dominance, determines survival. **Graveyard entry: G23.**
 
-**What would test it:** Compute dominance ratios for 12-14 pairs with known salience data and pre-fill survival. Spearman rho > 0.60 between dominance ratio and survival, CI excludes zero. Phase 9A is designed for this test.
+**Sources:** `09a-dominance.md`, `09-analysis.md` §1
 
-**Sources:** `08-analysis.md` §1
+### ~~H10. Gemini's deficit is transformation-chain blindness~~
+**[falsified]** — Phase 8B (proposed), Phase 9B (tested and reversed).
 
-### H10. Gemini's deficit is transformation-chain blindness
-**[hypothesis]** — Phase 8B (proposed from reversed gradient-blindness result).
+Gemini transformation mean (0.667) exceeds gradient mean (0.293) — the opposite of the hypothesis. Interaction = -0.290 (wrong direction, CI includes zero). Pooled meta-analytic interaction combining Phases 8B and 9B: -0.113, not significant. Gemini's overall deficit (mean 0.480 vs ~0.67 non-Gemini) remains real but has now resisted three mechanistic characterizations: frame-crossing threshold (Phase 5), gradient blindness (Phase 8B/G21), transformation blindness (Phase 9B/G24). **Graveyard entry: G24.**
 
-Gemini fails specifically on material/biological transformation intermediaries (cocoon, pottery, metal, flower, tree, dough — 6/10 causal pairs at zero) while succeeding on continuous-dimension midpoints (warm, walk, lake, rock, rain — 9/10 gradient pairs succeed). Refines H1 (frame-crossing) by specifying the type of frame boundary: Gemini handles within-frame gradients but cannot route through discrete transformation states.
-
-**What would test it:** 10 new transformation-chain pairs + 10 matched gradient pairs, testing for Gemini interaction (larger gap than non-Gemini). Phase 9B is designed for this test.
-
-**Sources:** `08b-gradient.md`, `08-analysis.md` §2
+**Sources:** `09b-transformation.md`, `09-analysis.md` §2
 
 ### H11. Pre-filling can facilitate marginal bridges when semantically aligned
-**[hypothesis]** — Phase 8A (discovered from inverted survival rates).
+**[partially confirmed / partially falsified]** — Phase 8A (discovered), Phase 9C (tested).
 
-Science-art "creativity" shows survival 5.200 (pre-fill frequency exceeds unconstrained by 5x) and student-professor "research" shows 2.429. For bridges with low unconstrained dominance, congruent pre-fills may prime rather than displace. This would create a crossover: displacement for dominant bridges, facilitation for marginal ones.
+The primary test (crossover regression slope CI excludes zero) fails: slope = -3.355, CI [-6.748, 0.723] includes zero. The crossover point is 0.790 (not 0.40-0.50 as predicted). **The regression does not confirm a clean crossover.** The facilitation effect for marginal bridges is confirmed: mean congruent survival 3.761 (P3 confirmed). Dominant bridge displacement is marginally not confirmed: mean survival 0.815 (P2 threshold < 0.80 not met, primarily due to the corrected animal-poodle "dog" showing 0.941 survival). The facilitation phenomenon is real (O22) but the crossover is not a clean regression — it is better described as a qualitative threshold with enormous pair-to-pair variance. **Partial graveyard entry: G25.**
 
-**What would test it:** 14 pairs spanning unconstrained frequency 0.10-1.00 with congruent/incongruent/neutral pre-fills. Regression of survival on frequency should show negative slope. Phase 9C is designed for this test.
-
-**Sources:** `08a-fragility.md`, `08-analysis.md` §1
+**Sources:** `09c-facilitation.md`, `09-analysis.md` §3
 
 ---
 
@@ -368,8 +390,33 @@ Predicted normalized cross-model r > 0.50. Observed: r = 0.212, identical to raw
 
 ---
 
-## Deferred Claims (Awaiting Phase 9+ Data)
+## Falsified (Phase 9)
+
+### ~~Dominance ratio predicts bridge fragility (H9)~~
+**[falsified]** — Phase 9A.
+
+Predicted combined Spearman rho > 0.50 between dominance ratio and pre-fill survival. Observed: rho = 0.157, CI includes zero. Warm (ratio 1.00) destroyed, fermentation (ratio 1.07) bulletproof. The pre-fill's semantic relationship to the bridge, not structural dominance, determines survival. After G20 (competitor count) and G23 (dominance ratio), both single-variable structural predictors of bridge fragility have failed. **Graveyard entry: G23.**
+
+### ~~Gemini transformation-chain blindness (H10)~~
+**[falsified]** — Phase 9B.
+
+Predicted Gemini (gradient - transformation) gap at least 0.15 larger than non-Gemini, interaction CI excludes zero. Observed: Gemini transformation mean 0.667, gradient mean 0.293 — the opposite direction. Interaction = -0.290, CI includes zero. Pooled meta-analytic interaction with Phase 8B: -0.113, null. Gemini's deficit is real but has resisted three mechanistic characterizations (frame-crossing threshold, gradient blindness, transformation blindness). **Graveyard entry: G24.**
+
+### ~~Pre-fill facilitation crossover regression (H11 primary test)~~
+**[partially falsified]** — Phase 9C.
+
+Predicted significant negative regression slope for survival on unconstrained frequency. Observed: slope = -3.355 (correct direction), CI [-6.748, 0.723] includes zero. Crossover at 0.790 (not 0.40-0.50). The regression fails because the data is too heterogeneous: cooking (marginal, 0.183) shows displacement while creativity (marginal, 0.125) shows massive facilitation. The facilitation observation (O22) survives individually; dominant displacement (P2) marginally fails at 0.815 > 0.80 threshold. **Partial graveyard entry: G25.**
+
+### O17 fails third replication (not promoted to [robust])
+**[replication failure]** — Phase 9B.
+
+Phase 9B finds transformation 0.699 > gradient 0.543, opposite to Phase 7C (0.730 vs 0.496) and Phase 8B (0.770 vs 0.578). Reversal is driven by bridge specification quality (bottleneck vs hypernym/too-central), not pair type. O17 remains [observed] from Phases 7C/8B but is pair-specific, not type-general. NOT promoted to [robust].
+
+---
+
+## Deferred Claims
 
 - **Multiverse robustness** — How robust are R1-R7 across different waypoint counts, prompt formats, and temperature settings? Deferred to pre-paper robustness phase.
 - **Cross-model bridge agreement as mechanism for path convergence** — Phase 4A found r=-0.283 between bridge frequency difference and cross-model Jaccard. Suggestive but limited sample. Needs larger triple set.
-- **O17 promotion to [robust]** — Gradient > causal-chain replicates across Phase 7C and Phase 8B (partial overlap in pairs). A third independent replication with non-overlapping pairs (Phase 9B) would promote to [robust].
+- **Gemini's mechanistic deficit** — Real (mean 0.480 vs ~0.67 non-Gemini) but three mechanistic characterizations falsified. May require multi-variable model or different experimental paradigm to characterize.
+- **Multi-variable bridge fragility model** — Both competitor count (G20) and dominance ratio (G23) fail as single-variable predictors. A model incorporating pre-fill content, bridge structural role, and dominance jointly may succeed.

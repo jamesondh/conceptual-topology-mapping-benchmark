@@ -125,7 +125,7 @@ const UNCONSTRAINED_SOURCE_MAP: Record<string, { pairId: string; dir: string }> 
   "p9c-emotion-melancholy": { pairId: "p6a-emotion-melancholy", dir: "salience" },
   "p9c-light-color": { pairId: "p6a-light-color", dir: "salience" },
   "p9c-sun-desert": { pairId: "p6a-sun-desert", dir: "salience" },
-  "p9c-animal-poodle": { pairId: "p6a-animal-poodle", dir: "salience" },
+  "p9c-animal-poodle": { pairId: "p7a-animal-poodle", dir: "anchoring" },
   "p9c-bank-ocean": { pairId: "p6a-bank-ocean", dir: "salience" },
   "p9c-music-mathematics": { pairId: "p6a-music-mathematics", dir: "salience" },
   "p9c-seed-garden": { pairId: "p6a-seed-garden", dir: "salience" },
@@ -762,14 +762,15 @@ async function analyze(opts: {
     const p7aPairId = PHASE7A_COMPARISON_MAP[pair.id];
     if (!p7aPairId) continue;
 
-    // Phase 7A survival: gather incongruent pre-fill data from Phase 7A
+    // Phase 7A survival: gather congruent pre-fill data from Phase 7A
+    // (matches Phase 9C congruent condition for same-type comparison)
     const p7aPreFillRuns: string[][] = [];
     for (const modelId of modelIds) {
-      const incongKey = `${p7aPairId}--incongruent::${modelId}`;
-      const incongResults = anchoringLookup.get(incongKey) ?? [];
-      p7aPreFillRuns.push(...waypointsOnly(incongResults));
-      if (incongResults.length > 0) {
-        totalReusedRuns += incongResults.length;
+      const congKey = `${p7aPairId}--congruent::${modelId}`;
+      const congResults = anchoringLookup.get(congKey) ?? [];
+      p7aPreFillRuns.push(...waypointsOnly(congResults));
+      if (congResults.length > 0) {
+        totalReusedRuns += congResults.length;
       }
     }
 
