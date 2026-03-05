@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. Phases 1-7 complete; Phase 8 spec written, awaiting implementation. Same process as word-convergence-game's 5 rounds.
+Exploration-first project. Phases 1-7 complete; Phase 8 implemented, awaiting experiment execution. Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -11,8 +11,8 @@ Exploration-first project. Phases 1-7 complete; Phase 8 spec written, awaiting i
 - [x] **Phase 6: Navigational salience mapping and forced crossings** — 2,080 new runs + 280 reused across 8 salience pairs, 8 asymmetry pairs, 10 positional pairs. Core findings: salience distributions non-uniform (7/8 KS reject); forced-crossing asymmetry hypothesis falsified (0.817 ≈ 0.811 baseline); bridge concepts anchor early (position 1-2, not midpoint); peak-detection contrast 0.345 vindicates Phase 5C; forced-crossing bridges positionally unstable (SD 1.71 vs 0.52); GPT highest entropy (3.44); Gemini financial-frame routing on bank-ocean. See `findings/06a-salience.md`, `findings/06b-forced-crossing.md`, `findings/06c-positional.md`, and `findings/06-analysis.md`.
 - [x] **Phase 7: Early anchoring and navigational mechanics** — 2,360 new runs + 920 reused across 8 anchoring pairs (4 conditions), 8 curvature triangles, 10 too-central pairs. Core findings: pre-filling causally displaces bridges (displacement 0.515, CI excludes zero); mechanism is primarily associative primacy (incongruent/congruent/neutral not cleanly separated); bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive — H8: route exclusivity); taxonomic bridges resist displacement (0.140); triangle inequality replicates at 90.6% (structural constant); polysemous curvature hypothesis falsified; cross-model distance validity fails (r=0.170); too-central categorization was wrong (only fire/water qualify); gradient > causal-chain (0.730 vs 0.496); Gemini systematic zeros on obvious univocal bridges. See `findings/07a-anchoring.md`, `findings/07b-curvature.md`, `findings/07c-too-central.md`, and `findings/07-analysis.md`.
 
-## Pending
-- [ ] **Phase 8: Bridge fragility and Gemini gradient blindness** — Part A: test route exclusivity as bridge fragility predictor (competitor count from salience data vs pre-fill survival); Part B: test Gemini's gradient blindness (10 gradient-midpoint vs 10 causal-chain pairs); Part C: gait-normalized distance metric to rescue cross-model geometry. ~2,930 new runs. Spec: `.planning/phases/08-bridge-fragility-and-gemini-gradient-blindness/SPEC.md`.
+## Implemented (awaiting execution)
+- [ ] **Phase 8: Bridge fragility and Gemini gradient blindness** — Part A: test route exclusivity as bridge fragility predictor (competitor count from salience data vs pre-fill survival); Part B: test Gemini's gradient blindness (10 gradient-midpoint vs 10 causal-chain pairs); Part C: gait-normalized distance metric to rescue cross-model geometry. ~2,930 new runs. Implementation complete and Codex-reviewed. Spec: `.planning/phases/08-bridge-fragility-and-gemini-gradient-blindness/SPEC.md`.
 
 ## Deferred
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many (see `_deferred/semantic-similarity-optimization.md`)

@@ -107,6 +107,15 @@ bun run analyze-curvature        # Analyze curvature results
 bun run too-central              # Part C: ~480 API calls (informational redundancy)
 bun run analyze-too-central      # Analyze too-central results
 bun run phase7                   # Run all Phase 7 in sequence
+
+# 11. Phase 8: Bridge fragility, gradient blindness, and gait-normalized distance
+bun run fragility                # Part A: ~1010 API calls (salience + pre-fill survival)
+bun run analyze-fragility        # Analyze fragility results
+bun run gradient                 # Part B: ~1280 API calls (gradient vs causal pairs)
+bun run analyze-gradient         # Analyze gradient blindness results
+bun run gait-norm                # Part C: ~640 API calls (dedicated 7-waypoint runs)
+bun run analyze-gait-norm        # Analyze gait-normalized distance results
+bun run phase8                   # Run all Phase 8 in sequence
 ```
 
 ## What It Measures
@@ -130,6 +139,9 @@ bun run phase7                   # Run all Phase 7 in sequence
 - **Early anchoring** — Does a pre-filled heading waypoint bias the subsequent path? (Phase 7A: incongruent/congruent/neutral pre-fill conditions, bridge displacement test)
 - **Curvature estimation** — Do polysemous concepts create regions of high curvature? (Phase 7B: triangle inequality excess, polysemous vs non-polysemous vertex comparison)
 - **Too-central boundary** — What separates "too central to bridge" from "obvious and useful"? (Phase 7C: informational redundancy gradient, random-target probes)
+- **Bridge fragility** — Does route exclusivity (competitor count) predict bridge survival under pre-fill displacement? (Phase 8A: retrospective + prospective Spearman correlation, LOO cross-validation)
+- **Gradient blindness** — Does Gemini systematically fail on gradient-midpoint bridges while succeeding on causal-chain bridges? (Phase 8B: gradient vs causal bridge frequency, Gemini interaction effect)
+- **Gait-normalized distance** — Can per-model normalization rescue cross-model distance comparability? (Phase 8C: raw vs normalized inter-model correlation, residual analysis)
 
 ## Concept Pairs
 
@@ -165,6 +177,7 @@ src/
     triples-phase5.ts             # Phase 5 triple/pair definitions (cue-strength, dimensionality, convergence)
     pairs-phase6.ts               # Phase 6 pair definitions (salience, forced-crossing, positional)
     pairs-phase7.ts               # Phase 7 pair definitions (anchoring, curvature, too-central)
+    pairs-phase8.ts               # Phase 8 pair definitions (fragility, gradient, gait-norm)
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -200,7 +213,7 @@ Cross-model correlation of navigational distances is only r = 0.170 — models d
 
 ## Status
 
-**Phase 7 complete. Phase 8 spec written, awaiting implementation.** Cumulative: 14,000+ API runs across 4 models and 7 phases.
+**Phase 8 implemented, awaiting experiment execution.** Cumulative: 14,000+ API runs across 4 models and 7 phases (Phase 8 adds ~2,930 new runs).
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -209,5 +222,7 @@ Cross-model correlation of navigational distances is only r = 0.170 — models d
 - **Phase 5:** 3,720 runs. Cue-strength gradient real but ragged (12/16 monotonic). Germination outperforms plant (process-naming > object-naming). Gemini threshold hypothesis fails. Forced crossing discovery (loan-bank-shore at 0.95-1.00). Fire dead as bridge concept. W-shape fails in aggregate but Claude shows 0.52 on music→mathematics. Prediction accuracy drops to 42.9% as experiments shift from characterization to mechanism.
 - **Phase 6:** 2,080 runs + 280 reused. Salience distributions non-uniform (7/8 KS reject). Forced-crossing asymmetry hypothesis falsified (0.817 ≈ baseline). Bridge concepts anchor early (position 1-2, not midpoint). Peak-detection contrast 0.345 vindicates Phase 5C. GPT highest entropy navigator. Gemini routes bank-ocean through financial frame (vault-treasure-gold).
 - **Phase 7:** 2,360 runs + 920 reused. Pre-filling causally displaces bridges (0.515, CI excludes zero). Bridge fragility is bimodal (harmony/germination collapse, sadness/dog survive). Taxonomic bridges resist displacement (0.140). Triangle inequality replicates at 90.6%. Cross-model distance validity fails (r=0.170). Too-central categorization was wrong — only fire/water qualify. Gradient > causal-chain bridges (0.730 vs 0.496). Gemini systematic zeros on obvious univocal bridges.
+
+- **Phase 8:** ~2,930 runs (pending execution). Bridge fragility mechanism (route exclusivity as predictor), Gemini gradient blindness (gradient-midpoint vs causal-chain), gait-normalized distance (rescuing cross-model geometry). Codex-reviewed implementation.
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.

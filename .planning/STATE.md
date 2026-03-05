@@ -2,7 +2,7 @@
 
 ## Current Phase
 Phase 7: Early Anchoring and Navigational Mechanics — **COMPLETE** (analysis written)
-Phase 8: Bridge Fragility and Gemini Gradient Blindness — **SPEC WRITTEN**, awaiting implementation
+Phase 8: Bridge Fragility and Gemini Gradient Blindness — **IMPLEMENTED**, awaiting experiment execution
 
 ## Context
 - Research survey complete (`research.md`)
@@ -63,9 +63,17 @@ Phase 8: Bridge Fragility and Gemini Gradient Blindness — **SPEC WRITTEN**, aw
 - Dead ends tracked in `GRAVEYARD.md` (19 entries G1-G19 across Phases 1-7)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 
+## Phase 8 Implementation Notes
+- 10 new/modified files: types.ts, metrics.ts, pairs-phase8.ts, 3 experiment scripts, 3 analysis scripts, package.json
+- Codex CLI review found 10 issues; 7 HIGH/MEDIUM fixed (missing data guard, sensitivity analysis, seeded RNG, prediction alignment, spec-matching thresholds, residual SD criterion)
+- 3 unfixed: pre-fill concurrency (same pattern as Phase 7, architectural choice), retrospective condition pooling (defensible), metadata run counting (low priority)
+- ~2,930 new API runs when experiments are executed
+
 ## Blockers
 None
 
 ## Next Steps
-- Implement Phase 8 (bridge fragility mechanism, Gemini gradient blindness, gait-normalized distance)
+- Execute Phase 8 experiments (`bun run fragility`, `bun run gradient`, `bun run gait-norm`)
+- Run Phase 8 analysis (`bun run analyze-fragility`, `bun run analyze-gradient`, `bun run analyze-gait-norm`)
+- Write Phase 8 findings
 - Consider paper writing (see `_deferred/paper.md`)

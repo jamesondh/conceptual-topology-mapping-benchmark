@@ -22,7 +22,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 ## Conventions
 
 - Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
-- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7)
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7), `pairs-phase8.ts` (Phase 8)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
@@ -68,6 +68,13 @@ bun run analyze-curvature        # Phase 7B: analyze curvature results
 bun run too-central              # Phase 7C: too-central boundary (~480 API calls)
 bun run analyze-too-central      # Phase 7C: analyze too-central results
 bun run phase7                   # Run all Phase 7 in sequence (7A → 7B → 7C)
+bun run fragility                # Phase 8A: bridge fragility experiment (~1010 API calls)
+bun run analyze-fragility        # Phase 8A: analyze fragility results
+bun run gradient                 # Phase 8B: Gemini gradient blindness experiment (~1280 API calls)
+bun run analyze-gradient         # Phase 8B: analyze gradient results
+bun run gait-norm                # Phase 8C: gait-normalized distance experiment (~640 API calls)
+bun run analyze-gait-norm        # Phase 8C: analyze gait-normalized distance results
+bun run phase8                   # Run all Phase 8 in sequence (8A → 8B → 8C)
 ```
 
 ## Models
