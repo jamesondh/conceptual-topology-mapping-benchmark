@@ -113,6 +113,7 @@ async function callOpenRouter(
   model: string,
   prompt: string,
   temperature: number,
+  requestTimeoutMs: number = 60_000,
 ): Promise<{ text: string; generationId?: string; providerRoute?: string }> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -123,7 +124,7 @@ async function callOpenRouter(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60_000); // 60s timeout
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
 
   let response: Response;
   try {
@@ -197,6 +198,7 @@ export async function elicit(
     waypointCount,
     promptFormat,
     temperature,
+    requestTimeoutMs,
   } = request;
 
   const runId = crypto.randomUUID();
@@ -215,6 +217,7 @@ export async function elicit(
         model.openRouterId,
         promptText,
         temperature,
+        requestTimeoutMs,
       );
       rawResponse = result.text;
       openRouterGenId = result.generationId;

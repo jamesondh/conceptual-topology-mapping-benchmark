@@ -103,6 +103,7 @@ async function callOpenRouter(
   model: string,
   prompt: string,
   temperature: number,
+  requestTimeoutMs: number = 60_000,
 ): Promise<{ text: string; generationId?: string; providerRoute?: string }> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -113,7 +114,7 @@ async function callOpenRouter(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60_000);
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
 
   let response: Response;
   try {
@@ -202,12 +203,13 @@ async function runSingleProbe(
   model: ModelConfig,
   pair: Phase10CorePair,
   format: PromptFormat,
+  requestTimeoutMs: number = 60_000,
 ): Promise<ProbeResult> {
   const prompt = buildPrompt(pair.from, pair.to, WAYPOINT_COUNT, format);
   const startTime = Date.now();
 
   try {
-    const result = await callOpenRouter(model.openRouterId, prompt, TEMPERATURE);
+    const result = await callOpenRouter(model.openRouterId, prompt, TEMPERATURE, requestTimeoutMs);
     const latencyMs = Date.now() - startTime;
     const waypoints = extractWaypoints(result.text, WAYPOINT_COUNT);
     const parsed = waypoints.length >= MIN_WAYPOINTS_FOR_PARSE;
@@ -248,13 +250,18 @@ function median(values: number[]): number {
 async function probeModel(
   model: ModelConfig,
   probePairs: Phase10CorePair[],
+  options: { requestTimeoutMs: number; latencyDiscardMs: number; latencySlowMs: number } = {
+    requestTimeoutMs: 60_000,
+    latencyDiscardMs: LATENCY_DISCARD_MS,
+    latencySlowMs: LATENCY_SLOW_MS,
+  },
 ): Promise<Phase10ModelReliabilityResult> {
   console.log(`  Probing ${model.displayName} (${model.openRouterId})...`);
 
   // Run probes with "semantic" format
   const semanticProbes: ProbeResult[] = [];
   for (const pair of probePairs) {
-    const result = await runSingleProbe(model, pair, "semantic");
+    const result = await runSingleProbe(model, pair, "semantic", options.requestTimeoutMs);
     semanticProbes.push(result);
 
     const statusStr = result.success
@@ -294,7 +301,7 @@ async function probeModel(
 
     const directProbes: ProbeResult[] = [];
     for (const pair of probePairs) {
-      const result = await runSingleProbe(model, pair, "direct");
+      const result = await runSingleProbe(model, pair, "direct", options.requestTimeoutMs);
       directProbes.push(result);
 
       const statusStr = result.success
@@ -340,8 +347,8 @@ async function probeModel(
   const parseRate = allProbes.filter((p) => p.success && p.parsed).length / PROBE_COUNT;
 
   // Classify based on latency
-  if (p50 > LATENCY_DISCARD_MS) {
-    console.log(`    -> UNAVAILABLE (p50 latency ${p50}ms > ${LATENCY_DISCARD_MS}ms)`);
+  if (p50 > options.latencyDiscardMs) {
+    console.log(`    -> UNAVAILABLE (p50 latency ${p50}ms > ${options.latencyDiscardMs}ms)`);
     return {
       modelId: model.id,
       openRouterId: model.openRouterId,
@@ -352,12 +359,12 @@ async function probeModel(
       medianLatencyMs: p50,
       usesDirectFormat,
       status: "unavailable",
-      statusReason: `Latency too high: p50=${p50}ms > ${LATENCY_DISCARD_MS}ms`,
+      statusReason: `Latency too high: p50=${p50}ms > ${options.latencyDiscardMs}ms`,
     };
   }
 
-  if (p50 > LATENCY_SLOW_MS) {
-    console.log(`    -> SLOW (p50 latency ${p50}ms > ${LATENCY_SLOW_MS}ms, concurrency=1)`);
+  if (p50 > options.latencySlowMs) {
+    console.log(`    -> SLOW (p50 latency ${p50}ms > ${options.latencySlowMs}ms, concurrency=1)`);
     return {
       modelId: model.id,
       openRouterId: model.openRouterId,
@@ -368,7 +375,7 @@ async function probeModel(
       medianLatencyMs: p50,
       usesDirectFormat,
       status: "slow",
-      statusReason: `High latency: p50=${p50}ms > ${LATENCY_SLOW_MS}ms`,
+      statusReason: `High latency: p50=${p50}ms > ${options.latencySlowMs}ms`,
     };
   }
 
@@ -460,7 +467,8 @@ async function main() {
       DEFAULT_MODEL_CONCURRENCY,
     )
     .option("--throttle <ms>", "per-model delay between requests", "0")
-    .option("--models <ids>", "comma-separated model short IDs (default: all new models)");
+    .option("--models <ids>", "comma-separated model short IDs (default: all new models)")
+    .option("--patient", "tolerate slow models: 300s request timeout, 300s latency gate (for overnight runs)");
 
   program.parse();
   const opts = program.opts();
@@ -472,6 +480,12 @@ async function main() {
   const globalConcurrency = parseInt(opts.concurrency as string, 10) || DEFAULT_CONCURRENCY;
   const perModelConcurrency = parseModelConcurrency(opts.modelConcurrency as string);
   const throttleMs = parseInt(opts.throttle as string, 10) || 0;
+  const patientMode = opts.patient === true;
+
+  // Patient mode: generous timeouts for slow models (overnight runs)
+  const requestTimeoutMs = patientMode ? 300_000 : 60_000;
+  const latencyDiscardMs = patientMode ? 300_000 : LATENCY_DISCARD_MS;
+  const latencySlowMs = patientMode ? 120_000 : LATENCY_SLOW_MS;
 
   // Resolve models (from NEW_MODELS, not MODELS)
   let models: ModelConfig[];
@@ -492,6 +506,9 @@ async function main() {
 
   // Print header
   console.log("=== Phase 10A: Model Generality Experiment ===\n");
+  if (patientMode) {
+    console.log(`Mode:                    PATIENT (${requestTimeoutMs / 1000}s request timeout, ${latencyDiscardMs / 1000}s latency gate)`);
+  }
   console.log(`New models:              ${models.map((m) => m.displayName).join(", ")}`);
   console.log(`Total pairs:             ${PHASE10A_ALL_PAIRS.length} (8 forward + 4 reverse)`);
   console.log(`Probe pairs:             ${PHASE10A_PROBE_PAIRS.length}`);
@@ -544,12 +561,23 @@ async function main() {
     const probeReportPath = path.join(probesDir, `probe-${model.id}.json`);
     if (existsSync(probeReportPath)) {
       const existingReport = JSON.parse(await readFile(probeReportPath, "utf-8")) as Phase10ModelReliabilityResult;
-      reliabilityResults.push(existingReport);
-      console.log(`  ${model.displayName}: Loaded existing probe report (status: ${existingReport.status})`);
-      continue;
+
+      // In patient mode, re-probe models that were previously unavailable
+      // (they may have been gated by the stricter default thresholds)
+      if (patientMode && existingReport.status === "unavailable") {
+        console.log(`  ${model.displayName}: Re-probing (was unavailable, now in patient mode)`);
+      } else {
+        reliabilityResults.push(existingReport);
+        console.log(`  ${model.displayName}: Loaded existing probe report (status: ${existingReport.status})`);
+        continue;
+      }
     }
 
-    const reliability = await probeModel(model, PHASE10A_PROBE_PAIRS);
+    const reliability = await probeModel(model, PHASE10A_PROBE_PAIRS, {
+      requestTimeoutMs,
+      latencyDiscardMs,
+      latencySlowMs,
+    });
     reliabilityResults.push(reliability);
 
     // Save probe result atomically
@@ -677,6 +705,7 @@ async function main() {
           waypointCount: WAYPOINT_COUNT,
           promptFormat: format,
           temperature: TEMPERATURE,
+          ...(patientMode ? { requestTimeoutMs } : {}),
         });
       }
     }

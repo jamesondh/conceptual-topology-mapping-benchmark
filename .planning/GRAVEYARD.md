@@ -300,15 +300,13 @@ The regression fails because the data is too heterogeneous to support a single-v
 
 ---
 
-## G26 — Phase 10: Bridge Bottleneck Generalization to New Models
+## ~~G26~~ — RESURRECTED: Bridge Bottleneck Generalization to New Models
 
-**What:** Predicted that the new model cohort's mean bridge frequency CI would include zero (i.e., no significant difference from the original cohort), demonstrating that bridge bottleneck structure (R6) generalizes beyond the original four models.
+**What:** Originally predicted that bridge frequency CI would include zero. With Llama-only data (1 model, 180 runs), the CI excluded zero (diff -0.617) and G26 was added to the graveyard.
 
-**Why it failed:** New cohort (Llama 3.1 8B) mean bridge frequency is 0.200, compared to the original cohort's 0.817. The difference is -0.617 (CI [-0.805, -0.383]), massive and statistically significant. Only 1/7 non-control pairs exceeds bridge frequency 0.40 (hot-cold "warm" at 0.733). Harmony, spectrum, dog, sadness, germination, and leather — all reliable bridges for the original four models — appear at low or zero frequency in Llama. The model routes through entirely different intermediaries.
+**Why it was resurrected:** After relaxing timeout thresholds (60s → 300s via `--patient` mode) and retesting overnight, 3 additional models (Qwen, MiniMax, Kimi) passed the probe gate. With the expanded 4-model cohort (720 runs), the cohort bridge frequency is 0.721 vs original 0.817, diff -0.096, **CI [-0.241, 0.064] includes zero**. Bridge bottleneck structure DOES generalize. The original G26 was an artifact of testing only a single small model whose low bridge frequencies reflected a scale effect, not a model-general content divergence.
 
-**Resolution:** Bridge bottleneck *structure* (that some concepts serve as navigational bottlenecks) is likely universal — R6's principle holds. But the *specific* bottleneck concepts are model-dependent navigational content. This crystallizes the benchmark's capstone finding: structural properties of conceptual navigation (gait, asymmetry, compositionality) generalize across architectures and scales, but navigational content (which bridges, which waypoints, which routes) does not. Note: this finding is based on a single new model; the 4 probe failures were OpenRouter infrastructure artifacts, not model capability failures.
-
-**Lesson:** Generality tests that depend on infrastructure (OpenRouter latency) can produce false negatives. The probe stage design was correct — it saved ~1,000 API calls — but the finding of non-generalization for bridge content may be overstated by having only one successful probe model. Native API access for the 4 failed models would provide a much stronger test.
+**Lesson:** Infrastructure limitations (aggressive timeouts) can masquerade as substantive findings. Patient re-testing reversed a false negative. This is the first graveyard resurrection in the benchmark — a reminder that N=1 findings should be treated with appropriate caution, especially when the single data point is confounded with other variables (model scale).
 
 ---
 

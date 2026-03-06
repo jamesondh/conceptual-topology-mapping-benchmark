@@ -15,14 +15,14 @@ All major claims from the benchmark, tagged by evidence tier. This is the canoni
 ### R1. Models have distinct, stable conceptual gaits
 **[robust]** — Phase 1, replicated across Phases 2-5.
 
-Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.258). This gap is stable across 5 phases and 9,500+ runs. Grok (0.293) and Gemini (0.372) fall between. The consistency profile predicts downstream behavior: Claude's rigidity produces the strongest positional signals (Phase 5C W-shape), GPT's variability produces the broadest bridge exploration, Gemini's fragmentation produces systematic cross-frame failures. Phase 10A confirms cross-architecture generality: Llama 3.1 8B (different architecture, 8B scale) shows characteristic gait at Jaccard 0.298 — within the expected range, confirming gait is a universal property of LLM navigation, not specific to frontier models.
+Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.258). This gap is stable across 5 phases and 9,500+ runs. Grok (0.293) and Gemini (0.372) fall between. The consistency profile predicts downstream behavior: Claude's rigidity produces the strongest positional signals (Phase 5C W-shape), GPT's variability produces the broadest bridge exploration, Gemini's fragmentation produces systematic cross-frame failures. Phase 10A (expanded) confirms cross-architecture generality across 4 new models: Qwen 0.508, MiniMax 0.419, Kimi 0.414, Llama 0.298 — all within the expected range. Gait is confirmed as a universal property across 8 models from 8 providers, spanning 8B to frontier scale.
 
 **Sources:** `01-pilot-analysis.md` §2, `05-analysis.md` §7, `10-analysis.md` §1
 
 ### R2. Conceptual navigation is fundamentally asymmetric (quasimetric)
 **[robust]** — Phase 2 (primary), Phase 3B (triangle inequality), Phases 4-5 (consistent with).
 
-Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space. Phase 10A confirms cross-architecture generality: Llama 3.1 8B shows asymmetry index 0.785 (CI [0.708, 0.847]), well above the 0.60 threshold. Quasimetric navigation is universal across architectures and scales.
+Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space. Phase 10A (expanded) confirms cross-architecture generality across all 4 new models: Llama 0.785, Kimi 0.684, Qwen 0.662, MiniMax 0.638 — all well above the 0.60 threshold. Quasimetric navigation is confirmed across 8 models from 8 providers.
 
 **Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`, `10-analysis.md` §1
 
@@ -40,12 +40,14 @@ Hierarchical triples show 4.9x higher waypoint transitivity than random controls
 
 **Sources:** `03-analysis.md` §2, `03b-transitivity.md`
 
-### R5. Controls validate cleanly
-**[robust]** — Phases 1-5.
+### R5. Controls validate cleanly (qualified)
+**[robust]** — Phases 1-5. **Qualified in Phase 10A.**
 
-Nonsense controls show near-zero consistency (Jaccard 0.062, entropy 6.37). Random bridge concepts never appear on paths (0% bridge frequency across all phases). This eliminates artifact explanations: the structure we measure in experimental conditions is not an artifact of the elicitation task, limited vocabulary, or formulaic responses.
+Nonsense controls show near-zero consistency (Jaccard 0.062, entropy 6.37). Random bridge concepts never appear on paths (0% bridge frequency across all phases for original 4 models). This eliminates artifact explanations: the structure we measure in experimental conditions is not an artifact of the elicitation task, limited vocabulary, or formulaic responses.
 
-**Sources:** `01-pilot-analysis.md` §3, `03-analysis.md` §2
+**Qualification (Phase 10A):** The stapler-monsoon control pair fails R5 for all 4 new models — MiniMax ("paper" 0.933), Kimi ("paper" 0.933), Qwen ("cloud" 0.867), Llama ("office" 0.800). This suggests the pair has an unintended semantic bridge that many models discover. R5 holds for the original cohort but the specific control pair needs revision for broader generality testing. See O27.
+
+**Sources:** `01-pilot-analysis.md` §3, `03-analysis.md` §2, `10-analysis.md` §1
 
 ### R6. Bridge concepts are bottlenecks, not associations
 **[robust]** — Phases 3-5 (converging evidence from multiple findings).
@@ -416,10 +418,10 @@ Phase 9B finds transformation 0.699 > gradient 0.543, opposite to Phase 7C (0.73
 
 ## New Observations from Phase 10
 
-### O25. Structural properties generalize to small models; navigational content does not
-**[observed]** — Phase 10A (1 new model, 180 runs).
+### O25. Structure and content generalize; scale differentiates navigational landmarks
+**[observed]** — Phase 10A (4 new models, 720 runs).
 
-Llama 3.1 8B (different architecture, 8B scale) shows characteristic gait (Jaccard 0.298, CI [0.202, 0.390]), quasimetric asymmetry (0.785, CI [0.708, 0.847]), and non-zero cross-model Jaccard (mean 0.145, above 0.10 threshold), confirming R1, R2, and shared structure. But mean bridge frequency (0.200) is massively lower than the original cohort (0.817, diff -0.617, CI [-0.805, -0.383] excludes zero). The geometry is universal; the landmarks are model-specific. A small model navigates the same topological space but takes completely different paths. Note: based on a single new model; generality of this finding awaits testing with additional models.
+All 4 new models (Qwen, MiniMax, Kimi, Llama) show characteristic gaits (0.298-0.508), quasimetric asymmetry (all > 0.60), and non-zero cross-model Jaccard (mean 0.235, above 0.10 threshold), confirming R1, R2, and shared structure. Critically, the cohort bridge frequency comparison CI now includes zero (new cohort 0.721 vs original 0.817, diff -0.096, CI [-0.241, 0.064]) — bridge bottleneck structure generalizes. Qwen, MiniMax, and Kimi produce bridge frequencies comparable to the original cohort. Llama 3.1 8B is the sole outlier (mean bridge freq 0.200), revealing a scale effect: large models from different providers converge on the same navigational landmarks, while an 8B model navigates the same geometry through different landmarks. The structure/content boundary is better characterized as a structure/content/scale hierarchy.
 
 **Sources:** `10a-model-generality.md`, `10-analysis.md` §1
 
@@ -430,14 +432,21 @@ Friedman chi-squared = 6.750, df = 2, p = 0.034. The three relation classes prod
 
 **Sources:** `10b-relation-classes.md`, `10-analysis.md` §2
 
+### O27. Control pair stapler-monsoon has an unintended associative bridge for non-original models
+**[observed]** — Phase 10A (4 new models, 720 runs).
+
+All 4 new models converge on strong waypoints for the "random" control pair stapler-monsoon: MiniMax and Kimi on "paper" (0.933 frequency), Qwen on "cloud" (0.867), Llama on "office" (0.800). All fail the R5 threshold of < 0.10 top-waypoint frequency. This is not a small-model phenomenon — MiniMax and Kimi are frontier-class models. The stapler→paper association is strong and predictable; the original 4 models' clean control performance may reflect their specific navigational diversity on this pair rather than the pair's inherent randomness. R5 remains valid for the original cohort but the control pair needs revision for broader generality testing.
+
+**Sources:** `10a-model-generality.md`, `10-analysis.md` §1
+
 ---
 
 ## Falsified (Phase 10)
 
-### ~~Bridge bottleneck generalization to new models~~
-**[falsified]** — Phase 10A.
+### ~~Bridge bottleneck generalization to new models~~ — RESURRECTED
+**[resurrected]** — Phase 10A (expanded).
 
-Predicted that the new model cohort's mean bridge frequency CI would include zero (no significant difference from original cohort). Observed: new cohort mean 0.200, original cohort mean 0.817, difference -0.617, CI excludes zero. The specific bridges that function as bottlenecks for the original four models (harmony, spectrum, dog, sadness, etc.) do not generalize to Llama 3.1 8B. Bridge topology is model-specific navigational content. Note: based on a single new model. **Graveyard entry: G26.**
+Originally falsified based on Llama-only data (1 model, 180 runs): new cohort mean 0.200, original 0.817, CI excluded zero. After relaxing timeout thresholds and retesting with 3 additional models (Qwen, MiniMax, Kimi), the expanded cohort (4 models, 720 runs) shows: new cohort mean 0.721, original 0.817, diff -0.096, **CI [-0.241, 0.064] includes zero**. Bridge bottleneck structure DOES generalize across providers and architectures for comparable-scale models. The original finding was an artifact of testing only a single small model (Llama 8B). **G26 resurrected (retained as historical record in graveyard).** The Llama-specific finding is retained within O25 as a scale effect.
 
 ### ~~Predicted relation class ordering (on-axis < unrelated < same-domain)~~
 **[falsified]** — Phase 10B.
@@ -449,6 +458,8 @@ Predicted that on-axis substitutes would be the most disruptive pre-fills, with 
 ## Deferred Claims
 
 - **Multiverse robustness** — How robust are R1-R7 across different waypoint counts, prompt formats, and temperature settings? Deferred to pre-paper robustness phase.
-- **Cross-model bridge agreement as mechanism for path convergence** — Phase 4A found r=-0.283 between bridge frequency difference and cross-model Jaccard. Suggestive but limited sample. Needs larger triple set.
+- **Cross-model bridge agreement as mechanism for path convergence** — Phase 4A found r=-0.283 between bridge frequency difference and cross-model Jaccard. Suggestive but limited sample. Needs larger triple set. Phase 10A's expanded cross-model matrix (28 pairs) may enable re-analysis.
 - **Gemini's mechanistic deficit** — Real (mean 0.480 vs ~0.67 non-Gemini) but three mechanistic characterizations falsified. May require multi-variable model or different experimental paradigm to characterize.
 - **Multi-variable bridge fragility model** — Both competitor count (G20) and dominance ratio (G23) fail as single-variable predictors. A model incorporating pre-fill content, bridge structural role, and dominance jointly may succeed.
+- **Scale-dependent bridge convergence threshold** — Phase 10A suggests large models converge on the same bridges while Llama 8B diverges. What's the threshold? Is it parameter count, training data volume, or capability level? Would a 70B Llama show the same bridges as frontier models?
+- **Control pair revision** — Stapler-monsoon fails R5 for all new models (O27). Need additional control pairs that are verified across diverse model cohorts.

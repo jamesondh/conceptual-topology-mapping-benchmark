@@ -61,6 +61,8 @@ export interface ElicitationRequest {
   waypointCount: number;
   promptFormat: PromptFormat;
   temperature: number;
+  /** Per-request timeout in ms (default: 60_000). Raise for slow models. */
+  requestTimeoutMs?: number;
 }
 
 export interface ElicitationResult {
