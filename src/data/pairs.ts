@@ -578,3 +578,30 @@ export const NEW_MODELS: ModelConfig[] = [
     displayName: "Llama 3.1 8B Instruct",
   },
 ];
+
+/**
+ * Phase 11A: New models for expanded generality testing.
+ * Adds 3 entirely new families (DeepSeek, Mistral, Cohere) + within-family scale test (Llama 4 Maverick).
+ */
+export const PHASE11_MODELS: ModelConfig[] = [
+  {
+    id: "deepseek",
+    openRouterId: "deepseek/deepseek-v3.2",
+    displayName: "DeepSeek V3.2",
+  },
+  {
+    id: "mistral",
+    openRouterId: "mistralai/mistral-large-2512",
+    displayName: "Mistral Large 3",
+  },
+  {
+    id: "cohere",
+    openRouterId: "cohere/command-a",
+    displayName: "Cohere Command A",
+  },
+  {
+    id: "llama4",
+    openRouterId: "meta-llama/llama-4-maverick",
+    displayName: "Llama 4 Maverick",
+  },
+];

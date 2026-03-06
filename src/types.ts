@@ -2103,3 +2103,303 @@ export interface RelationClassAnalysisOutput {
     value: string;
   }>;
 }
+
+// --- Phase 11: Expanded Generality, Control Revision, and Robustness ---
+
+// Part A: Expanded Model Generality (reuses Phase10CorePair and Phase10ModelReliabilityResult)
+
+export interface Phase11ExpandedGeneralityOutput {
+  metadata: {
+    timestamp: string;
+    newModels: string[];
+    originalModels: string[];
+    phase10AModels: string[];
+    pairs: string[];
+    totalNewRuns: number;
+    reliableModelCount: number;
+  };
+  /** Model reliability reports */
+  reliabilityReports: Phase10ModelReliabilityResult[];
+  /** Gait profiles (R1 replication): intra-model Jaccard per model */
+  gaitProfiles: Array<{
+    modelId: string;
+    displayName: string;
+    meanIntraModelJaccard: number;
+    jaccardCI: [number, number];
+    isNewModel: boolean;
+    cohort: "original" | "phase10a" | "phase11a";
+    perPairJaccard: Array<{ pairId: string; jaccard: number }>;
+  }>;
+  /** Asymmetry (R2 replication): per model per pair */
+  asymmetryResults: Array<{
+    modelId: string;
+    pairId: string;
+    forwardPairId: string;
+    reversePairId: string;
+    asymmetryIndex: number;
+    asymmetryCI: [number, number];
+  }>;
+  /** Per-model mean asymmetry */
+  perModelAsymmetry: Array<{
+    modelId: string;
+    meanAsymmetry: number;
+    asymmetryCI: [number, number];
+    aboveThreshold: boolean;
+  }>;
+  /** Bridge frequency (R6 replication): per pair per model */
+  bridgeFrequencyMatrix: Array<{
+    pairId: string;
+    modelId: string;
+    expectedBridge: string | null;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+    runCount: number;
+  }>;
+  /** Control validation (R5): stapler-monsoon */
+  controlValidation: Array<{
+    modelId: string;
+    topWaypoint: string;
+    topFrequency: number;
+    passesControl: boolean;
+    uniqueWaypoints: number;
+  }>;
+  /** Llama scale test (Llama 4 Maverick vs Llama 3.1 8B) */
+  llamaScaleTest: {
+    maverick: {
+      gaitJaccard: number | null;
+      meanBridgeFreq: number | null;
+      meanAsymmetry: number | null;
+    };
+    llama8b: {
+      gaitJaccard: number | null;
+      meanBridgeFreq: number | null;
+      meanAsymmetry: number | null;
+    };
+    scaleConfirmed: boolean | null;
+  } | null;
+  /** Combined 8-model cohort comparison (Phases 10A+11A new vs original 4) */
+  cohortComparison: {
+    newCohortMeanBridgeFreq: number;
+    newCohortCI: [number, number];
+    originalCohortMeanBridgeFreq: number;
+    originalCohortCI: [number, number];
+    difference: number;
+    differenceCI: [number, number];
+    ciIncludesZero: boolean;
+    newCohortModelCount: number;
+  };
+  /** 12-model cross-model similarity matrix */
+  modelSimilarityMatrix: Array<{
+    modelA: string;
+    modelB: string;
+    meanPairwiseJaccard: number;
+  }>;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part B: Control Pair Revision
+
+export interface Phase11ControlCandidate {
+  id: string;
+  from: string;
+  to: string;
+  rationale: string;
+  targetScreeningReps: number;
+  targetValidationReps: number;
+}
+
+export interface ControlScreeningResult {
+  candidateId: string;
+  modelId: string;
+  topWaypoint: string;
+  topFrequency: number;
+  entropy: number;
+  runCount: number;
+  passesFrequencyGate: boolean;
+  passesEntropyGate: boolean;
+}
+
+export interface Phase11ControlRevisionOutput {
+  metadata: {
+    timestamp: string;
+    candidates: string[];
+    screeningModels: string[];
+    validationModels: string[];
+    totalScreeningRuns: number;
+    totalValidationRuns: number;
+  };
+  /** Screening results per candidate per model */
+  screeningResults: ControlScreeningResult[];
+  /** Screening summary per candidate */
+  screeningSummary: Array<{
+    candidateId: string;
+    modelsPassingFrequency: number;
+    modelsPassingEntropy: number;
+    totalModels: number;
+    overallPass: boolean;
+    maxTopFrequency: number;
+    minEntropy: number;
+  }>;
+  /** Validation results for passing candidates */
+  validationResults: Array<{
+    candidateId: string;
+    modelId: string;
+    topWaypoint: string;
+    topFrequency: number;
+    entropy: number;
+    uniqueWaypoints: number;
+    runCount: number;
+    passesControl: boolean;
+  }>;
+  /** Validation summary per candidate */
+  validationSummary: Array<{
+    candidateId: string;
+    modelsPassingControl: number;
+    totalModels: number;
+    meanTopFrequency: number;
+    meanEntropy: number;
+    recommended: boolean;
+  }>;
+  /** Retrospective stapler-monsoon analysis */
+  staplerMonsoonRetrospective: Array<{
+    modelId: string;
+    topWaypoint: string;
+    topFrequency: number;
+    entropy: number;
+    passesR5: boolean;
+    cohort: string;
+  }>;
+  /** R5 revision recommendation */
+  r5Recommendation: {
+    recommendedControls: string[];
+    rationale: string;
+    passingCandidateCount: number;
+  };
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}
+
+// Part C: Multiverse Robustness
+
+export type RobustnessCondition = {
+  waypoints: number;
+  temperature: number;
+  label: string;
+};
+
+export interface Phase11RobustnessPair {
+  id: string;
+  from: string;
+  to: string;
+  direction: "forward" | "reverse";
+  expectedBridge: string | null;
+  targetReps: number;
+}
+
+export interface RobustnessCellResult {
+  conditionLabel: string;
+  waypoints: number;
+  temperature: number;
+  pairId: string;
+  modelId: string;
+  intraModelJaccard: number;
+  bridgeFrequency: number | null;
+  bridgeFrequencyCI: [number, number] | null;
+  runCount: number;
+}
+
+export interface Phase11RobustnessOutput {
+  metadata: {
+    timestamp: string;
+    conditions: RobustnessCondition[];
+    pairs: string[];
+    models: string[];
+    totalNewRuns: number;
+    totalReusedRuns: number;
+  };
+  /** Full cell results: condition × pair × model */
+  cellResults: RobustnessCellResult[];
+  /** Gait robustness: per model per condition */
+  gaitRobustness: Array<{
+    modelId: string;
+    conditionLabel: string;
+    meanIntraModelJaccard: number;
+    jaccardCI: [number, number];
+  }>;
+  /** Gait rank-order stability across conditions */
+  gaitRankStability: {
+    kendallW: number;
+    modelRankOrder: Array<{
+      conditionLabel: string;
+      rankedModels: string[];
+    }>;
+    rankOrderPreserved: boolean;
+  };
+  /** Asymmetry robustness: per model per condition for asymmetry pairs */
+  asymmetryRobustness: Array<{
+    modelId: string;
+    conditionLabel: string;
+    pairLabel: string;
+    asymmetryIndex: number;
+    asymmetryCI: [number, number];
+  }>;
+  /** Mean asymmetry per condition */
+  meanAsymmetryPerCondition: Array<{
+    conditionLabel: string;
+    meanAsymmetry: number;
+    asymmetryCI: [number, number];
+    aboveThreshold: boolean;
+  }>;
+  /** Bridge frequency robustness */
+  bridgeFrequencyRobustness: Array<{
+    pairId: string;
+    bridgeConcept: string;
+    modelId: string;
+    conditionLabel: string;
+    bridgeFrequency: number;
+    bridgeFrequencyCI: [number, number];
+  }>;
+  /** Mean bridge frequency per condition */
+  meanBridgeFreqPerCondition: Array<{
+    conditionLabel: string;
+    meanBridgeFreq: number;
+    bridgeFreqCI: [number, number];
+    aboveThreshold: boolean;
+  }>;
+  /** ANOVA interaction test: waypoints × temperature */
+  anovaInteraction: {
+    waypointMainEffect: number;
+    waypointMainEffectP: number;
+    temperatureMainEffect: number;
+    temperatureMainEffectP: number;
+    interactionEffect: number;
+    interactionEffectP: number;
+    modelMainEffect: number;
+    modelMainEffectP: number;
+    nullInteraction: boolean;
+  };
+  /** Waypoint count scaling */
+  waypointScaling: {
+    sharedFraction5to7: number;
+    sharedFraction7to9: number;
+    sharedFraction5to9: number;
+  } | null;
+  /** Predictions evaluation */
+  predictions: Array<{
+    id: number;
+    description: string;
+    result: "confirmed" | "not confirmed" | "insufficient data";
+    value: string;
+  }>;
+}

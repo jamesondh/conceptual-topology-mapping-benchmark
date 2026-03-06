@@ -58,6 +58,13 @@
     "relation-classes": "bun run experiments/10b-relation-classes.ts",
     "analyze-relation-classes": "bun run analysis/10b-relation-classes.ts",
     "phase10": "bun run experiments/10a-model-generality.ts && bun run analysis/10a-model-generality.ts && bun run experiments/10b-relation-classes.ts && bun run analysis/10b-relation-classes.ts",
+    "expanded-generality": "bun run experiments/11a-expanded-generality.ts",
+    "analyze-expanded-generality": "bun run analysis/11a-expanded-generality.ts",
+    "control-revision": "bun run experiments/11b-control-revision.ts",
+    "analyze-control-revision": "bun run analysis/11b-control-revision.ts",
+    "robustness": "bun run experiments/11c-robustness.ts",
+    "analyze-robustness": "bun run analysis/11c-robustness.ts",
+    "phase11": "bun run experiments/11a-expanded-generality.ts && bun run analysis/11a-expanded-generality.ts && bun run experiments/11b-control-revision.ts && bun run analysis/11b-control-revision.ts && bun run experiments/11c-robustness.ts && bun run analysis/11c-robustness.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
