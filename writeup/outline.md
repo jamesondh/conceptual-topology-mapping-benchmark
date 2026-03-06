@@ -12,9 +12,9 @@
 
 2. **Contribution:** We introduce the Conceptual Topology Mapping Benchmark, a waypoint-elicitation paradigm that probes navigational geometry across ~21,540 API runs, 12 models from 11 independent training pipelines, and 11 experimental phases. Models are given concept pairs (A, B) and asked for intermediate waypoints; the resulting paths are tested against metric axioms, compositional structure, and causal perturbation.
 
-3. **Findings:** Models exhibit distinct "conceptual gaits" (consistency ranging 0.258-0.747 across 12 models), navigation is fundamentally asymmetric (mean 0.811, consistent with quasimetric structure), bridge concepts are structural bottlenecks (not mere associations), and these properties generalize across architectures while resisting protocol variation. Single-variable mechanistic explanations universally fail (8/8 hypotheses falsified), revealing a mechanism ceiling: conceptual navigation has qualitative geometric structure that current tools can characterize but cannot yet explain.
+3. **Findings:** Models exhibit distinct "conceptual gaits" (consistency ranging 0.258-0.747 across 12 models), navigation is fundamentally asymmetric (mean 0.811, consistent with quasimetric structure), bridge concepts are structural bottlenecks (not mere associations), and these properties generalize across architectures while resisting protocol variation. Single-variable mechanistic explanations consistently fail (7 hypotheses falsified, 1 resurrected with additional data), revealing a mechanism ceiling: conceptual navigation has qualitative geometric structure that current tools can characterize but cannot yet explain.
 
-**Key statistics for abstract:** 21,540 runs, 12 models, 11 families, 11 phases, 6 robust claims + 1 qualified (R5), 29 graveyard entries, 8/8 mechanistic hypotheses falsified. Note: do NOT lead with "7 robust claims" — immediately note R5 is qualified.
+**Key statistics for abstract:** ~21,540 runs (exact count requires audit — per-phase headers sum higher due to retries/failures; use data-derived total), 12 models, 11 families, 11 phases, 6 robust claims + 1 qualified (R5), 29 graveyard entries, 7 mechanistic hypotheses falsified (G26 resurrected). Note: do NOT lead with "7 robust claims" — immediately note R5 is qualified.
 
 ---
 
@@ -33,7 +33,7 @@
 
 - Cognitive science has long theorized that concepts live in navigable geometric spaces (Gardenfors, 2000). Grid cells in human entorhinal cortex fire during *conceptual* navigation (Constantinescu et al., 2016), suggesting spatial mechanisms are repurposed for abstract thought.
 - The Platonic Representation Hypothesis (Huh et al., 2024) claims models are converging toward shared representations. But representational alignment does not imply navigational alignment — two people can agree on a map and prefer different routes.
-- The reversal curse (Berglund et al., 2023) established that LLMs cannot reverse learned associations. We reframe this: asymmetry is not a bug but a signal that reveals topological structure, paralleling Tversky's (1977) finding that human similarity judgments are inherently asymmetric.
+- The reversal curse (Berglund et al., 2023) established that LLMs cannot reverse learned associations. We reframe this: asymmetry is not a bug but a signal that reveals structure, paralleling Tversky's (1977) finding that human similarity judgments are inherently asymmetric. Note: the connection is thematic (both concern directional asymmetry) rather than mechanistic (we do not demonstrate that the reversal curse *causes* the specific navigational asymmetry we observe).
 - Multi-hop reasoning failures (compositionality gap, two-hop curse) show models struggle with latent composition. Our benchmark generalizes this: rather than binary pass/fail on composed facts, we measure the *shape* and *consistency* of intermediate steps.
 
 ### 1.3 Contributions
@@ -41,8 +41,8 @@
 Bulleted list:
 
 1. **A novel evaluation paradigm** — waypoint elicitation as a behavioral probe for conceptual geometry, distinct from static embedding analysis, factual QA, and free association.
-2. **Six robust empirical claims** about navigational structure, replicated across multiple phases and models, plus one qualified claim (R5, control validation) that reveals a fundamental limitation of the paradigm (Section 4-5).
-3. **A mechanism ceiling result** — 8/8 single-variable mechanistic hypotheses fail across two dedicated phases, establishing that conceptual navigation resists simple explanations (Section 7).
+2. **Six robust empirical claims** about navigational structure, replicated across multiple phases and models, plus one qualified claim (R5, control validation) that reveals a fundamental limitation of the paradigm (Section 4-5). Three claims (R3, R4, R7) are untested beyond the original 4-model cohort.
+3. **A mechanism ceiling result** — 7 single-variable mechanistic hypotheses fail across Phases 8-10 (one additional hypothesis was initially falsified then resurrected with more data), establishing that conceptual navigation resists simple explanations (Section 7).
 4. **Cross-architecture generality** — navigational structure and content generalize across 12 models from 11 families; scale differentiates (Section 8).
 5. **Protocol robustness** — bridge frequency is insensitive to waypoint count and temperature; gait rankings are largely stable; model identity dominates protocol variation (Section 9).
 6. **29 documented dead ends** as an honest accounting of the benchmark's learning curve.
@@ -75,7 +75,7 @@ One-sentence summary of each subsequent section, following the six-act narrative
 
 Define each metric formally:
 
-- **Gait consistency (Jaccard similarity):** For a given (model, pair, direction), compute pairwise Jaccard similarity across 20 runs. Higher = more deterministic navigation.
+- **Gait consistency (Jaccard similarity):** For a given (model, pair, direction), compute pairwise Jaccard similarity across 20 runs. Higher = more deterministic navigation. **Important limitation:** Jaccard is purely lexical after canonicalization (lemmatization, lowercasing, singularization). Semantically equivalent waypoints like "melody" and "tune" are treated as completely different. This means Jaccard *underestimates* true consistency and *overestimates* asymmetry. All "distance" and "asymmetry" claims are lexical, not semantic. This limitation is never fully mitigated across 11 phases (embedding-based semantic similarity was deferred). The magnitude of this bias is unknown but bounded by the canonicalization, which handles morphological variants (running/run, cities/city).
 - **Path asymmetry:** Compare A-to-B waypoint set vs B-to-A waypoint set via Jaccard. Low Jaccard = high asymmetry.
 - **Bridge frequency:** For a triple (A, B, C), what fraction of A-to-C paths include bridge concept B as a waypoint?
 - **Triangle inequality:** For a triple (A, B, C), does d(A,C) <= d(A,B) + d(B,C) using waypoint-based navigational distance?
@@ -117,6 +117,7 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 **Self-grounding and the validity strategy:** Model outputs generate their own ground truth. This is a feature (no annotation required, scalable) and a limitation (circular). We mitigate circularity three ways: (1) testing against external mathematical properties (metric axioms have definitions independent of any model), (2) cross-model comparison (12 independent models as mutual validation), (3) causal intervention (pre-fill experiments demonstrate structural sensitivity, not just statistical regularity). The benchmark's evidential standard is relative, not absolute: we measure the *magnitude gap* between experimental and control conditions, not whether controls achieve a fixed threshold. This is explicitly acknowledged as the primary limitation (Section 9.5).
 
 **Additional paradigm limitations:**
+- **Lexical metrics only:** All metrics use Jaccard set similarity after lemmatization. Semantically equivalent waypoints (melody/tune, cemetery/graveyard) are treated as distinct. Asymmetry of 0.811 should be interpreted as *lexical* asymmetry; true conceptual asymmetry is likely lower. A spot-check using embedding-based similarity on a subset of pairs would help bound this effect.
 - Prompt sensitivity: addressed by Phase 11C multiverse robustness analysis.
 - API-mediated access: cannot control internal model state, temperature is approximate, potential for silent model updates.
 
@@ -156,7 +157,7 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 - Directional hysteresis in semantic caching (Barakat et al., 2026): input ordering steers trajectories into different basins of attraction.
 - Self-consistency failures (2025): high variability even in GPT-4 across repeated evaluations.
 - Trajectory variance in agents (2025): substantial action-sequence diversity across runs.
-- **Our reframing:** Existing work treats inconsistency and asymmetry as failure modes. We reframe asymmetry as data — the pattern reveals topology. The 0.811 mean asymmetry is a structural constant of navigational space, not a bug.
+- **Our reframing:** Existing work treats inconsistency and asymmetry as failure modes. We reframe asymmetry as data — the pattern reveals structure consistent with directed topology. The pervasive asymmetry (mean 0.811 in Phase 2 cohort, >0.60 across all 12 models) is a structural property of navigational space, not a bug.
 
 > **Defensive positioning (address explicitly in this section):** Reviewers will ask why this isn't just "self-consistency / stochastic decoding work with a geometry gloss." Key contrast: self-consistency work measures variance across samples; we test whether the *structure* of that variance satisfies formal geometric axioms (metric properties, compositionality, causal sensitivity). Variance is our data, not our failure mode.
 
@@ -249,9 +250,9 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 
 ---
 
-## 5. Act II — Topology: Conceptual Space Is Quasimetric
+## 5. Act II — Topology: Conceptual Space Has Quasimetric Structure
 
-**Goal:** Establish the metric-axiom results that characterize the topology of navigational space.
+**Goal:** Present the metric-axiom results that characterize the topology of navigational space. Note: asymmetry and triangle inequality are tested on different operationalizations of "distance" (cross-direction Jaccard vs within-direction Jaccard), so the quasimetric claim is "consistent with" rather than formally established.
 
 **Phases covered:** 2, 3B, 4, 5
 
@@ -259,14 +260,14 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 
 **Claims:** [robust] R2
 
-- Mean directional asymmetry 0.811 across 84 pair/model combinations.
-- 87% of combinations show statistically significant asymmetry (permutation test, p < 0.05).
+- Mean directional asymmetry 0.811 across 84 pair/model combinations (Phase 2, original 4-model cohort, 5 waypoints). Note: this includes control pairs (nonsense 0.986, random 0.908) which inflate the mean. Experimental-only mean may be lower. Phase 11A new models show 0.673-0.729. Phase 11C shows resolution dependence (0.594 at 5wp, 0.684 at 9wp). Do not present 0.811 as a universal constant — contextualize it.
+- 87% of combinations show statistically significant asymmetry (permutation test, p < 0.05). **Statistical caveat:** 84 tests with no explicit multiple-comparison correction reported for this figure. With Bonferroni correction (threshold 0.05/84 ≈ 0.0006), the percentage would likely be lower. The permutation test uses 1,000 resamples (minimum achievable p = 0.001), limiting resolution for corrected thresholds. Increase to 5,000-10,000 for the paper.
 - Symmetry axiom fails comprehensively. This is not noise — it is the dominant property.
 - Phase 11C qualification: asymmetry is resolution-dependent (0.594 at 5 waypoints, 0.684 at 9 waypoints). The property is real but requires sufficient path length to manifest. [observed] O32
 
-> **[Figure 5: Asymmetry Distribution]** — Histogram of directional asymmetry values across all 84 pair/model combinations. Vertical line at 0.811 (mean). Almost no mass near 1.0 (perfect symmetry). Compare to what a metric space would predict (all values at 1.0).
+> **[Figure 5: Asymmetry Distribution]** — Histogram of directional asymmetry values across all 84 pair/model combinations (Phase 2, original 4-model cohort, 5 waypoints). Vertical line at 0.811 (mean). Almost no mass near 0.0 (where perfect symmetry would appear, since asymmetry = 1 - Jaccard(forward, reverse)). Compare to what a metric space would predict (all values near 0.0). Note: 0.811 is the Phase 2 value; Phase 11C shows asymmetry is resolution-dependent (0.594 at 5 waypoints, 0.684 at 9 waypoints), so this figure should be contextualized.
 
-**Theoretical connection:** Tversky (1977) showed human similarity is asymmetric. Berglund et al. (2023) showed autoregressive models have a reversal curse. Our finding connects these: the reversal curse is not a bug — it produces structured asymmetry that reveals quasimetric topology.
+**Theoretical connection:** Tversky (1977) showed human similarity is asymmetric. Berglund et al. (2023) showed autoregressive models have a reversal curse. Our finding connects these: the reversal curse is not a bug — it produces structured asymmetry consistent with quasimetric topology.
 
 ### 5.2 Triangle Inequality Holds as a Structural Constant
 
@@ -274,7 +275,7 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 
 - Phase 3B: 91%. Phase 4B: 93.8%. Phase 7B: 90.6%.
 - Three independent samples converge on ~91% — a structural constant.
-- Conceptual space satisfies all metric axioms except symmetry: the formal definition of a quasimetric space.
+- **Important methodological caveat:** The triangle inequality uses within-direction Jaccard (consistency of repeated runs) as the distance function, while the asymmetry test uses cross-direction Jaccard (comparing A→B vs B→A paths). These are different operationalizations of "distance." The results are *consistent with* quasimetric structure (asymmetry + triangle inequality), but the claim is not formally established on a single unified distance function. The paper should present this as "consistent with quasimetric structure" rather than "the formal definition of a quasimetric space."
 
 > **[Table 4: Triangle Inequality Replication]** — Three rows (Phase 3B, 4B, 7B), columns: N triangles, % holding, mean excess, 95% CI.
 
@@ -315,7 +316,7 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 
 **Claims:** [observed] O11
 
-- 7/8 pairs reject uniformity (Bonferroni-corrected KS test).
+- 7/8 pairs reject uniformity (Bonferroni-corrected chi-squared goodness-of-fit test; note: the codebase function is named `ksTestUniform` but actually implements chi-squared, which is more appropriate for categorical frequency data — fix the naming in the paper).
 - Claude lowest entropy (2.59, near-deterministic); GPT highest (3.44, broadest exploration).
 - Navigational traffic concentrates in a small number of high-frequency waypoints.
 
@@ -362,10 +363,11 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 
 **Claims:** [observed] O26
 
-- Friedman chi-squared = 6.750, p = 0.034. Significant.
+- Friedman chi-squared = 6.750, p = 0.034. Significant but marginal.
 - Unrelated pre-fills most disruptive (0.388) < on-axis (0.643) ~ same-domain (0.708).
 - The operationally meaningful distinction is binary: related vs unrelated.
 - Related pre-fills maintain navigational context; unrelated pre-fills destroy it.
+- **Statistical caveat:** N=8 pairs. Post-hoc Wilcoxon tests (p=0.025, p=0.036) do not survive Bonferroni correction for 3 pairwise comparisons (threshold 0.017). Report the Friedman as significant but note post-hoc pairwise comparisons are suggestive, not confirmatory. The qualitative conclusion (unrelated < related) is sound; specific p-values are overstated.
 
 > **[Figure 10: Relation Class Survival]** — Boxplot or violin plot showing bridge survival by relation class (unrelated, on-axis, same-domain). Include the Friedman p-value.
 
@@ -394,27 +396,28 @@ Brief overview of the 11-phase structure as an exploration-first workflow. Each 
 - Combined Phases 8-9: 22% (11/50).
 - Zero novel mechanistic predictions confirmed across both phases.
 - Replication predictions succeed at ~80%, structural predictions at ~50%, mechanistic predictions at ~15%.
+- Note: these are the two phases most focused on single-variable mechanistic hypotheses. Phase 10 (50%) and Phase 11 (44%) show better accuracy because they include more replication/structural predictions.
 
 > **[Figure 11: Prediction Accuracy by Phase]** — Line plot showing prediction accuracy across Phases 4-11. Annotate the descent from 81.3% (Phase 4, characterization) to 20-24% (Phases 8-9, mechanism). Include horizontal reference lines for different prediction types.
 
-### 7.2 The Eight Falsified Hypotheses
+### 7.2 The Falsified Hypotheses
 
-Present as a structured catalog:
+Present as a structured catalog. Note: the commonly cited "8/8" count is misleading because G26 was resurrected with additional data. The accurate count is **7 falsified + 1 resurrected.** Additionally, these span different types — some are genuinely mechanistic (G20, G23), some characterize a model-level deficit (G21, G24), one is methodological (G22), and one is about effect direction (G27). The paper should present them individually rather than as a uniform class.
 
-| # | Hypothesis | Phase | Predicted | Observed | Graveyard |
-|---|-----------|-------|-----------|----------|-----------|
-| 1 | Route exclusivity (competitor count) | 8A | rho < -0.70 | rho = 0.116 | G20 |
-| 2 | Gemini gradient blindness | 8B | Gemini interaction >= 0.20 | interaction = 0.046 | G21 |
-| 3 | Gait normalization rescues cross-model distance | 8C | normalized r > 0.50 | r = 0.212 (0.000 improvement) | G22 |
-| 4 | Dominance ratio predicts fragility | 9A | rho > 0.50 | rho = 0.157 | G23 |
-| 5 | Gemini transformation-chain blindness | 9B | transformation deficit | transformation *advantage* | G24 |
-| 6 | Pre-fill facilitation crossover regression | 9C | significant slope | CI includes zero | G25 |
-| 7 | Bridge bottleneck generalization (initial) | 10A | CI includes zero | CI excluded zero (resurrected with more data) | G26* |
-| 8 | Predicted relation class ordering | 10B | on-axis < unrelated < same-domain | unrelated < on-axis ~ same-domain | G27 |
+| # | Hypothesis | Phase | Predicted | Observed | Graveyard | Type |
+|---|-----------|-------|-----------|----------|-----------|------|
+| 1 | Route exclusivity (competitor count) | 8A | rho < -0.70 | rho = 0.116 | G20 | Mechanistic |
+| 2 | Gemini gradient blindness | 8B | Gemini interaction >= 0.20 | interaction = 0.046 | G21 | Model deficit |
+| 3 | Gait normalization rescues cross-model distance | 8C | normalized r > 0.50 | r = 0.212 (0.000 improvement) | G22 | Methodological |
+| 4 | Dominance ratio predicts fragility | 9A | rho > 0.50 | rho = 0.157 | G23 | Mechanistic |
+| 5 | Gemini transformation-chain blindness | 9B | transformation deficit | transformation *advantage* | G24 | Model deficit |
+| 6 | Pre-fill facilitation crossover regression | 9C | significant slope | CI includes zero | G25 | Mechanistic (partial) |
+| 7 | Bridge bottleneck generalization (initial) | 10A | CI includes zero | **RESURRECTED** — CI excluded zero initially, then included zero with more data | G26 | Structural |
+| 8 | Predicted relation class ordering | 10B | on-axis < unrelated < same-domain | unrelated < on-axis ~ same-domain | G27 | Effect direction |
 
-> **[Table 5: Falsified Mechanistic Hypotheses]** — The table above, formatted for the paper. Include predicted effect size, observed effect size, and CI for each.
+> **[Table 5: Hypothesis Outcomes]** — The table above, formatted for the paper. Include predicted effect size, observed effect size, and CI for each. Clearly mark G26 as resurrected and distinguish hypothesis types.
 
-*Note: G26 was resurrected — include in discussion as an honest accounting case.
+**Honest accounting:** G26 (bridge generalization) was initially falsified based on N=1 model (Llama 8B) and then resurrected when 3 additional models were tested with relaxed timeouts. This is the benchmark's strongest example of infrastructure limitations masquerading as substantive findings (the aggressive 60s timeout excluded most new models). The paper should present G26 honestly as a resurrection, not as a falsification, reducing the clean count to 7/8.
 
 ### 7.3 The Pattern: Qualitative Structure, Quantitative Opacity
 
@@ -498,6 +501,7 @@ Present as a structured catalog:
 - **ANOVA results:** Model identity eta-squared = 0.242 (p ~ 0.001). Waypoint count eta-squared = 0.008 (p ~ 0.520). Temperature eta-squared = 0.002 (p ~ 0.743). Interaction ~ 0.000.
 - Model identity is the dominant driver. Protocol variation is negligible.
 - The benchmark's structural claims are not artifacts of the 7-waypoint, 0.7-temperature protocol.
+- **Statistical caveat:** p-values use a chi-squared approximation to the F-distribution (ignoring denominator df) and treat per-pair cells as independent without repeated-measures modeling. Only 3 models tested. Present as descriptive/exploratory, not confirmatory. The eta-squared effect sizes are more reliable than exact p-values. Consider a mixed-effects model for the paper if this is to be inferential.
 
 > **[Table 6: ANOVA Results]** — Factor, eta-squared, approximate p-value for each main effect and interaction.
 
@@ -546,15 +550,15 @@ Present as a structured catalog:
 
 Compact recapitulation:
 1. **Structure:** Models have distinct, stable conceptual gaits (R1). Navigation is self-consistent (O9, O10) and shaped by dual-anchor effects (O2).
-2. **Topology:** Conceptual space is quasimetric — asymmetric (R2, 0.811) with triangle inequality holding at ~91%. Bridges are structural bottlenecks (R6), not associations. Hierarchical paths are compositional (R4).
+2. **Topology:** Conceptual space is consistent with quasimetric structure — systematically asymmetric (R2, mean 0.811 in Phase 2 cohort) with triangle inequality holding at ~91% (tested on different distance operationalizations). Bridges are structural bottlenecks (R6), not associations. Hierarchical paths are compositional (R4).
 3. **Mechanism:** Pre-filling causally displaces bridges (O15, 0.515 displacement). The mechanism is associative primacy. Relation class matters (O26): related pre-fills preserve context, unrelated destroy it.
-4. **Limits:** 8/8 single-variable mechanistic hypotheses fail. Prediction accuracy plateaus at 20-24% for mechanism (O24). Qualitative structure is characterizable; quantitative mechanism is opaque.
+4. **Limits:** 7 single-variable mechanistic hypotheses fail (1 resurrected). Prediction accuracy plateaus at 20-24% for mechanism (O24). Qualitative structure is characterizable; quantitative mechanism is opaque.
 5. **Generality:** Structure and content generalize across 12 models from 11 families (R1, R2, R6 extended). Scale differentiates (Llama 8B outlier). The hierarchy is structure > content > scale.
 6. **Robustness:** Model identity dominates protocol variation (O30). Bridge frequency is the most robust property (O31, >0.97 all conditions). Asymmetry is resolution-dependent (O32).
 
 ### 10.2 What the Benchmark Reveals About Conceptual Space
 
-- **Quasimetric, not metric:** Symmetry fails; all other axioms hold. This is the formal signature of a directed space, consistent with autoregressive architecture (reversal curse) and human cognition (Tversky's asymmetry).
+- **Consistent with quasimetric structure:** Symmetry fails comprehensively; triangle inequality holds at ~91% across three independent samples. These are tested on different operationalizations of "distance" (cross-direction vs within-direction Jaccard), so the formal quasimetric claim is not established on a single distance function. Nevertheless, the results are consistent with a directed space, paralleling autoregressive architecture (reversal curse) and human cognition (Tversky's asymmetry).
 - **Bottleneck topology:** The most reliable navigational landmarks are obligatory intermediaries, not strongly associated concepts. This echoes the knowledge graph finding that shortest-path intermediaries are more informative than high-degree hubs.
 - **Model-specific gaits on shared geometry:** All models navigate the same basic geometry (structure is universal) through the same landmarks (content converges for large models) but with different route preferences (gaits diverge). This is the behavioral analog of the PRH: representations converge, but behavior diversifies.
 - **Navigational structure is not compositional from simple variables:** The mechanism ceiling (8/8 failures) suggests that conceptual navigation emerges from the interaction of multiple factors (bridge identity, pre-fill content, model gait, pair semantics) that cannot be captured by single-variable models. This parallels findings in neuroscience where spatial navigation is multi-factorial.
@@ -565,7 +569,7 @@ Compact recapitulation:
 
 #### Benchmark Limitations (in order of severity)
 
-1. **Control pair failure (R5):** The most serious limitation. LLMs find navigable routes between any two concepts, defeating single-pair control validation. The benchmark's validity rests on relative performance gaps, not absolute control baselines. Future work needs a fundamentally different control design (e.g., pair batteries, relative consistency ratios).
+1. **Control pair failure (R5):** The most serious limitation. LLMs find navigable routes between any two concepts, defeating single-pair control validation. The retrospective finding that stapler-monsoon fails R5 for ALL 12 models (top freq 0.650-1.000) means the original "clean" control validation was illusory — the original 4 models happened to show lower consistency on this pair, but not because it is truly unstructured. The benchmark's validity rests on relative performance gaps (experimental pairs show predicted bridges with higher consistency than controls show unpredicted bridges), not absolute control baselines. This should be stated prominently, not buried. Future work needs a fundamentally different control design (e.g., pair batteries, relative consistency ratios).
 
 2. **Self-grounding circularity:** Model outputs generate their own ground truth. Mitigated by testing external mathematical properties (metric axioms) and cross-model comparison, but never fully eliminated. External anchors (ConceptNet paths, human free association norms) would strengthen validity.
 
@@ -593,7 +597,7 @@ Compact recapitulation:
 ### 10.5 Connections to Theory
 
 - **Karkada et al. (2025) as theoretical complement:** They proved why static geometry exists; we show it supports (structured, asymmetric, model-specific) navigation. Together: geometry arises from data statistics (their contribution) and supports behavioral navigation that is structurally universal but dynamically model-specific (our contribution).
-- **Gardenfors operationalized:** The benchmark provides a large-scale computational probe of conceptual spaces theory in LLMs. Findings partially confirm Gardenfors: concepts do live in navigable geometric spaces with measurable distance structure. But the quasimetric finding challenges the standard metric assumption.
+- **Gardenfors operationalized:** The benchmark provides a large-scale computational probe of conceptual spaces theory in LLMs. Findings partially confirm Gardenfors: concepts do live in navigable geometric spaces with measurable distance structure. But the pervasive asymmetry challenges the standard metric assumption in conceptual spaces theory.
 - **PRH refined:** Representations may converge (Huh et al.), but navigation diversifies. The PRH captures structure but misses dynamics.
 - **Wyss et al. (2025) confirmed behaviorally:** Spectral semantic attractors predict discrete basins — our bridge bottlenecks and "deep basins" from the word convergence game are the behavioral manifestation.
 
@@ -616,9 +620,9 @@ Compact recapitulation:
 
 ~300 words. Three paragraphs:
 
-1. **What we showed:** LLMs have consistent, measurable geometric structure in how they navigate between concepts. This structure is quasimetric (asymmetric with triangle inequality), populated by bottleneck bridges (not associations), and organized into model-specific gaits on a shared geometry. These findings hold across 12 models from 11 families and resist protocol variation.
+1. **What we showed:** LLMs have consistent, measurable geometric structure in how they navigate between concepts. This structure is consistent with quasimetric geometry (systematically asymmetric, with triangle inequality holding at ~91%), populated by bottleneck bridges (not associations), and organized into model-specific gaits on a shared geometry. These findings hold across 12 models from 11 families and resist protocol variation.
 
-2. **What we learned:** The mechanism ceiling — 8/8 single-variable hypotheses fail — is itself the most important finding. Conceptual navigation has qualitative geometric structure (characterizable) but resists quantitative mechanistic explanation (opaque to simple models). This parallels the broader challenge in interpretability: structure is detectable before it is explainable.
+2. **What we learned:** The mechanism ceiling — 7 single-variable hypotheses falsified across Phases 8-10 — is itself the most important finding. Conceptual navigation has qualitative geometric structure (characterizable) but resists quantitative mechanistic explanation (opaque to simple models). This parallels the broader challenge in interpretability: structure is detectable before it is explainable.
 
 3. **What it means:** Static geometry is well-studied; navigation is not. Karkada et al. proved why the geometry exists; we showed what it supports. The Conceptual Topology Mapping Benchmark provides a new evaluation paradigm — not testing what models know, but how they navigate what they know. The 29 dead ends and the mechanism ceiling are not failures but honest accounting of where the field needs to go next.
 
@@ -650,11 +654,12 @@ Compact recapitulation:
 
 ### Appendix E: Statistical Methods
 
-- Bootstrap confidence intervals for Jaccard comparisons.
-- Permutation tests for asymmetry significance.
-- Friedman test and post-hoc Wilcoxon for relation classes.
-- ANOVA for multiverse robustness.
-- Notes on multiple comparison corrections (Bonferroni, etc.).
+- Bootstrap confidence intervals for Jaccard comparisons. **Note:** Current implementation uses 1,000 resamples; increase to 5,000-10,000 for publication-quality CIs (Efron & Tibshirani, 1993).
+- Permutation tests for asymmetry significance. **Note:** 1,000 permutations limits minimum p to 0.001. Increase for Bonferroni-corrected thresholds. Report the 87% figure with multiple-comparison qualification.
+- Friedman test and post-hoc Wilcoxon for relation classes. **Note:** Post-hoc pairwise comparisons do not survive Bonferroni correction (N=8, 3 comparisons).
+- ANOVA for multiverse robustness. **Note:** Uses chi-squared approximation to F-distribution; treats per-pair cells as independent. Present as descriptive. Consider mixed-effects model for the paper.
+- Notes on multiple comparison corrections (Bonferroni, etc.). Be consistent about when corrections are applied.
+- **Additional note:** The `ksTestUniform()` function in the codebase is misnamed — it implements chi-squared goodness-of-fit, not Kolmogorov-Smirnov. Use "chi-squared test" in the paper.
 
 ### Appendix F: Robustness Analysis Details
 
