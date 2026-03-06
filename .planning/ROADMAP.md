@@ -15,11 +15,13 @@ Exploration-first project. All 10 experimental phases complete (~19,500 API runs
 
 - [x] **Phase 10: Model Generality and Pre-Fill Relation Classes** — 1,680 new runs + 778 reused across 5 new models (10A, 4 reliable) and 4 core models (10B). Part A: Initial run blocked 4/5 on 60s timeout; patient mode (300s) recovered 3 more (Qwen, MiniMax, Kimi). GLM 5 rate-limited. R1 (gait 0.298-0.508) and R2 (asymmetry, all > 0.60) replicate for all 4. Bridge frequency CI includes zero (new 0.721 vs original 0.817) — bridge structure generalizes. Llama 8B sole outlier (0.200), a scale effect. R5 controls fail for all new models. Part B: Friedman test significant (p=0.034) — relation class affects bridge survival. Unrelated pre-fills most disruptive (0.388), on-axis (0.643) ≈ same-domain (0.708). Warm/fermentation replications perfect. Prediction accuracy 50% (9/18). Capstone finding: structure/content/scale hierarchy — geometry universal, landmarks shared among large models, scale differentiates. G26 resurrected. See `findings/10a-model-generality.md`, `findings/10b-relation-classes.md`, and `findings/10-analysis.md`.
 
+- [ ] **Phase 11: Expanded Generality, Control Revision, and Robustness** — Scripts implemented, pending execution (~2,440 new runs across up to 12 models). Part A: 4 new models (DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick) on 12-pair battery. Part B: 4 new control candidates to replace stapler-monsoon (screening + validation). Part C: 2×2 waypoint × temperature robustness grid (3 models, 6 pairs). See `.planning/phases/11-expanded-generality-robustness/SPEC.md`.
+
 ## Next Priority
-- **Paper writing & positioning** — 10 phases support five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 27 observations (O1-O27), 27 graveyard entries (G26 resurrected) constitute a comprehensive empirical characterization. The expanded 10A cohort (4 new models) substantially strengthens the generality argument.
+- **Run Phase 11** — `bun run phase11` to execute all 3 parts, then analyze
+- **Paper writing & positioning** — 11 phases support five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 27+ observations, 27 graveyard entries constitute a comprehensive empirical characterization.
 
 ## Deferred
-- Multiverse robustness analysis — R1-R7 across different waypoint counts, prompt formats, temperatures (pre-paper)
 - Embedding-based distance validation — may rescue cross-model geometry where path-based failed (O18, O19, G22)
 - Native API retesting — GLM 5 (only remaining failed probe model; Qwen, MiniMax, Kimi recovered via --patient mode)
 - Semantic similarity optimization — refactor embedding analysis to embed-once/lookup-many
@@ -32,4 +34,3 @@ Exploration-first project. All 10 experimental phases complete (~19,500 API runs
 - Temporal stability replication (from Phase 6/7/8B analysis — 9/12 Phase 7C pairs replicate in 8B; Phase 9C shows 5/8 replicate with corrected congruent-to-congruent comparison)
 - Multi-variable bridge fragility model — both single-variable predictors failed (G20, G23); needs joint model of pre-fill content + bridge role + dominance
 - Gemini deficit characterization — three mechanistic attempts falsified (G7, G21, G24); needs different approach (possibly non-type-based)
-- Control pair revision — ALL 4 new models fail R5 on stapler-monsoon (not just Llama). Need additional control pairs or revised threshold. May be a control pair design issue, not model-dependent.

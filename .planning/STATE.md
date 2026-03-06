@@ -1,14 +1,14 @@
 # State
 
 ## Current Phase
-Phase 10: Model Generality and Pre-Fill Relation Classes — **COMPLETE**
+Phase 11: Expanded Generality, Control Revision, and Robustness — **IMPLEMENTED** (pending execution)
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
-- **All 10 phases complete. ~19,500 total API runs across 8 models.**
-- **Benchmark empirical program is complete. Paper writing is the next priority.**
+- **Phases 1-10 complete. ~19,500 total API runs across 8 models.**
+- **Phase 11 scripts implemented. Estimated ~2,440 new API runs across up to 12 models.**
 
 ## Phase 1-4 Summary (Condensed)
 1. **Models have distinct gaits** — Claude 0.578 avg Jaccard vs GPT 0.258 (2.2x gap)
@@ -55,11 +55,15 @@ Phase 10: Model Generality and Pre-Fill Relation Classes — **COMPLETE**
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 - Structure/content/scale hierarchy is the capstone finding: geometric structure is universal, navigational landmarks are shared among large models, scale differentiates
 
+## Phase 11 Status
+- **Part A — Expanded Model Generality (~720 runs):** Script implemented. 4 new models (DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick). Same 12-pair battery as Phase 10A. Probe + full-run design. Llama 4 Maverick enables within-family scale comparison with Llama 3.1 8B.
+- **Part B — Control Pair Revision (~640 runs):** Script implemented. 4 new control candidates (turmeric-trigonometry, barnacle-sonnet, magnesium-ballet, accordion-stalactite). Two-stage screening + validation design. Tests 6 models for screening, 8 for validation.
+- **Part C — Multiverse Robustness (~1080 runs):** Script implemented. 2×2 grid (waypoints: 5,9 × temperature: 0.5,0.9). 3 models (Claude, GPT, DeepSeek). 6 pairs (4 forward + 2 reverse). Tests R1/R2/bridge frequency invariance.
+
 ## Blockers
 None
 
 ## Next Steps
-- **Paper writing** — 10 phases of data support a five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 27 observations (O1-O27), 27 graveyard entries (G26 resurrected).
-- Consider multiverse robustness analysis before paper (R1-R7 across different waypoint counts, prompts, temperatures)
+- **Run Phase 11 experiments** — `bun run phase11` to execute all 3 parts
+- **Paper writing** — 11 phases of data support five-act narrative (structure → topology → mechanism → limits → generality)
 - Consider embedding-based distance approach (may rescue cross-model geometry where path-based failed)
-- GLM 5 retesting via native API (only remaining failed probe model; others recovered with --patient mode)

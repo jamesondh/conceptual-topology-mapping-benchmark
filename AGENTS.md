@@ -22,7 +22,7 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 ## Conventions
 
 - Core engine and library code in `src/` — `index.ts` (CLI + elicitation), `types.ts`, `canonicalize.ts`, `metrics.ts`, `scheduler.ts`
-- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7), `pairs-phase8.ts` (Phase 8), `pairs-phase9.ts` (Phase 9), `pairs-phase10.ts` (Phase 10)
+- Concept definitions in `src/data/` — `pairs.ts`, `triples.ts` (Phase 3B), `triples-phase4.ts` (Phase 4), `triples-phase5.ts` (Phase 5), `pairs-phase6.ts` (Phase 6), `pairs-phase7.ts` (Phase 7), `pairs-phase8.ts` (Phase 8), `pairs-phase9.ts` (Phase 9), `pairs-phase10.ts` (Phase 10), `pairs-phase11.ts` (Phase 11)
 - Experiment scripts in `experiments/` (batch runners per phase)
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
@@ -87,11 +87,18 @@ bun run analyze-model-generality # Phase 10A: analyze model generality results
 bun run relation-classes         # Phase 10B: pre-fill relation class experiment (~960 API calls)
 bun run analyze-relation-classes # Phase 10B: analyze relation class results
 bun run phase10                  # Run all Phase 10 in sequence (10A → 10B → analysis)
+bun run expanded-generality      # Phase 11A: expanded model generality (~720 API calls)
+bun run analyze-expanded-generality # Phase 11A: analyze expanded generality results
+bun run control-revision         # Phase 11B: control pair revision (~640 API calls)
+bun run analyze-control-revision # Phase 11B: analyze control revision results
+bun run robustness               # Phase 11C: multiverse robustness (~1080 API calls)
+bun run analyze-robustness       # Phase 11C: analyze robustness results
+bun run phase11                  # Run all Phase 11 in sequence (11A → 11B → 11C)
 ```
 
 ## Models
 
-Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tested 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Only Llama 3.1 8B passed the probe reliability gate (others failed on OpenRouter latency). Requires `OPENROUTER_API_KEY` env var.
+Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tested 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Only Llama 3.1 8B passed the probe reliability gate (others failed on OpenRouter latency). Phase 11A adds 4 more models: DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick (`PHASE11_MODELS` in `pairs.ts`). Phase 11C robustness uses Claude, GPT, and DeepSeek. Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 
