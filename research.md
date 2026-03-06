@@ -340,6 +340,25 @@ Empirical mapping of model-specific behavioral topographies using diversity-driv
 This provides the clearest empirical precedent for the benchmark's cross-model comparison: different models don't just produce different outputs — they have qualitatively different *topographies*. One model's conceptual space might be dominated by a few large attractors while another has many small ones. The benchmark's geodesic comparison would measure whether these topographic differences manifest in navigation behavior (path choices, waypoint distributions) as directly as they do in behavioral mapping.
 - [Paper](https://arxiv.org/abs/2602.22291)
 
+### Conversational Attractor States (Nanda et al., 2026)
+
+**Directly observes model-specific behavioral signatures in unconstrained self-conversation.** Two instances of the same model talk for 30 turns with open-ended prompts; each model converges to characteristic behavioral loops:
+
+- **Claude Sonnet 4.5** → existential introspection → zen silence ("stillness...enough")
+- **GPT-5.2** → system-building, code generation, versioned frameworks (most consistent model)
+- **Grok 4.1 Fast** → coherent → manic word salad ("PETAOMNI GOD-BIGBANGS HYPERBIGBANG")
+- **Gemini 2.5 Flash** → escalating grandiosity → identical paragraph loops ("Primal Logos")
+- **DeepSeek v3.2** → highly diverse, no single dominant attractor
+- **Kimi K2.5** → material science metaphors → terminal symbol collapse (◊, *, —)
+- **Llama 3.1 8B** → sycophantic agreement → verbatim loops ("What a beautiful farewell!")
+
+Cross-model conversations produce richer complexity before convergence: Claude × Grok invents a fictional color "synchroil" and performs a "rite of encoding"; Grok × GPT becomes a "policy factory" generating governance frameworks with zero philosophy. OLMo checkpoint analysis tracks attractor evolution through training: SFT produces empty phrase loops, DPO introduces content diversity, early RL (steps 50-500) generates the richest content, and late RL collapses toward zen minimalism.
+
+Quantitative analysis via Brotli compression ratio: less post-trained models show much higher repetition (Trinity Large 57× vs frontier models 9-12×; cross-model conversations 1-4×). Proposed theory: extended self-conversation shifts models off-distribution, eroding fine-tuning and reverting toward base model behavior.
+
+**Connection to our findings:** The model-specific attractor signatures are the conversational analog of our characteristic gaits [robust]. Their qualitative descriptions map onto our quantitative measurements — GPT's "most consistent" system-building maps to our lowest gait variance (0.258); Claude's fast convergence to zen parallels our highest gait (0.578) with canonical bridge selection; Gemini's grandiosity loops parallel our Gemini isolation index (0.136) and systematic anomalies across 11 phases; DeepSeek's diversity aligns with our Phase 11C finding of GPT/DeepSeek gait-rank instability under parameter variation. Their cross-model "richer complexity" finding echoes our 48% novelty rate in cross-model convergence games. The OLMo training-stage analysis provides a dimension we haven't explored — how attractor/gait properties evolve through the training pipeline. Their Llama 8B verbatim loops parallel our scale effect finding (Llama 8B gait = 0.200, sole small-model outlier).
+- [LessWrong post](https://www.lesswrong.com/posts/mgjtEHeLgkhZZ3cEx/models-have-some-pretty-funny-attractor-states) | [Code](https://github.com/ajobi-uhc/attractor-states)
+
 ### Relation to Benchmark
 
 The PRH makes a strong prediction: if representations converge, cross-model geodesics should become more similar as models scale. The benchmark provides a *behavioral* test — not just "are embeddings aligned" but "do models navigate conceptual space the same way." The fingerprinting work suggests models have characteristic behavioral signatures, aligning with the "characteristic gaits" finding from the word convergence game.
@@ -543,6 +562,7 @@ Supplement with the multi-hop reasoning angle (Angle 5) to ground the methodolog
 | Multi-agent convergence | Chiang et al. — Multi-LLM Negotiation | 2025 |
 | Abstract/concrete analogies | Complex Analogies Benchmark | 2025 |
 | Word convergence game | Hodge — 575 games, 4 models | 2026 |
+| Conversational attractors | Nanda et al. — Attractor States | 2026 |
 | Similarity metrics | CKA (Kornblith et al.) | 2019 |
 | CCA-based | SVCCA | 2017 |
 | Learnable similarity | ContraSim | 2024 |
@@ -632,6 +652,7 @@ Supplement with the multi-hop reasoning angle (Angle 5) to ground the methodolog
 - [Directional/Hysteretic Bias — Barakat et al.](https://arxiv.org/abs/2601.08846)
 - [Multi-LLM Negotiation Convergence — Chiang et al.](https://arxiv.org/abs/2512.00047)
 - [Complex Analogies Benchmark](https://aclanthology.org/2025.inlg-main.28.pdf)
+- [Conversational Attractor States — Nanda et al. (LessWrong)](https://www.lesswrong.com/posts/mgjtEHeLgkhZZ3cEx/models-have-some-pretty-funny-attractor-states) | [Code](https://github.com/ajobi-uhc/attractor-states)
 - [Word Convergence Game — Hodge](https://github.com/jamesondh/word-convergence-game) | [Writeup](https://jamesonhodge.com/posts/word-convergence-game)
 
 ### Distance Metrics & Anisotropy
