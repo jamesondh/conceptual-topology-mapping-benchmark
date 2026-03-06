@@ -239,9 +239,13 @@ async function analyze(opts: {
 
   console.log("Loading data from multiple sources...");
 
-  const controlRevisionDir = join(inputDir, "control-revision");
-  const controlRevisionResults = await loadResultsFromDir(controlRevisionDir);
-  console.log(`  Control revision (11B): ${controlRevisionResults.length} results`);
+  const screeningDir = join(inputDir, "control-revision", "screening");
+  const screeningRawResults = await loadResultsFromDir(screeningDir);
+  console.log(`  Screening (11B):        ${screeningRawResults.length} results`);
+
+  const validationDir = join(inputDir, "control-revision", "validation");
+  const validationRawResults = await loadResultsFromDir(validationDir);
+  console.log(`  Validation (11B):       ${validationRawResults.length} results`);
 
   const pilotDir = join(inputDir, "pilot");
   const pilotResults = await loadResultsFromDir(pilotDir);
@@ -256,13 +260,15 @@ async function analyze(opts: {
   console.log(`  Expanded gen. (11A):    ${expandedResults.length} results`);
   console.log("");
 
-  // Build lookups
-  const controlLookup = buildWaypointLookup(controlRevisionResults);
+  // Build lookups — screening and validation loaded separately to avoid data contamination
+  const screeningLookup = buildWaypointLookup(screeningRawResults);
+  const validationLookup = buildWaypointLookup(validationRawResults);
   const pilotLookup = buildWaypointLookup(pilotResults);
   const generalityLookup = buildWaypointLookup(generalityResults);
   const expandedLookup = buildWaypointLookup(expandedResults);
 
-  console.log(`  Control revision keys:  ${controlLookup.size}`);
+  console.log(`  Screening lookup keys:  ${screeningLookup.size}`);
+  console.log(`  Validation lookup keys: ${validationLookup.size}`);
   console.log(`  Pilot lookup keys:      ${pilotLookup.size}`);
   console.log(`  Generality lookup keys: ${generalityLookup.size}`);
   console.log(`  Expanded lookup keys:   ${expandedLookup.size}`);
@@ -282,7 +288,7 @@ async function analyze(opts: {
   for (const candidate of PHASE11B_CONTROL_CANDIDATES) {
     for (const modelId of allModelIds) {
       const key = `${candidate.id}::${modelId}`;
-      const results = controlLookup.get(key) ?? [];
+      const results = screeningLookup.get(key) ?? [];
       const runs = waypointsOnly(results);
 
       if (runs.length === 0) continue;
@@ -364,7 +370,7 @@ async function analyze(opts: {
   for (const candidateId of passingCandidateIds) {
     for (const modelId of allModelIds) {
       const key = `${candidateId}::${modelId}`;
-      const results = controlLookup.get(key) ?? [];
+      const results = validationLookup.get(key) ?? [];
       const runs = waypointsOnly(results);
 
       if (runs.length === 0) continue;
@@ -412,8 +418,8 @@ async function analyze(opts: {
     const meanEntropy = totalModels > 0
       ? mean(candidateValidation.map((vr) => vr.entropy))
       : 0;
-    // Recommend if majority of models pass strict validation
-    const recommended = totalModels > 0 && modelsPassingControl > totalModels / 2;
+    // Recommend only if ALL models pass strict validation (matches experiment script)
+    const recommended = totalModels > 0 && modelsPassingControl === totalModels;
 
     validationSummary.push({
       candidateId,

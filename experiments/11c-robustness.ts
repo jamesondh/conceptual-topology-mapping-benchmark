@@ -245,6 +245,7 @@ async function main() {
 
   const allRequests: ElicitationRequest[] = [];
   let totalExisting = 0;
+  const existingPerCondition = new Map<string, { count: number; successful: number }>();
 
   for (const condition of ROBUSTNESS_CONDITIONS) {
     const condDir = path.join(outputDir, condition.label);
@@ -252,6 +253,8 @@ async function main() {
 
     // Load existing results for this condition subdir (resume support)
     const existing = await loadExistingResults(condDir);
+    const existingSuccessful = existing.results.filter((r) => !r.failureMode).length;
+    existingPerCondition.set(condition.label, { count: existing.results.length, successful: existingSuccessful });
     if (existing.results.length > 0) {
       console.log(`  ${condition.label}: Found ${existing.results.length} existing results`);
       totalExisting += existing.results.length;
@@ -543,6 +546,7 @@ async function main() {
     })),
     targetReps: FULL_RUN_REPS,
     totalNewRuns: allNewResults.length,
+    totalExistingRuns: totalExisting,
     successfulRuns: successful.length,
     failedRuns: failed.length,
     successRate: allNewResults.length > 0 ? successful.length / allNewResults.length : 0,
@@ -550,11 +554,13 @@ async function main() {
       ROBUSTNESS_CONDITIONS.map((cond) => {
         const results = conditionResults.get(cond.label) ?? [];
         const condSuccessful = results.filter((r) => !r.failureMode).length;
+        const existing = existingPerCondition.get(cond.label) ?? { count: 0, successful: 0 };
         return [
           cond.label,
           {
             newRuns: results.length,
-            successful: condSuccessful,
+            existingRuns: existing.count,
+            successful: condSuccessful + existing.successful,
             failed: results.length - condSuccessful,
           },
         ];
