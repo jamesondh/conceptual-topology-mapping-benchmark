@@ -105,9 +105,18 @@ More broadly, a NeurIPS 2023 paper on the geometry of hidden representations rep
 This is the mathematical formalization of what the word convergence game observed behaviorally: "formation" as a deep basin for Beyoncé+erosion, with walls strong enough to capture all four models, is exactly the kind of stable attractor basin Wyss et al. prove must exist. The three-type taxonomy (deep basins, moderate basins, flat terrain) maps onto basins of varying spectral gap — deep basins have large spectral gaps (strong separation from neighboring attractors), flat terrain has near-degenerate eigenvalues (no dominant attractor).
 - [Paper](https://arxiv.org/abs/2512.05162)
 
+### Translation Symmetry and Universal Manifold Origin (Karkada et al., 2025)
+
+**Provides the theoretical explanation for why embedding spaces have organized geometric structure.** Proves that translation symmetry in word co-occurrence statistics — where co-occurrence depends only on relative distance on a semantic continuum, not absolute position — mathematically determines the manifold geometry of learned representations. When words occupy a periodic semantic lattice (e.g., calendar months), PCA-projected embeddings exhibit sinusoidal Fourier geometry (Theorem 3.1); open-boundary continua (historical years, number lines) produce related but distinct eigenmodes (Proposition 3.3). Linear coordinate decoding error scales as ε² ∝ r^(-1/D) where r is probe dimension and D is continuum dimensionality (Proposition 3.4).
+
+These analytical predictions are validated empirically on Word2Vec, GloVe, EmbeddingGemma (308M), and Gemma 2 2B, showing the same geometric structure emerges across fundamentally different architectures. Central claim: *"Representational manifolds have a universal origin: symmetry in the statistics of natural data."* The geometry doesn't come from model architecture — it comes from translation-invariant structure in the training data that all models share. Robustness analysis shows manifold structure persists even after removing all direct co-occurrence entries between target words (e.g., month-month pairs), because many "helper" words sharing the same latent variable create large eigenvalues insensitive to perturbation (Davis-Kahan theorem). Also connects to grid cell Fourier interference patterns in rodent entorhinal cortex (Hafting et al., 2005), suggesting organisms spontaneously learn similar structures from spatial trajectory statistics.
+
+**Direct relevance to the benchmark:** Provides the theoretical mechanism behind our capstone finding that geometric structure generalizes across models (Phases 10-11, [robust] R1/R2). If structure arises from data statistics that all models share, universality is mathematically expected — exactly what we observe empirically across 12 models from 11 families. Their robustness argument (many helper words → stable eigenvalues) parallels our finding that bridge frequency is the most robust metric (Phase 11C, >0.97 all conditions). Critically, the paper studies only *static* geometry — manifold shape and eigenmode structure — and explicitly does not address geodesics, navigation, or paths through these spaces, reinforcing our positioning that behavioral navigation testing is the missing complement to this theoretical work.
+- [Paper](https://arxiv.org/abs/2602.15029)
+
 ### Relation to Benchmark
 
-All of this work studies *static* geometry — what shape the space has. **Nobody is asking models to navigate these spaces and testing whether navigation is consistent with the geometry.** Park et al. tells you what the landmarks look like; our benchmark asks whether models can reliably walk between them.
+All of this work studies *static* geometry — what shape the space has. **Nobody is asking models to navigate these spaces and testing whether navigation is consistent with the geometry.** Park et al. tells you what the landmarks look like; Karkada et al. explains *why* those landmarks exist; our benchmark asks whether models can reliably walk between them.
 
 Existing work measures geometric properties passively (analyzing embeddings after the fact). Our approach tests whether models *behaviorally* exhibit geometric consistency — whether their conceptual navigation respects metric axioms. Fundamentally different and complementary question.
 
@@ -556,6 +565,7 @@ Supplement with the multi-hop reasoning angle (Angle 5) to ground the methodolog
 | Delta-hyperbolicity | Hierarchical Structure in LLM Embeddings | 2025 |
 | Trajectory variance | When Agents Disagree With Themselves | 2025 |
 | Manifold dynamics | Dynamic Manifold Evolution Theory | 2025 |
+| Universal manifold origin | Karkada et al. — Translation Symmetry | 2025 |
 | Spectral attractors | Wyss et al. — Semantic Characterization Theorem | 2025 |
 | Behavioral topography | Behavioral Failure Manifold Mapping | 2025 |
 | Directional hysteresis | Barakat et al. — Semantic Cache Bias | 2026 |
@@ -610,6 +620,9 @@ Supplement with the multi-hop reasoning angle (Angle 5) to ground the methodolog
 - [Rating Roulette — EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.1361.pdf)
 - [Trajectory Variance — "When Agents Disagree"](https://arxiv.org/abs/2602.11619)
 - [Position Bias — NAACL 2024](https://aclanthology.org/2024.findings-naacl.130/)
+
+### Translation Symmetry & Universal Geometry
+- [Symmetry in Language Statistics — Karkada et al.](https://arxiv.org/abs/2602.15029)
 
 ### Trajectory & Manifold Dynamics
 - [Dynamic Manifold Evolution Theory](https://arxiv.org/html/2505.20340)
