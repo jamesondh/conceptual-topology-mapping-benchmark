@@ -17,14 +17,18 @@ All major claims from the benchmark, tagged by evidence tier. This is the canoni
 
 Claude navigates with 2.2x higher consistency than GPT (avg Jaccard 0.578 vs 0.258). This gap is stable across 5 phases and 9,500+ runs. Grok (0.293) and Gemini (0.372) fall between. The consistency profile predicts downstream behavior: Claude's rigidity produces the strongest positional signals (Phase 5C W-shape), GPT's variability produces the broadest bridge exploration, Gemini's fragmentation produces systematic cross-frame failures. Phase 10A (expanded) confirms cross-architecture generality across 4 new models: Qwen 0.508, MiniMax 0.419, Kimi 0.414, Llama 0.298 — all within the expected range. Gait is confirmed as a universal property across 8 models from 8 providers, spanning 8B to frontier scale.
 
-**Sources:** `01-pilot-analysis.md` §2, `05-analysis.md` §7, `10-analysis.md` §1
+Phase 11A extends the gait spectrum to 12 models from 11 families: Mistral sets the record at 0.747, followed by Claude 0.578, DeepSeek 0.540, Llama 4 Maverick 0.539, Qwen 0.508, Cohere 0.502, MiniMax 0.419, Kimi 0.414, Gemini 0.372, Llama 8B 0.298, Grok 0.293, GPT 0.258. Phase 11C robustness: gait rank ordering is largely stable across waypoint count and temperature variations (Kendall's W = 0.840), though not perfectly preserved (GPT and DeepSeek swap in some conditions).
+
+**Sources:** `01-pilot-analysis.md` §2, `05-analysis.md` §7, `10-analysis.md` §1, `11a-expanded-generality.md`, `11c-robustness.md`, `11-analysis.md`
 
 ### R2. Conceptual navigation is fundamentally asymmetric (quasimetric)
 **[robust]** — Phase 2 (primary), Phase 3B (triangle inequality), Phases 4-5 (consistent with).
 
 Mean directional asymmetry 0.811 across 84 pair/model combinations. 87% show statistically significant asymmetry (permutation test, p < 0.05). The symmetry axiom fails comprehensively. Triangle inequality holds in 91% of cases (Phase 3B), 93.8% (Phase 4B), and 90.6% (Phase 7B) — a structural constant across three independent samples. Conceptual space satisfies all metric axioms *except* symmetry — the formal definition of a quasimetric space. Phase 10A (expanded) confirms cross-architecture generality across all 4 new models: Llama 0.785, Kimi 0.684, Qwen 0.662, MiniMax 0.638 — all well above the 0.60 threshold. Quasimetric navigation is confirmed across 8 models from 8 providers.
 
-**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`, `10-analysis.md` §1
+Phase 11A: all 4 new models exceed the 0.60 threshold (Mistral 0.729, DeepSeek 0.722, Cohere 0.718, Llama4 0.673). Asymmetry is confirmed across 12 models. Phase 11C qualification: asymmetry detectability is waypoint-count sensitive — at 5 waypoints, mean asymmetry falls to 0.594 (below 0.60 threshold); at 9 waypoints, 0.669-0.684. The quasimetric property is real but its detectability is resolution-dependent.
+
+**Sources:** `02-reversals-analysis.md` §1, `03-analysis.md` §3, `04-analysis.md` §6, `07b-curvature.md`, `10-analysis.md` §1, `11a-expanded-generality.md`, `11c-robustness.md`
 
 ### R3. Polysemy sense differentiation is genuine
 **[robust]** — Phase 1 (original, corrected in Phase 2), Phase 5B (extended).
@@ -47,14 +51,18 @@ Nonsense controls show near-zero consistency (Jaccard 0.062, entropy 6.37). Rand
 
 **Qualification (Phase 10A):** The stapler-monsoon control pair fails R5 for all 4 new models — MiniMax ("paper" 0.933), Kimi ("paper" 0.933), Qwen ("cloud" 0.867), Llama ("office" 0.800). This suggests the pair has an unintended semantic bridge that many models discover. R5 holds for the original cohort but the specific control pair needs revision for broader generality testing. See O27.
 
-**Sources:** `01-pilot-analysis.md` §3, `03-analysis.md` §2, `10-analysis.md` §1
+**Qualification (Phase 11B):** Phase 11B demonstrates that R5 validation with a single control pair is fundamentally inadequate. All 4 new candidate controls fail screening (0/24 cells pass). Retrospective analysis shows stapler-monsoon itself fails R5 for ALL 12 models (top freq 0.650-1.000). LLMs find navigable semantic routes between any concept pair at 7 waypoints. The R5 evidence supporting the benchmark rests on the original cohort's relative performance (lower consistency on control vs experimental pairs), not on the absolute R5 threshold. R5 is retained but qualified as the weakest robust claim.
+
+**Sources:** `01-pilot-analysis.md` §3, `03-analysis.md` §2, `10-analysis.md` §1, `11b-control-revision.md`, `11-analysis.md`
 
 ### R6. Bridge concepts are bottlenecks, not associations
 **[robust]** — Phases 3-5 (converging evidence from multiple findings).
 
 A concept serves as a navigational bridge when it is the *necessary intermediate step* in the most natural decomposition of the endpoint relationship, not merely when it is associated with both endpoints. Converging evidence: "spectrum" works (names the mechanism, 1.00 all models), "metaphor" fails (associated but off-axis, 0.00 all models), "germination" outperforms "plant" (process-naming > object-naming), "fire" fails (too-central, skipped), loan-bank-shore succeeds (only connection, 0.95-1.00).
 
-**Sources:** `04-analysis.md` §1+§3, `05-analysis.md` §2+§3+§4
+Phase 11A extends to 12 models. Combined 8-model new cohort bridge freq CI includes zero (new 0.717 vs original 0.817, diff -0.100, CI [-0.286, 0.089]). Phase 11C: bridge frequency is the MOST protocol-robust property (>0.97 across all waypoint/temperature conditions, ANOVA interaction p=0.886).
+
+**Sources:** `04-analysis.md` §1+§3, `05-analysis.md` §2+§3+§4, `11a-expanded-generality.md`, `11c-robustness.md`
 
 ### R7. Cue-strength gradient exists
 **[robust]** — Phase 5A.
@@ -441,6 +449,45 @@ All 4 new models converge on strong waypoints for the "random" control pair stap
 
 ---
 
+## New Observations from Phase 11
+
+### O28. Mistral shows record gait consistency (0.747), extending the gait range beyond the previously observed ceiling
+**[observed]** — Phase 11A (720 runs).
+
+Mistral achieves 0.936 Jaccard on music-mathematics (near-deterministic paths) and 0.934 on hot-cold. The 12-model gait spectrum now ranges from 0.258 (GPT) to 0.747 (Mistral), a 2.9x span. Gait is not bounded at ~0.58 (Claude's level) — architectural/training differences can produce even more rigid conceptual navigation.
+
+**Sources:** `11a-expanded-generality.md`, `11-analysis.md`
+
+### O29. All 4 control candidates fail screening — LLMs find navigable routes between any concept pair
+**[observed]** — Phase 11B (240 runs, 6 models).
+
+Turmeric-trigonometry, barnacle-sonnet, magnesium-ballet, and accordion-stalactite all fail both frequency (<0.15) and entropy (>5.0) gates for every model tested. Models find strong intermediate concepts for every pair: "bellow" for accordion-stalactite (5/6 models at 0.60-1.00), "choreography"/"movement" for magnesium-ballet, etc. The retrospective analysis shows stapler-monsoon also fails R5 for all 12 models. Single-pair control validation is not viable.
+
+**Sources:** `11b-control-revision.md`, `11-analysis.md`
+
+### O30. ANOVA confirms model identity drives navigational structure, not elicitation protocol
+**[observed]** — Phase 11C (1,080 runs, 2×2 grid, 3 models).
+
+Model identity η²=0.242 (p≈0.001). Waypoint count η²=0.008 (p≈0.520). Temperature η²=0.002 (p≈0.743). Interaction η²≈0.000 (p≈0.886). p-values are approximate (chi-squared approximation ignoring denominator df; per-pair cells treated as independent). Effect sizes are more reliable than exact p-values. The benchmark's structural claims are not artifacts of the 7-waypoint, 0.7-temperature protocol.
+
+**Sources:** `11c-robustness.md`, `11-analysis.md`
+
+### O31. Bridge frequency is the most protocol-robust structural property
+**[observed]** — Phase 11C.
+
+Mean bridge frequency exceeds 0.97 across all 5 conditions (7wp/t0.7, 5wp/t0.5, 5wp/t0.9, 9wp/t0.5, 9wp/t0.9). The range is 0.978-0.993. Bridge bottleneck behavior is insensitive to both waypoint count and temperature.
+
+**Sources:** `11c-robustness.md`
+
+### O32. Asymmetry detectability is waypoint-count sensitive
+**[observed]** — Phase 11C.
+
+At 5 waypoints, mean asymmetry is 0.594 (below the 0.60 threshold). At 9 waypoints, 0.669-0.684 (above). Asymmetry requires sufficient path length to manifest directional differences. The quasimetric property is real but resolution-dependent — not a protocol artifact, but a measurement sensitivity finding.
+
+**Sources:** `11c-robustness.md`, `11-analysis.md`
+
+---
+
 ## Falsified (Phase 10)
 
 ### ~~Bridge bottleneck generalization to new models~~ — RESURRECTED
@@ -455,11 +502,24 @@ Predicted that on-axis substitutes would be the most disruptive pre-fills, with 
 
 ---
 
+## Falsified (Phase 11)
+
+### ~~Control pair revision — all candidates pass screening~~
+**[falsified]** — Phase 11B.
+
+Predicted at least 2/4 new control candidates would pass both frequency (<0.15) and entropy (>5.0) screening gates. 0/4 passed. LLMs are creative enough to find navigable routes between any two concepts. The single-pair, strict-threshold control design is fundamentally inadequate. **Graveyard entry: G28.**
+
+### ~~R2 asymmetry universal across all waypoint/temperature conditions~~
+**[falsified]** — Phase 11C.
+
+Predicted mean asymmetry > 0.60 for all waypoint count and temperature conditions. Observed: 5-waypoint conditions fall below the threshold (0.594, 0.593). Asymmetry is resolution-dependent — detectable at 9 waypoints but not reliably at 5. **Graveyard entry: G29.**
+
+---
+
 ## Deferred Claims
 
-- **Multiverse robustness** — How robust are R1-R7 across different waypoint counts, prompt formats, and temperature settings? Deferred to pre-paper robustness phase.
 - **Cross-model bridge agreement as mechanism for path convergence** — Phase 4A found r=-0.283 between bridge frequency difference and cross-model Jaccard. Suggestive but limited sample. Needs larger triple set. Phase 10A's expanded cross-model matrix (28 pairs) may enable re-analysis.
 - **Gemini's mechanistic deficit** — Real (mean 0.480 vs ~0.67 non-Gemini) but three mechanistic characterizations falsified. May require multi-variable model or different experimental paradigm to characterize.
 - **Multi-variable bridge fragility model** — Both competitor count (G20) and dominance ratio (G23) fail as single-variable predictors. A model incorporating pre-fill content, bridge structural role, and dominance jointly may succeed.
 - **Scale-dependent bridge convergence threshold** — Phase 10A suggests large models converge on the same bridges while Llama 8B diverges. What's the threshold? Is it parameter count, training data volume, or capability level? Would a 70B Llama show the same bridges as frontier models?
-- **Control pair revision** — Stapler-monsoon fails R5 for all new models (O27). Need additional control pairs that are verified across diverse model cohorts.
+- **Control pair revision** — All 4 new candidates and stapler-monsoon fail R5 for all 12 models (O27, O29). Single-pair strict-threshold validation is not viable. Needs fundamentally different approach — e.g., relative consistency ratios, pair batteries, or redefinition of the control criterion.

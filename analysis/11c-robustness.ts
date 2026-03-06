@@ -25,6 +25,8 @@ import {
   setMetricsSeed,
   mean,
   bootstrapCI,
+  bootstrapCIFromRuns,
+  crossDirectionJaccards,
   computeBridgeFrequency,
   bootstrapBridgeFrequencyCI,
   computeWaypointFrequencies,
@@ -141,7 +143,9 @@ function mapPhase11CToOriginalPairId(pairId: string): string | null {
     "p11c-hot-cold": "antonym-hot-cold",
     "p11c-emotion-melancholy": "p6a-emotion-melancholy",
     "p11c-stapler-monsoon": "control-random-stapler-monsoon",
-    "p11c-cold-hot": "antonym-cold-hot",
+    // Reverse pair IDs — Phase 2 reversals use "rev-" prefix convention
+    "p11c-cold-hot": "rev-antonym-hot-cold",
+    // Note: p6a-melancholy-emotion does not exist (Phase 6A only ran forward)
     "p11c-melancholy-emotion": "p6a-melancholy-emotion",
   };
   return pairMap[pairId] ?? null;
@@ -227,13 +231,16 @@ function chiSquaredPValue(chiSq: number, df: number): number {
 }
 
 /**
- * Approximate F-distribution p-value using Abramowitz-Stegun approach.
- * Converts F to chi-squared approximation: X ~ F(df1, df2)
- * Use Wilson-Hilferty: if df2 is large, F*df1 ~ chi^2(df1).
+ * Approximate F-distribution p-value.
+ * NOTE: This is a chi-squared approximation (F*df1 ~ chi^2(df1)) that ignores df2.
+ * The approximation is reasonable when df2 is large but becomes liberal (anti-conservative)
+ * for small df2. The resulting p-values should be treated as approximate, and the effect
+ * sizes (eta-squared) are more reliable than the exact p-values. Additionally, the ANOVA
+ * treats per-pair cells as independent without modeling repeated measures.
  */
 function fTestPValue(fStat: number, df1: number, df2: number): number {
   if (df1 <= 0 || df2 <= 0 || fStat <= 0) return 1;
-  // For small df2 values, use the chi-squared approximation on F*df1
+  // Chi-squared approximation: ignores df2, liberal for small denominator df
   const chiSq = fStat * df1;
   return chiSquaredPValue(chiSq, df1);
 }
@@ -324,11 +331,13 @@ function generateFindings(output: Phase11RobustnessOutput): string {
   // 5. ANOVA Interaction Test
   lines.push("## 5. ANOVA-like Interaction Test");
   lines.push("");
+  lines.push("> **Methodological note:** p-values are approximate (chi-squared approximation to F-distribution, ignoring denominator df). Per-pair cells are treated as independent without repeated-measures modeling. Effect sizes (eta-squared) are more reliable than exact p-values.");
+  lines.push("");
   const anova = output.anovaInteraction;
-  lines.push(`- **Waypoint main effect (SS proportion):** ${anova.waypointMainEffect.toFixed(4)} (p=${anova.waypointMainEffectP.toFixed(4)})`);
-  lines.push(`- **Temperature main effect (SS proportion):** ${anova.temperatureMainEffect.toFixed(4)} (p=${anova.temperatureMainEffectP.toFixed(4)})`);
-  lines.push(`- **Interaction effect (SS proportion):** ${anova.interactionEffect.toFixed(4)} (p=${anova.interactionEffectP.toFixed(4)})`);
-  lines.push(`- **Model main effect (SS proportion):** ${anova.modelMainEffect.toFixed(4)} (p=${anova.modelMainEffectP.toFixed(4)})`);
+  lines.push(`- **Waypoint main effect (SS proportion):** ${anova.waypointMainEffect.toFixed(4)} (p≈${anova.waypointMainEffectP.toFixed(4)})`);
+  lines.push(`- **Temperature main effect (SS proportion):** ${anova.temperatureMainEffect.toFixed(4)} (p≈${anova.temperatureMainEffectP.toFixed(4)})`);
+  lines.push(`- **Interaction effect (SS proportion):** ${anova.interactionEffect.toFixed(4)} (p≈${anova.interactionEffectP.toFixed(4)})`);
+  lines.push(`- **Model main effect (SS proportion):** ${anova.modelMainEffect.toFixed(4)} (p≈${anova.modelMainEffectP.toFixed(4)})`);
   lines.push(`- **Null interaction:** ${anova.nullInteraction ? "**YES** (model identity drives structure, not parameter interaction)" : "no"}`);
   lines.push("");
 
@@ -424,7 +433,6 @@ async function analyze(opts: {
   const salienceResults = await loadResultsFromDir(join(inputDir, "salience"));
   const baselineResults = [...pilotResults, ...reversalResults, ...salienceResults];
   const baselineLookup = buildWaypointLookup(baselineResults);
-  const totalReusedRuns = baselineResults.length;
 
   console.log(`  Pilot (Phase 1):     ${pilotResults.length} results`);
   console.log(`  Reversals (Phase 2): ${reversalResults.length} results`);
@@ -448,6 +456,13 @@ async function analyze(opts: {
     }
   }
   conditionLookups.set(ROBUSTNESS_BASELINE.label, baselineMapped);
+
+  // Count only actually-mapped baseline results (not the full loaded set)
+  let totalReusedRuns = 0;
+  for (const results of baselineMapped.values()) {
+    totalReusedRuns += results.length;
+  }
+  console.log(`  Baseline mapped:     ${totalReusedRuns} runs across ${baselineMapped.size} cells`);
 
   const allConditions: RobustnessCondition[] = [ROBUSTNESS_BASELINE, ...ROBUSTNESS_CONDITIONS];
   const modelIds = [...PHASE11C_MODEL_IDS];
@@ -584,17 +599,10 @@ async function analyze(opts: {
         const crossJaccard = computeCrossGroupJaccard(fwdRuns, revRuns);
         const asymmetryIndex = 1 - crossJaccard;
 
-        // Bootstrap CI for asymmetry
-        const crossJaccards: number[] = [];
-        for (const fwd of fwdRuns) {
-          for (const rev of revRuns) {
-            crossJaccards.push(computeJaccard(fwd, rev).similarity);
-          }
-        }
-        const asymmetryCI =
-          crossJaccards.length >= 2
-            ? (bootstrapCI(crossJaccards.map((j) => 1 - j)) as [number, number])
-            : ([asymmetryIndex, asymmetryIndex] as [number, number]);
+        // Bootstrap CI for asymmetry — resample runs independently to avoid pseudoreplication
+        const asymmetryCI = fwdRuns.length > 0 && revRuns.length > 0
+          ? bootstrapCIFromRuns(fwdRuns, revRuns, (fwd, rev) => 1 - mean(crossDirectionJaccards(fwd, rev)))
+          : [asymmetryIndex, asymmetryIndex] as [number, number];
 
         asymmetryRobustness.push({
           modelId,

@@ -98,7 +98,14 @@ bun run phase11                  # Run all Phase 11 in sequence (11A → 11B →
 
 ## Models
 
-Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Model configs in `src/data/pairs.ts` (`MODELS`). Phase 10A additionally tested 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Only Llama 3.1 8B passed the probe reliability gate (others failed on OpenRouter latency). Phase 11A adds 4 more models: DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick (`PHASE11_MODELS` in `pairs.ts`). Phase 11C robustness uses Claude, GPT, and DeepSeek. Requires `OPENROUTER_API_KEY` env var.
+12 models from 11 independent training pipelines via OpenRouter (~21,540 total API runs across 11 phases):
+
+- **Original 4:** Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash (`MODELS` in `src/data/pairs.ts`)
+- **Phase 10A additions:** MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5 397B-A17B, Llama 3.1 8B Instruct (`NEW_MODELS` in `pairs.ts`). Qwen/MiniMax/Kimi recovered via patient mode; GLM rate-limited. Llama 8B is the sole small-scale model.
+- **Phase 11A additions:** DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick (`PHASE11_MODELS` in `pairs.ts`). All 4 pass reliability. Mistral holds the record gait (0.747). Llama 4 Maverick enables within-family scale comparison with Llama 3.1 8B.
+- **Phase 11C robustness:** Claude, GPT, and DeepSeek tested across a 2×2 waypoint × temperature grid.
+
+Requires `OPENROUTER_API_KEY` env var.
 
 ## Project Management
 

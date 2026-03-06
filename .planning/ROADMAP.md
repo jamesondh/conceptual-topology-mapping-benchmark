@@ -1,6 +1,6 @@
 # Roadmap
 
-Exploration-first project. All 10 experimental phases complete (~19,500 API runs across 8 models). Same process as word-convergence-game's 5 rounds.
+Exploration-first project. All 11 experimental phases complete (~21,540 API runs across 12 models). Same process as word-convergence-game's 5 rounds.
 
 ## Completed
 - [x] **Phase 1: Waypoint elicitation engine + pilot data** — Engine built, 2,480 runs collected across 4 models and 21 pairs. Core finding: models have distinct conceptual gaits (2.2x consistency gap between Claude and GPT), clean control validation. See `findings/01-pilot-analysis.md`.
@@ -15,11 +15,10 @@ Exploration-first project. All 10 experimental phases complete (~19,500 API runs
 
 - [x] **Phase 10: Model Generality and Pre-Fill Relation Classes** — 1,680 new runs + 778 reused across 5 new models (10A, 4 reliable) and 4 core models (10B). Part A: Initial run blocked 4/5 on 60s timeout; patient mode (300s) recovered 3 more (Qwen, MiniMax, Kimi). GLM 5 rate-limited. R1 (gait 0.298-0.508) and R2 (asymmetry, all > 0.60) replicate for all 4. Bridge frequency CI includes zero (new 0.721 vs original 0.817) — bridge structure generalizes. Llama 8B sole outlier (0.200), a scale effect. R5 controls fail for all new models. Part B: Friedman test significant (p=0.034) — relation class affects bridge survival. Unrelated pre-fills most disruptive (0.388), on-axis (0.643) ≈ same-domain (0.708). Warm/fermentation replications perfect. Prediction accuracy 50% (9/18). Capstone finding: structure/content/scale hierarchy — geometry universal, landmarks shared among large models, scale differentiates. G26 resurrected. See `findings/10a-model-generality.md`, `findings/10b-relation-classes.md`, and `findings/10-analysis.md`.
 
-- [ ] **Phase 11: Expanded Generality, Control Revision, and Robustness** — Scripts implemented, pending execution (~2,440 new runs across up to 12 models). Part A: 4 new models (DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick) on 12-pair battery. Part B: 4 new control candidates to replace stapler-monsoon (screening + validation). Part C: 2×2 waypoint × temperature robustness grid (3 models, 6 pairs). See `.planning/phases/11-expanded-generality-robustness/SPEC.md`.
+- [x] **Phase 11: Expanded Generality, Control Revision, and Robustness** — 2,040 new runs + ~340 reused across up to 12 models. Part A: 4 new models (DeepSeek, Mistral, Cohere, Llama 4 Maverick) all pass reliability; R1/R2 replicate; combined cohort bridge freq CI includes zero; Mistral sets gait record (0.747); Llama scale effect confirmed. Part B: All 4 control candidates fail screening; retrospective shows stapler-monsoon fails for all 12 models; R5 needs fundamental revision. Part C: ANOVA confirms model identity drives structure (η²=0.242, p≈0.001); bridge frequency most robust property (>0.97 all conditions); asymmetry waypoint-count sensitive. Baseline data sparse (DeepSeek has no prior-phase data). Prediction accuracy 8/18 (44%). See findings/11a-expanded-generality.md, 11b-control-revision.md, 11c-robustness.md, 11-analysis.md.
 
 ## Next Priority
-- **Run Phase 11** — `bun run phase11` to execute all 3 parts, then analyze
-- **Paper writing & positioning** — 11 phases support five-act narrative (structure → topology → mechanism → limits → generality). 7 robust claims, 27+ observations, 27 graveyard entries constitute a comprehensive empirical characterization.
+- **Paper writing & positioning** — 11 phases, ~21,540 total runs, 12 models from 11 families support six-act narrative (structure → topology → mechanism → limits → generality → robustness). 7 robust claims, 32+ observations, 29 graveyard entries constitute a comprehensive empirical characterization. All pre-paper vulnerabilities addressed (expanded model coverage, protocol robustness). Control pair limitation acknowledged.
 
 ## Deferred
 - Embedding-based distance validation — may rescue cross-model geometry where path-based failed (O18, O19, G22)

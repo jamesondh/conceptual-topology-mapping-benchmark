@@ -30,6 +30,8 @@ import {
   seededRandom,
   mean,
   bootstrapCI,
+  bootstrapCIFromRuns,
+  crossDirectionJaccards,
   computeWaypointFrequencies,
   computeBridgeFrequency,
   bootstrapBridgeFrequencyCI,
@@ -654,15 +656,9 @@ async function analyze(opts: {
       const crossJaccard = computeCrossGroupJaccard(fwdRuns, revRuns);
       const asymmetryIndex = 1 - crossJaccard;
 
-      // Bootstrap CI for asymmetry
-      const crossJaccards: number[] = [];
-      for (const fwd of fwdRuns) {
-        for (const rev of revRuns) {
-          crossJaccards.push(computeJaccard(fwd, rev).similarity);
-        }
-      }
-      const asymmetryCIValues = crossJaccards.length >= 2
-        ? bootstrapCI(crossJaccards.map((j) => 1 - j))
+      // Bootstrap CI for asymmetry — resample runs independently to avoid pseudoreplication
+      const asymmetryCIValues = fwdRuns.length > 0 && revRuns.length > 0
+        ? bootstrapCIFromRuns(fwdRuns, revRuns, (fwd, rev) => 1 - mean(crossDirectionJaccards(fwd, rev)))
         : [asymmetryIndex, asymmetryIndex] as [number, number];
 
       asymmetryResults.push({

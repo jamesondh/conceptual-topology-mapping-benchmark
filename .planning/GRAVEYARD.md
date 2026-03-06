@@ -319,3 +319,27 @@ The regression fails because the data is too heterogeneous to support a single-v
 **Resolution:** The disruption mechanism is about maintaining vs. destroying navigational context, not about dimensional competition. On-axis pre-fills, despite competing with the bridge on the same dimension, keep the model in the right conceptual neighborhood — the model continues navigating within the relevant semantic space and can still encounter the bridge (or functional equivalents). Unrelated pre-fills derail navigation entirely — the model must spend subsequent waypoints recovering from the irrelevant heading before re-entering the correct conceptual neighborhood. The Friedman test (p=0.034) confirming that relation class matters survives as a genuine finding (O26); the mechanism is just different than predicted.
 
 **Lesson:** The operationally meaningful distinction is binary (related vs. unrelated), not the three-way taxonomy. On-axis and same-domain pre-fills function similarly because both maintain navigational context. This mirrors the benchmark's broader pattern: coarse categorical distinctions capture the phenomena, while fine-grained mechanistic orderings fail.
+
+---
+
+## G28 — Phase 11: Control Pair Revision Fails
+
+**What:** Designed 4 new control pair candidates (turmeric-trigonometry, barnacle-sonnet, magnesium-ballet, accordion-stalactite) to replace the failing stapler-monsoon. Predicted at least 2 of 4 would pass screening (top waypoint frequency < 0.15, entropy > 5.0 across 6 models).
+
+**Why it failed:** All 4 candidates failed every gate for every model (0/24 cells pass). Top waypoint frequencies ranged 0.60-1.00, entropies 3.29-4.92. Each candidate produced strong convergence on specific intermediaries: accordion-stalactite on "bellow" (5/6 models), magnesium-ballet on "choreography"/"movement"/"grace", turmeric-trigonometry on domain-specific concepts ("ancient india", "spice", "sine", "curcumin", "angle", "golden ratio"), barnacle-sonnet on "shell"/"sea shanty"/"rhyme". The retrospective analysis was even more damaging: stapler-monsoon itself fails R5 for ALL 12 models (top freq 0.650-1.000). The original 4 models' "clean" control performance was never as clean as originally reported.
+
+**Resolution:** R5 single-pair validation with strict thresholds is fundamentally inadequate. LLMs at 7-waypoint path length are creative enough to find navigable semantic routes between any two concrete concepts. Control evidence must rely on relative metrics (experimental pairs show dramatically higher consistency than controls, even if controls aren't perfectly unstructured) rather than absolute thresholds. For the paper, recommend acknowledging this limitation and reframing: the benchmark's validity rests on the magnitude gap between experimental and control conditions, not on controls being truly random.
+
+**Lesson:** The assumption that human-generated "unrelated" concept pairs would produce unstructured LLM navigation was wrong. LLMs have much richer associative connectivity than human intuition predicts. This is itself a finding about the nature of conceptual navigation — these models can navigate between ANY two concepts, just with varying levels of consistency.
+
+---
+
+## G29 — Phase 11: Asymmetry Universality Across Protocol Conditions
+
+**What:** Predicted R2 asymmetry (mean > 0.60) would survive across all waypoint count × temperature conditions.
+
+**Why it failed:** 5-waypoint conditions show mean asymmetry of 0.594 (t=0.5) and 0.593 (t=0.9) — both just below the 0.60 threshold. 9-waypoint conditions succeed: 0.669 (t=0.5) and 0.684 (t=0.9). The 7-waypoint baseline from prior phases shows higher values (~0.811), but the 7wp-t0.7 DeepSeek data was missing, inflating that figure.
+
+**Resolution:** Asymmetry is real and robust at ≥7 waypoints, but its detectability is resolution-dependent. Shorter paths (5 waypoints) provide fewer opportunities for directional differences to manifest. This is a measurement sensitivity issue, not a refutation of the quasimetric property. R2 should be qualified: "robust at standard or longer path lengths; may fall below detection threshold at shorter lengths."
+
+**Lesson:** Path length is itself a parameter that affects the measurement of asymmetry. The 0.60 threshold was calibrated for 7-waypoint paths. A resolution-appropriate threshold for 5-waypoint paths might be lower. The phenomenon is real but the magnitude is path-length-dependent.
