@@ -10,7 +10,7 @@ Give models two concepts, ask for intermediate waypoints, and test whether the r
 
 ## Key Findings
 
-Across 19,000+ elicitation runs and 5 models across 10 phases, the benchmark has established 7 robust claims about how LLMs navigate conceptual space:
+Across 19,500+ elicitation runs and 8 models across 10 phases, the benchmark has established 7 robust claims about how LLMs navigate conceptual space:
 
 ### R1. Models have distinct "conceptual gaits"
 Claude produces 2.2× more consistent waypoints than GPT (avg Jaccard 0.578 vs 0.258). Each model navigates the same conceptual terrain with a characteristic style — not just different vocabulary, but structurally different paths. Cross-model agreement is strikingly low (~0.18 Jaccard), suggesting each LLM has its own "conceptual geography." Confirmed across 5 models including Llama 3.1 8B (0.298) — gait is a universal property of LLM navigation, not specific to frontier models.
@@ -138,6 +138,15 @@ bun run analyze-model-generality # Analyze model generality results
 bun run relation-classes         # Part B: ~960 API calls (on-axis/same-domain/unrelated pre-fill)
 bun run analyze-relation-classes # Analyze relation class results
 bun run phase10                  # Run all Phase 10 in sequence
+
+# 14. Phase 11: Expanded generality, control revision, and robustness
+bun run expanded-generality      # Part A: ~720 API calls (4 new models on 12-pair battery)
+bun run analyze-expanded-generality # Analyze expanded generality results
+bun run control-revision         # Part B: ~640 API calls (screening + validation of new controls)
+bun run analyze-control-revision # Analyze control revision results
+bun run robustness               # Part C: ~1080 API calls (2×2 waypoint × temperature grid)
+bun run analyze-robustness       # Analyze robustness results
+bun run phase11                  # Run all Phase 11 in sequence
 ```
 
 ## What It Measures
@@ -186,7 +195,7 @@ bun run phase10                  # Run all Phase 10 in sequence
 
 ## Models
 
-Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Phase 10 additionally tests 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B.
+Four core models via OpenRouter: Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash. Same core models as word-convergence-game rounds 4-5. Phase 10 additionally tests 5 new models: MiniMax M2.5, Kimi K2.5, GLM 5, Qwen 3.5, Llama 3.1 8B. Phase 11 adds 4 more models: DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick.
 
 ## Project Structure
 
@@ -207,6 +216,7 @@ src/
     pairs-phase8.ts               # Phase 8 pair definitions (fragility, gradient, gait-norm)
     pairs-phase9.ts               # Phase 9 pair definitions (dominance, transformation, facilitation)
     pairs-phase10.ts              # Phase 10 pair definitions (model generality, relation classes)
+    pairs-phase11.ts              # Phase 11 pair definitions (expanded generality, control revision, robustness)
 experiments/                      # Batch experiment runners per phase
 analysis/                         # Analysis scripts per phase
 results/                          # Experiment output (gitignored)
@@ -245,7 +255,7 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 
 ## Status
 
-**All 10 phases complete.** Cumulative: ~19,000 API runs across 5 models and 10 phases.
+**Phases 1-10 complete. Phase 11 implemented, pending execution.** Cumulative: ~19,500 API runs across 8 models and 10 phases.
 
 - **Phase 1:** 2,480 runs. Models have distinct conceptual gaits (2.2x consistency gap).
 - **Phase 2:** 960 runs. Navigation is fundamentally asymmetric (quasimetric space).
@@ -257,5 +267,6 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 - **Phase 8:** 2,690 runs + 2,960 reused. All three primary hypotheses fail: route exclusivity (rho=0.116), gradient blindness (interaction=0.046), gait normalization (zero improvement). O17 replicates (gradient 0.770 vs causal 0.578). New discoveries: pre-fill facilitation for marginal bridges, transformation-chain blindness for Gemini, model-independent geometry definitively blocked. Prediction accuracy 24% (worst in benchmark) — single-variable mechanistic models are inadequate.
 - **Phase 9:** 3,037 runs + ~5,270 reused. All three primary hypotheses fail: dominance ratio (rho=0.157), transformation-chain blindness (interaction=-0.290 reversed), facilitation crossover (slope CI includes zero). Marginal facilitation real (3.761× survival). Pre-fill content modulates survival for some pairs. Bridge specification > type classification. Prediction accuracy 20%.
 - **Phase 10:** 1,140 runs + 778 reused. Part A: 4/5 new models failed on OpenRouter latency; only Llama 3.1 8B passed. R1 (gait 0.298) and R2 (asymmetry 0.785) replicate cross-architecture. Bridge frequency does not generalize (Llama 0.200 vs original 0.817). Part B: Friedman test significant (p=0.034) — relation class affects bridge survival. Unrelated pre-fills most disruptive (0.388), on-axis (0.643) ≈ same-domain (0.708). Prediction accuracy 33% (6/18). Capstone: structural properties are universal, navigational content is model-specific.
+- **Phase 11:** Implemented, pending execution (~2,440 API calls). Part A: 4 new models (DeepSeek V3.2, Mistral Large 3, Cohere Command A, Llama 4 Maverick) on 12-pair battery. Part B: 4 new control pair candidates to replace stapler-monsoon (screening + validation). Part C: 2×2 waypoint × temperature robustness grid (3 models, 6 pairs).
 
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.
