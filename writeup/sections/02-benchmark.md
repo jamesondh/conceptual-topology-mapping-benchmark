@@ -139,7 +139,7 @@ These were split into a holdout set (15 pairs, used only for prompt format selec
 
 **Bridge concept types.** Across 11 phases, bridge concepts were classified into four functional types:
 
-- **Bottleneck bridges** name the primary axis of connection between two domains. Example: "spectrum" for color→sound (names the mechanism), "deposit" for loan→shore (names the action linking financial and geographic senses of "bank").
+- **Bottleneck bridges** name the primary axis of connection between two domains. Example: "spectrum" for light→color (names the mechanism), "deposit" for loan→shore (names the action linking financial and geographic senses of "bank").
 - **Gradient midpoint bridges** occupy a position on a continuous dimension between the endpoints. Example: "warm" for hot→cold, "twilight" for day→night.
 - **Causal-chain bridges** name a process step connecting cause to effect. Example: "fermentation" for grape→wine, "germination" for seed→garden.
 - **Too-central bridges** are informationally redundant — both endpoints already imply the candidate bridge. Example: "fire" for spark→ash, "water" for rain→ocean. These are expected to produce low bridge frequencies because they add no navigational information.
