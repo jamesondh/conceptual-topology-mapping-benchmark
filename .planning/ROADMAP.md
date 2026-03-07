@@ -17,9 +17,10 @@ Exploration-first project. All 11 experimental phases complete (~21,540 API runs
 
 - [x] **Phase 11: Expanded Generality, Control Revision, and Robustness** — 2,040 new runs + ~340 reused across up to 12 models. Part A: 4 new models (DeepSeek, Mistral, Cohere, Llama 4 Maverick) all pass reliability; R1/R2 replicate; combined cohort bridge freq CI includes zero; Mistral sets gait record (0.747); Llama scale effect confirmed. Part B: All 4 control candidates fail screening; retrospective shows stapler-monsoon fails for all 12 models; R5 needs fundamental revision. Part C: ANOVA confirms model identity drives structure (η²=0.242, p≈0.001); bridge frequency most robust property (>0.97 all conditions); asymmetry waypoint-count sensitive. Baseline data sparse (DeepSeek has no prior-phase data). Prediction accuracy 8/18 (44%). See findings/11a-expanded-generality.md, 11b-control-revision.md, 11c-robustness.md, 11-analysis.md.
 
-## Next Priority
-- **Cross-section consistency pass complete.** Dual review (Opus + Codex) found ~25 unique issues; all critical/important fixes applied to section files and outline. Key fixes: limitation count split (5+4→6+3), R3 replication contradiction, bank→vault/mortgage, asymmetry "7+"→"9+", Phase 9A→9C reference, R5 qualification, hypothesis type overstatement, terminology standardization ("families"→"training pipelines"), GLM 5 table note, missing two-hop curse citation.
-- Remaining: figure/table generation, appendix drafting, LaTeX conversion, citation formatting, target venue selection.
+## In Progress
+- [x] **Cross-section consistency pass complete.** Dual review (Opus + Codex) found ~25 unique issues; all critical/important fixes applied.
+- [x] **Figure/table generation complete.** Python pipeline (config.py, build_manifest.py, generate_figures.py, generate_tables.py) produces 13 data-driven figures (PDF+PNG) and 8 LaTeX tables from 26 analysis JSONs. Codex review found 7 issues; all fixed and verified. Fig 0 (path visualization) and Fig 1 (benchmark schematic) deferred as design tasks. See `.planning/phases/12-paper-figures/SPEC.md`.
+- Remaining: appendix drafting, LaTeX conversion, citation formatting, target venue selection.
 - Paper covers: Abstract, Introduction (§1), Benchmark (§2), Related Work (§3), six act sections (§4-9), Discussion (§10), Conclusion (§11). ~15,000 words main text + outline for 6 appendices.
 
 ## Deferred

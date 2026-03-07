@@ -52,9 +52,21 @@ Phase 12: Paper Writing — **ALL SECTIONS DRAFTED AND REVIEWED**
 - **Part C — Multiverse Robustness (1,080 runs, 3 models):** ANOVA model identity drives structure (η²=0.242, p≈0.001). Bridge frequency most robust (>0.97 all conditions). Gait rank largely stable (W=0.840, though GPT/DeepSeek swap). Asymmetry waypoint-sensitive. 2/7 predictions confirmed.
 - **Combined prediction accuracy: 8/18 (44%).** Observations: O28-O32. Graveyard: G28-G29.
 
+## Figure/Table Generation (Phase 12 Sub-Task)
+- Python visualization pipeline built: `writeup/scripts/` (config.py, build_manifest.py, data_loader.py, generate_figures.py, generate_tables.py)
+- `paper_manifest.json` preprocesses 26 analysis JSONs into unified data source (236 KB)
+- 13 data-driven figures generated (PDF + PNG); Fig 0, 1 deferred as design tasks
+- 8 LaTeX tables generated (booktabs style)
+- Codex review found 7 issues (4 high, 2 medium, 1 low); all fixed and verified:
+  - Fig 5: Now includes all 84 pair/model combos (mean 0.811, matches paper)
+  - Fig 6: Correctly separates hierarchical vs random triples (was mixing all types)
+  - Table 7(a): Uses 12-model retrospective from 11b data (was using 3-model fig14 data)
+  - Fig 7: Correct 4-panel layout (bottleneck/off-axis/process-vs-object/too-central)
+  - Fig 4: Filtered to 4 categories, Fig 8: 1-based positions, Table 7: deterministic ties
+- Section placeholders replaced with file references in all 8 section files
+
 ## Blockers
 None
 
 ## Next Steps
-- **Cross-section consistency pass complete.** Opus + Codex dual review found 20+11 issues; all critical fixes applied (limitation count split, R3 replication contradiction, bank→vault/mortgage mismatch, asymmetry "7+" → "9+", Phase 9A→9C reference, R5 qualification in Section 7, hypothesis type overstatement, terminology standardization, GLM 5 table clarity, missing citation).
-- Next: Figure/table generation, appendix drafting, LaTeX conversion, citation formatting, target venue selection
+- Remaining: appendix drafting, LaTeX conversion, citation formatting, target venue selection

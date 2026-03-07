@@ -276,4 +276,14 @@ Eight phases of experiments show that navigational phenomena resist simple expla
 - **Phase 10:** 1,680 runs + 778 reused. R1/R2 replicate cross-architecture. Bridge frequency generalizes (CI includes zero). Llama 8B sole outlier (scale effect). Relation class affects bridge survival (Friedman p=0.034). Prediction accuracy 50%.
 - **Phase 11:** 2,040 runs + ~340 reused. Part A: 4 new models all pass reliability, R1/R2 replicate, bridge freq CI includes zero. Mistral record gait 0.747. Llama scale confirmed. Part B: All 4 control candidates fail screening; single-pair control design inadequate. Part C: Model identity is the only substantial ANOVA factor (η²=0.242, p≈0.001). Bridge frequency most protocol-robust (>0.97 all conditions). Prediction accuracy 44%.
 
+## Paper Writeup
+
+The paper writeup is in `writeup/`, with Python scripts for reproducible figure/table generation:
+
+```bash
+bun run manifest   # Build paper_manifest.json from 26 analysis JSONs
+bun run figures    # Generate all figures (PDF + PNG) → writeup/figures/
+bun run tables     # Generate all LaTeX tables → writeup/tables/
+```
+
 See `findings/` for detailed analysis writeups per phase and `.planning/ROADMAP.md` for the full plan.
