@@ -27,6 +27,11 @@ A novel LLM benchmark that tests whether models have consistent, measurable geom
 - Analysis scripts in `analysis/`
 - Results in `results/` (JSON, gitignored)
 - Findings in `findings/` (markdown writeups per phase)
+- Paper writeup in `writeup/` — sections, outline, scripts, figures, tables
+  - `writeup/scripts/` — Python pipeline: `config.py`, `build_manifest.py`, `data_loader.py`, `generate_figures.py`, `generate_tables.py`
+  - `writeup/data/paper_manifest.json` — Preprocessed data for all figures/tables (built from 26 analysis JSONs)
+  - `writeup/figures/` — 13 data-driven figures (PDF + PNG), 2 design placeholders (Fig 0, 1)
+  - `writeup/tables/` — 8 LaTeX tables (.tex, booktabs style)
 
 ## CLI Usage
 
@@ -94,6 +99,11 @@ bun run analyze-control-revision # Phase 11B: analyze control revision results
 bun run robustness               # Phase 11C: multiverse robustness (~1080 API calls)
 bun run analyze-robustness       # Phase 11C: analyze robustness results
 bun run phase11                  # Run all Phase 11 in sequence (11A → 11B → 11C)
+
+# Paper figures and tables (Phase 12)
+bun run manifest                 # Build paper_manifest.json from 26 analysis JSONs
+bun run figures                  # Generate all figures (PDF + PNG) from manifest
+bun run tables                   # Generate all LaTeX tables from manifest
 ```
 
 ## Models
