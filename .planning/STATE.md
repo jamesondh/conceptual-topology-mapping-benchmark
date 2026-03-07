@@ -5,6 +5,7 @@ Phase 12: Paper Writing — **IN PROGRESS**
 - Section 2 (The Benchmark) drafted and reviewed
 - Section 4 (Structure: Act I) drafted and reviewed
 - Section 5 (Topology: Act II) drafted and reviewed
+- Section 6 (Mechanism: Act III) drafted and reviewed
 
 ## Context
 - Research survey complete (`research.md`)
@@ -47,5 +48,5 @@ Phase 12: Paper Writing — **IN PROGRESS**
 None
 
 ## Next Steps
-- **Paper Section 6 (Mechanism: Act III)** — next section per writing order
+- **Paper Section 7 (Limits: Act IV)** — next section per writing order
 - Continue paper writing following outline writing order recommendation
