@@ -1,6 +1,6 @@
 # 8. Act V — Generality: Structure Scales Across Architectures
 
-The structural findings in Sections 4–6 were established on four models from four providers. A natural concern is that the properties might reflect idiosyncrasies of those specific models rather than general features of language model navigation. Phases 10A and 11A addressed this by testing 8 additional models from 7 independent training pipelines, bringing the total to 12 models from 11 families. The central result is that both navigational structure and navigational content generalize across architectures — with one scale-dependent exception in content generalization, alongside separate measurement caveats discussed in Sections 5 and 9.
+The structural findings in Sections 4–6 were established on four models from four providers. A natural concern is that the properties might reflect idiosyncrasies of those specific models rather than general features of language model navigation. Phases 10A and 11A addressed this by testing 8 additional models from 7 independent training pipelines, bringing the total to 12 models from 11 independent training pipelines. The central result is that both navigational structure and navigational content generalize across architectures — with one scale-dependent exception in content generalization, alongside separate measurement caveats discussed in Sections 5 and 9.
 
 ## 8.1 Replication Across 12 Models
 
@@ -51,7 +51,7 @@ The most informative result from the generality phases is not that structure rep
 
 Phase 11A extended the gait spectrum beyond the original four models, revealing that the range is wider than initially characterized.
 
-**Mistral sets the record at 0.747.** Mistral Large 3 showed near-deterministic navigation on several pairs: 0.936 on music→mathematics (producing nearly identical waypoint sets across 15 repetitions) and 0.934 on hot→cold. This exceeds Claude's 0.578 by a substantial margin and demonstrates that rigid, near-deterministic navigation is an achievable endpoint of the gait spectrum.
+**Mistral sets the record at 0.747.** Mistral Large 3 showed near-deterministic navigation on several pairs: 0.936 on music→mathematics (producing nearly identical waypoint sets across all repetitions) and 0.934 on hot→cold. This exceeds Claude's 0.578 by a substantial margin and demonstrates that rigid, near-deterministic navigation is an achievable endpoint of the gait spectrum.
 
 **DeepSeek, Cohere, and Llama 4 Maverick cluster at moderate consistency.** DeepSeek V3.2 at 0.540, Llama 4 Maverick at 0.539, and Cohere Command A at 0.502 occupy the middle of the gait spectrum — more consistent than GPT/Grok but less rigid than Claude/Mistral. The Llama within-family comparison is particularly informative: Maverick (0.539) vs 8B (0.298) shows that gait increases with scale within a model family, suggesting that scale may contribute to navigational consistency within the Llama family, though broader causal attribution remains open.
 

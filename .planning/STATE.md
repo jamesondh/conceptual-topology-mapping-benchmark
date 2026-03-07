@@ -1,7 +1,7 @@
 # State
 
 ## Current Phase
-Phase 12: Paper Writing — **IN PROGRESS**
+Phase 12: Paper Writing — **ALL SECTIONS DRAFTED AND REVIEWED**
 - Section 2 (The Benchmark) drafted and reviewed
 - Section 4 (Structure: Act I) drafted and reviewed
 - Section 5 (Topology: Act II) drafted and reviewed
@@ -9,12 +9,17 @@ Phase 12: Paper Writing — **IN PROGRESS**
 - Section 7 (Limits: Act IV) drafted and reviewed
 - Section 8 (Generality: Act V) drafted and reviewed
 - Section 9 (Robustness: Act VI) drafted and reviewed
+- Section 10 (Discussion) drafted, Codex-reviewed, fixes applied
+- Section 11 (Conclusion) drafted, Codex-reviewed, fixes applied
+- Section 1 (Introduction) drafted, Codex-reviewed, fixes applied
+- Section 3 (Related Work) drafted, Codex-reviewed, fixes applied
+- Abstract drafted and reviewed
 
 ## Context
 - Research survey complete (`research.md`)
 - Word convergence game (575 games, 4 models) provides empirical foundation
 - Core thesis: no benchmark systematically evaluates whether LLMs can *navigate* conceptual space consistently
-- **Phases 1-11 complete. ~21,540 total unique API runs across 12 models from 11 families.**
+- **Phases 1-11 complete. ~21,540 total unique API runs across 12 models from 11 independent training pipelines.**
 
 ## Phase 1-4 Summary (Condensed)
 - **Models have distinct gaits** (Claude 0.578 vs GPT 0.258). Asymmetry universal (0.811). Dual-anchor paths confirmed. Hierarchical transitivity 0.175 vs random 0.036 (4.9×). Triangle inequality 91%. Bridge frequency model-dependent. Prediction accuracy 81.3%.
@@ -35,7 +40,7 @@ Phase 12: Paper Writing — **IN PROGRESS**
 
 ## Key Design Decisions
 - Exploration-first workflow — phases follow the most interesting data signal
-- Phases 8-10 establish that single-variable mechanistic models are inadequate (8/8 hypotheses fail at primary test level)
+- Phases 8-10 establish that single-variable models are inadequate (7/8 hypotheses fail at primary test level, 1 resurrected)
 - Dead ends tracked in `GRAVEYARD.md` (29 entries G1-G29; G26 resurrected by expanded data)
 - All major claims cataloged in `findings/CLAIMS.md` ([robust], [observed], [hypothesis])
 - Structure/content/scale hierarchy is the capstone finding: geometric structure is universal, navigational landmarks are shared among large models, scale differentiates
@@ -51,6 +56,5 @@ Phase 12: Paper Writing — **IN PROGRESS**
 None
 
 ## Next Steps
-- **Paper Section 10 (Discussion)** — next section per writing order
-- Continue paper writing following outline writing order recommendation
-- Remaining sections: 10 (Discussion), 11 (Conclusion), 1 (Introduction), 3 (Related Work), Abstract
+- **Cross-section consistency pass complete.** Opus + Codex dual review found 20+11 issues; all critical fixes applied (limitation count split, R3 replication contradiction, bank→vault/mortgage mismatch, asymmetry "7+" → "9+", Phase 9A→9C reference, R5 qualification in Section 7, hypothesis type overstatement, terminology standardization, GLM 5 table clarity, missing citation).
+- Next: Figure/table generation, appendix drafting, LaTeX conversion, citation formatting, target venue selection

@@ -41,7 +41,7 @@
 Bulleted list:
 
 1. **A novel evaluation paradigm** — waypoint elicitation as a behavioral probe for conceptual geometry, distinct from static embedding analysis, factual QA, and free association.
-2. **Six robust empirical claims** about navigational structure, replicated across multiple phases and models, plus one qualified claim (R5, control validation) that reveals a fundamental limitation of the paradigm (Section 4-5). Three claims (R3, R4, R7) are untested beyond the original 4-model cohort.
+2. **Six robust empirical claims** about navigational structure, replicated across multiple phases and models, plus one qualified claim (R5, control validation) that reveals a fundamental limitation of the paradigm (Section 9.5). Three claims (R3, R4, R7) are untested beyond the original 4-model cohort.
 3. **A mechanism ceiling result** — 7 single-variable mechanistic hypotheses fail across Phases 8-10 (one additional hypothesis was initially falsified then resurrected with more data), establishing that conceptual navigation resists simple explanations (Section 7).
 4. **Cross-architecture generality** — navigational structure and content generalize across 12 models from 11 families; scale differentiates (Section 8).
 5. **Protocol robustness** — bridge frequency is insensitive to waypoint count and temperature; gait rankings are largely stable; model identity dominates protocol variation (Section 9).
@@ -577,11 +577,11 @@ Compact recapitulation:
 
 4. **Concept pair selection bias:** Pairs were selected by the experimenters, not sampled from a principled distribution. Some findings may be pair-specific rather than general. Partially addressed by the large number of pairs (100+) and by the generality analysis.
 
-5. **Resolution dependence:** Asymmetry requires 7+ waypoints to detect reliably (O32). Other properties may similarly have resolution thresholds that the benchmark's default settings happen to satisfy.
+5. **Resolution dependence:** Asymmetry requires 9+ waypoints to reliably exceed the 0.60 threshold in the robustness subset (O32). Other properties may similarly have resolution thresholds that the benchmark's default settings happen to satisfy.
 
 #### Phenomenon Limitations (findings about what we're studying)
 
-6. **Mechanism ceiling:** 8/8 single-variable hypotheses fail. The benchmark characterizes structure but cannot yet explain it. Multi-variable models and different experimental paradigms (e.g., embedding-level interventions, activation patching) may be needed. This is not a design flaw — it is the paper's most informative negative result.
+6. **Mechanism ceiling:** 7/8 follow-up hypotheses fail (1 resurrected). The benchmark characterizes structure but cannot yet explain it. Multi-variable models and different experimental paradigms (e.g., embedding-level interventions, activation patching) may be needed. This is not a design flaw — it is the paper's most informative negative result.
 
 7. **Cross-model distance failure (O18, O19):** Models rank-order conceptual distances differently. Model-independent navigational geometry cannot be recovered from path-based measurements alone. This limits the benchmark's ability to define a universal distance function.
 
@@ -707,7 +707,7 @@ Compact recapitulation:
 |-------|----------------|-----------------|
 | R1. Distinct stable gaits | 4.1, 8.1 | 9.3 |
 | R2. Quasimetric asymmetry | 5.1, 5.2, 8.1 | 9.4 |
-| R3. Polysemy sense differentiation | 4.4 | |
+| R3. Polysemy sense differentiation | 4.5 | |
 | R4. Hierarchical compositionality | 5.3 | |
 | R5. Control validation (qualified) | 9.5 | 10.3 |
 | R6. Bridges are bottlenecks | 5.4 | 9.2 |

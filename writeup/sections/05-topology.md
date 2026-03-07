@@ -6,7 +6,7 @@ Section 4 established that waypoint elicitation measures real navigational struc
 
 ## 5.1 Asymmetry Is Fundamental
 
-Phase 2 reversed all 21 reporting pairs across 4 models (840 runs) and computed the directional asymmetry index: 1 minus the mean Jaccard similarity between forward (A→B) and reverse (B→A) waypoint sets. A value of 0 indicates perfect symmetry (identical paths in both directions); a value of 1 indicates complete non-overlap.
+Phase 2 reversed all 21 reporting pairs across 4 models (840 reverse-direction runs; ~960 total including polysemy supplementary) and computed the directional asymmetry index: 1 minus the mean Jaccard similarity between forward (A→B) and reverse (B→A) waypoint sets. A value of 0 indicates perfect symmetry (identical paths in both directions); a value of 1 indicates complete non-overlap.
 
 **The symmetry axiom fails comprehensively.** The mean directional asymmetry across all 84 pair/model combinations was 0.811 (95% CI [0.772, 0.848]). Of 84 combinations, 73 (87%) showed statistically significant asymmetry by permutation test (p < 0.05, 1,000 resamples). The distribution was heavily right-skewed: 54 of 84 combinations (64%) exceeded 0.8, and only 5 (6%) fell below 0.5. Forward and reverse paths typically shared less than 19% of their waypoints.
 
@@ -34,7 +34,7 @@ The triangle inequality — d(A,C) ≤ d(A,B) + d(B,C) — was tested across thr
 
 The satisfaction rate shows a stable replication pattern around 91% across three independent triple sets. This is remarkably high given the magnitude of the asymmetry violations: a space where forward and reverse distances differ by 0.811 on average might be expected to show widespread triangle inequality failures, yet the directional distances compose properly in over 90% of cases.
 
-The violations in Phase 3B were concentrated in Gemini: the music→harmony→mathematics triple showed a slack of −0.319 (the direct path was much longer than the sum of the two legs), and bank→river→ocean showed −0.061. Claude's hot→energy→cold violation was marginal (−0.023). GPT and Grok satisfied the triangle inequality in all 32 cases across Phase 3B.
+The violations in Phase 3B were concentrated in Gemini: the music→harmony→mathematics triple showed a slack of −0.319 (the direct path was much longer than the sum of the two legs), and bank→river→ocean showed −0.061. Claude's hot→energy→cold violation was marginal (−0.023). GPT and Grok each satisfied the triangle inequality in all 8 of their respective Phase 3B cases.
 
 **Quasimetric characterization.** Combined with the asymmetry data, the metric-axiom profile of LLM conceptual space is:
 - *Identity:* not directly testable with Jaccard-based distance (identity controls show low directional divergence for some models — Claude 0.017 — but mean cross-direction asymmetry was 0.456, and within-direction distance was not measured for identity pairs)

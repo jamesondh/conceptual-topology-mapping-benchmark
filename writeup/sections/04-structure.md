@@ -1,6 +1,6 @@
 # 4. Act I — Structure: Models Have Navigational Geometry
 
-The first three experimental phases established the empirical foundation for the benchmark: models navigate conceptual space with measurable, stable, model-specific structure. This section summarizes the five structural findings from the early phases; some were later replicated across expanded model cohorts (R1, R3), while others remain well-supported observations from the original cohort (O1, O2, O9, O10).
+The first three experimental phases established the empirical foundation for the benchmark: models navigate conceptual space with measurable, stable, model-specific structure. This section summarizes the five structural findings from the early phases; some were later replicated across expanded model cohorts (R1), while others remain well-supported observations from the original cohort (O1, O2, O9, O10).
 
 ## 4.1 Conceptual Gaits Are Distinct and Stable
 

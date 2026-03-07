@@ -128,7 +128,7 @@ Lower entropy indicates concentrated, near-deterministic navigation; higher entr
 - **Anchor** (5 pairs): Pairs with known basin structure from prior word convergence experiments (e.g., Beyoncé→erosion with known basin "formation"). Used to calibrate expectations from prior work.
 - **Hierarchy** (4 pairs): Hypernym–hyponym relationships at varying taxonomic depth (e.g., animal→poodle, emotion→nostalgia). Test compositional path structure.
 - **Cross-domain** (4 pairs): Pairs spanning unrelated conceptual domains (e.g., music→mathematics, love→death). The benchmark's primary test cases — conceptually distant, requiring genuine navigation.
-- **Polysemy** (6 pairs): Pairs where one concept is polysemous, with targets selecting different senses (e.g., bank→river vs bank→vault; bat→cave vs bat→baseball). Test sense differentiation.
+- **Polysemy** (6 pairs): Pairs where one concept is polysemous, with targets selecting different senses (e.g., bank→river vs bank→mortgage; bat→cave vs bat→baseball). Test sense differentiation.
 - **Near-synonym** (4 pairs): Semantically close concepts (e.g., happy→joyful, student→pupil). Expected to produce short conceptual distances.
 - **Antonym** (2 pairs): Opposite concepts (e.g., hot→cold, love→hate). Test spectrum traversal.
 - **Control-identity** (2 pairs): Same concept in both positions (e.g., apple→apple). Expected to produce low-distance, high-consistency paths.
@@ -183,7 +183,7 @@ Twelve models from 11 independent training pipelines were tested across the benc
 | Cohere Command A | Cohere | `cohere/command-a` | Frontier | Final (Phase 11A) | 11 |
 | Llama 4 Maverick | Meta | `meta-llama/llama-4-maverick` | Frontier | Final (Phase 11A) | 11 |
 
-*GLM 5 was rate-limited during Phase 10A and produced insufficient data for full analysis.
+*GLM 5 was rate-limited during Phase 10A and produced insufficient data for full analysis; it is excluded from the 12-model cohort reported throughout the paper but listed here for completeness.
 
 **Cohort structure.** The core cohort (Claude, GPT, Grok, Gemini) anchored Phases 1–9; Claude and GPT continued into Phases 10–11 for comparative baselines, while Grok and Gemini were not tested beyond Phase 9. Expanded and final cohort models were added in Phases 10–11 specifically to test whether findings generalize beyond the original four models. This design means that some claims (R1, R2, R6) are supported by all 12 models, while others (R3, R4, R7) are tested only on the original 4-model cohort.
 
@@ -200,7 +200,7 @@ The benchmark followed an exploration-first methodology: each phase was designed
 | Phase | Name | New Runs | Key Question | Primary Finding |
 |-------|------|----------|--------------|-----------------|
 | 1 | Pilot & prompt selection | ~2,480 | Do models produce consistent waypoint paths? | Models have distinct gaits: Claude 0.578 vs GPT 0.258 (2.2× gap) |
-| 2 | Reversals & asymmetry | ~960 | Is A→B navigation symmetric with B→A? | Navigation is fundamentally asymmetric (mean 0.811); symmetry axiom fails |
+| 2 | Reversals & asymmetry (5 waypoints) | ~960 | Is A→B navigation symmetric with B→A? | Navigation is fundamentally asymmetric (mean 0.811); symmetry axiom fails |
 | 3 | Positional convergence & transitivity | ~1,260 | Do paths compose? Does triangle inequality hold? | Hierarchical transitivity 4.9× over random; triangle inequality 91% |
 | 4 | Cross-model bridge topology | ~1,600 | Do models agree on bridge concepts? | Bridges are structural bottlenecks, not associations; prediction accuracy 81.3% |
 | 5 | Cue-strength & dimensionality | ~3,720 | Is bridge frequency graded by semantic cue strength? | Gradient real (12/16 monotonic); forced crossing discovery |
