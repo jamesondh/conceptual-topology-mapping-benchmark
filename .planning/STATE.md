@@ -8,6 +8,7 @@ Phase 12: Paper Writing — **IN PROGRESS**
 - Section 6 (Mechanism: Act III) drafted and reviewed
 - Section 7 (Limits: Act IV) drafted and reviewed
 - Section 8 (Generality: Act V) drafted and reviewed
+- Section 9 (Robustness: Act VI) drafted and reviewed
 
 ## Context
 - Research survey complete (`research.md`)
@@ -50,5 +51,6 @@ Phase 12: Paper Writing — **IN PROGRESS**
 None
 
 ## Next Steps
-- **Paper Section 9 (Robustness: Act VI)** — next section per writing order
+- **Paper Section 10 (Discussion)** — next section per writing order
 - Continue paper writing following outline writing order recommendation
+- Remaining sections: 10 (Discussion), 11 (Conclusion), 1 (Introduction), 3 (Related Work), Abstract
