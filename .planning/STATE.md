@@ -1,7 +1,8 @@
 # State
 
 ## Current Phase
-Phase 11: Expanded Generality, Control Revision, and Robustness — **COMPLETE**
+Phase 12: Paper Writing — **IN PROGRESS**
+- Section 2 (The Benchmark) drafted and reviewed
 
 ## Context
 - Research survey complete (`research.md`)
@@ -44,4 +45,5 @@ Phase 11: Expanded Generality, Control Revision, and Robustness — **COMPLETE**
 None
 
 ## Next Steps
-- **Paper writing** — 11 phases support six-act narrative (structure → topology → mechanism → limits → generality → robustness)
+- **Paper Section 4 (Structure)** — next section per writing order
+- Continue paper writing following outline writing order recommendation
