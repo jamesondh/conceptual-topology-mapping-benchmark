@@ -63,7 +63,7 @@ Phase 10B refined the content-modulation finding from Section 6.2 by systematica
 
 **Statistical caveat.** The Friedman test is significant at p = 0.034 with N = 8 pairs as blocks. Post-hoc Wilcoxon signed-rank tests show on-axis vs unrelated at p = 0.025 and same-domain vs unrelated at p = 0.036, but neither survives Bonferroni correction for 3 pairwise comparisons (threshold p < 0.017). The on-axis vs same-domain comparison was not significant (p = 0.889, Cohen's d = 0.170). The qualitative conclusion — unrelated pre-fills are more disruptive than related ones — is sound; the specific pairwise p-values should be interpreted as suggestive rather than confirmatory.
 
-**Replication of Phase 9C results.** Two pairs with direct Phase 9A comparisons showed near-perfect replication: warm (hot→cold on-axis) at 0.000 survival in both phases (diff = 0.000), and fermentation (grape→wine same-domain) at 0.991 vs 1.017 (diff = 0.026). This provides cross-phase validation of the pre-fill paradigm's measurement reliability.
+**Replication of Phase 9C results.** Two pairs with direct Phase 9C comparisons showed near-perfect replication: warm (hot→cold on-axis) at 0.000 survival in both phases (diff = 0.000), and fermentation (grape→wine same-domain) at 0.991 vs 1.017 (diff = 0.026). This provides cross-phase validation of the pre-fill paradigm's measurement reliability.
 
 > [FIGURE 10: Relation Class Survival] — Boxplot or violin plot showing bridge survival by relation class (unrelated, on-axis, same-domain). Include the Friedman p-value and note post-hoc correction status.
 
