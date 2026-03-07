@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering
+\caption{Control pair screening.}
+\label{tab:control}
+\small
+\begin{tabular}{llcc}
+\toprule
+    \multicolumn{4}{l}{\textbf{(a) Stapler--monsoon retrospective}} \\
+    \midrule
+    Model & Mean Jaccard & Bridge Freq & Status \\
+    \midrule
+    Claude Sonnet 4.6 & 0.292 & --- & fail \\
+    DeepSeek V3.2 & 0.212 & --- & fail \\
+    GPT-5.2 & 0.101 & --- & pass \\
+    \midrule
+    \multicolumn{4}{l}{\textbf{(b) New control-pair candidates (6 screening models)}} \\
+    \midrule
+    Pair & Top Waypoint & Mean Top Freq & Status \\
+    \midrule
+    turmeric / trigonometry & angle & 0.92 & 0/6 pass \\
+    barnacle / sonnet & rhyme & 0.87 & 0/6 pass \\
+    magnesium / ballet & choreography & 0.87 & 0/6 pass \\
+    accordion / stalactite & bellow & 0.93 & 0/6 pass \\
+\bottomrule
+\end{tabular}
+\end{table}

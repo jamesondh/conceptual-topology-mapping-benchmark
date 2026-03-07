@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{Headline claims at a glance.}
+\label{tab:claims}
+\small
+\begin{tabular}{l p{3.0cm} l l p{4.5cm} p{4.5cm}}
+\toprule
+ID & Claim & Tier & Models/Phases & Core Statistic & Key Qualification \\
+\midrule
+    R1 & Models have distinct, stable conceptual gaits & robust & 12 models, 11 families & Claude 0.578, GPT 0.258; 2.2x gap stable across 9,500+ runs & Gait rank order not perfectly preserved across protocol conditions (Kendall W = 0.840) \\
+    R2 & Conceptual navigation is fundamentally asymmetric (quasimetric) & robust & 12 models & Mean asymmetry 0.811; 87\% significant (p < 0.05); triangle inequality holds 91\% & Detectability resolution-dependent: falls below 0.60 threshold at 5 waypoints \\
+    R3 & Polysemy sense differentiation is genuine & robust & 4 original & Cross-pair Jaccard 0.011-0.062 for bank/bat/crane & --- \\
+    R4 & Hierarchical paths are compositional & robust & 4 original & 4.9x transitivity over random controls (0.175 vs 0.036) & --- \\
+    R5 & Controls validate cleanly & robust & 12 models & Nonsense Jaccard 0.062, random bridge freq 0\% & Weakest robust claim; LLMs find routes between any concepts at 7 waypoints; single-pair validation inadequate \\
+    R6 & Bridge concepts are bottlenecks, not associations & robust & 12 models & spectrum 1.00, metaphor 0.00, germination > plant; bridge freq most protocol-robust (>0.97) & New-model cohort bridge freq CI includes zero (diff -0.100, CI [-0.286, 0.089]) \\
+    R7 & Cue-strength gradient exists & robust & 4 original & 12/16 family/model combos show monotonic decrease; 3/4 families perfect & All failures in biological-growth family \\
+    O15 & Prediction accuracy degrades from characterization to mechanism & observed & 4 original & Phase 4: 81.3\%, Phase 5: 42.9\%, Phase 9: 20.0\% & Qualitative predictions succeed (\textasciitilde{}50\%); quantitative predictions fail (\textasciitilde{}0\%) \\
+    O25 & Bridge frequency is the most protocol-robust property & observed & 3 (claude, gpt, deepseek) & >0.97 across all waypoint/temperature conditions; ANOVA interaction p=0.886 & Tested on 3 models only \\
+    O30 & Gait rank ordering is largely stable across protocol conditions & observed & 3 (claude, gpt, deepseek) & Kendall W = 0.840 & GPT and DeepSeek swap in some conditions \\
+\bottomrule
+\end{tabular}
+\end{table}

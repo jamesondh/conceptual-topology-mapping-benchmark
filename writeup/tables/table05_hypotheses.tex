@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Hypothesis outcomes.}
+\label{tab:hypotheses}
+\small
+\begin{tabular}{cl c p{3.5cm} p{3.8cm} l}
+\toprule
+\# & Hypothesis & Phase & Predicted & Observed & Outcome \\
+\midrule
+    G20 & Route Exclusivity Predicts Bridge Fragility & 8 & Spearman rho < -0.70 (competitor count vs survival) & rho = 0.116 (opposite direction) & dead \\
+    G21 & Gemini Gradient Blindness & 8 & Gemini zeros on >= 5/10 gradient pairs, <= 2/10 causal & Reversed: 1/10 gradient zeros, 6/10 causal zeros & dead \\
+    G22 & Gait Normalization Rescues Distance Metrics & 8 & Cross-model r from \textasciitilde{}0.17 to >0.50 after normalization & r = 0.212 before and after (zero improvement) & dead \\
+    G23 & Dominance Ratio Predicts Bridge Fragility & 9 & Spearman rho > 0.50 (dominance ratio vs survival) & rho = 0.157, CI includes zero & dead \\
+    G24 & Gemini Transformation-Chain Blindness & 9 & Gemini transformation mean < 0.30, gradient > 0.45 & Reversed: transformation 0.667, gradient 0.293 & dead \\
+    G25 & Pre-Fill Facilitation Crossover Regression & 9 & Negative slope CI excluding zero; crossover at 0.40-0.50 & Slope CI [-6.748, 0.723] includes zero; crossover at 0.790 & partial \\
+    G26 & Bridge Bottleneck Generalization to New Models & 10 & Bridge freq CI would include zero & 4-model cohort diff -0.096, CI [-0.241, 0.064] includes zero & \textbf{resurrected} \\
+    G27 & Predicted Relation Class Ordering & 10 & On-axis < unrelated < same-domain in >= 5/8 pairs & Actual: unrelated (0.388) < on-axis (0.643) \textasciitilde{} same-domain (0.708); 1/8 pairs & dead \\
+\bottomrule
+\end{tabular}
+\end{table}

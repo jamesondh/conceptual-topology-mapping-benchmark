@@ -14,7 +14,7 @@ Phase 2 reversed all 21 reporting pairs across 4 models (840 reverse-direction r
 
 Phase 11A confirmed asymmetry across 4 additional models, all exceeding the 0.60 threshold: Mistral 0.729, DeepSeek 0.722, Cohere 0.718, Llama 4 Maverick 0.673. Phase 11C revealed a resolution-dependence qualification in the 3-model robustness subset (Claude, GPT, DeepSeek): only the 9-waypoint conditions cleared the 0.60 threshold (0.669–0.684); the 5-waypoint conditions (0.593–0.594) and the 7-waypoint baseline (0.599) did not. The asymmetry property is real but requires sufficient path length to manifest reliably — a measurement sensitivity finding, not a protocol artifact.
 
-> [FIGURE 5: Asymmetry Distribution] — Histogram of directional asymmetry values across all 84 pair/model combinations (Phase 2, 5 waypoints). Vertical line at 0.811 (mean). Almost no mass near 0.0. Annotated with the resolution-dependence finding from Phase 11C.
+<!-- See writeup/figures/fig05-asymmetry.pdf -->
 
 **Statistical caveat.** The 87% significance rate was computed at α = 0.05 across 84 independent tests with no explicit multiple-comparison correction. With Bonferroni correction (threshold ≈ 0.0006), the percentage would be lower, and the permutation test's resolution (1,000 resamples, minimum achievable p = 0.001) limits precision at corrected thresholds. The qualitative conclusion — that the vast majority of pair/model combinations show genuine asymmetry — is robust, but the specific 87% figure should be interpreted conservatively.
 
@@ -24,7 +24,7 @@ Phase 11A confirmed asymmetry across 4 additional models, all exceeding the 0.60
 
 The triangle inequality — d(A,C) ≤ d(A,B) + d(B,C) — was tested across three independent samples using navigational distance defined as 1 minus mean within-direction Jaccard similarity.
 
-> [TABLE 4: Triangle Inequality Replication]
+<!-- See writeup/tables/table04_triangle.tex -->
 
 | Phase | N Triangles | Models | % Holding | Violations |
 |-------|-------------|--------|-----------|------------|
@@ -50,7 +50,7 @@ If conceptual navigation merely produces plausible-sounding word chains, there i
 
 **Hierarchical triples showed 4.9× higher waypoint transitivity than random controls.** Mean transitivity for hierarchical triples was 0.175 (95% CI [0.112, 0.238]); for random controls, 0.036 (95% CI [0.011, 0.070]). The confidence intervals do not overlap. Bridge concepts appeared systematically for taxonomic triples — "dog" at 15–100% frequency on the animal→poodle path — and never for random controls ("stapler" at 0% on music→mathematics, "flamingo" at 0% on hot→cold).
 
-> [FIGURE 6: Compositional Structure] — (Left) Transitivity scores for hierarchical vs random triples, showing the 4.9× gap with non-overlapping CIs. (Right) Bridge frequency for taxonomic bridges vs random controls.
+<!-- See writeup/figures/fig06-compositional.pdf -->
 
 **Polysemy-extend triples** (bank→river→ocean) showed even higher bridge frequency (0.725) than hierarchical triples (0.456), reflecting the bottleneck effect of sense-mediated routing: once "bank" resolves to its geographic sense, "river" is the only natural waypoint en route to "ocean." Semantic-chain triples (music→harmony→mathematics, hot→energy→cold) showed intermediate transitivity (0.073) with strong model dependence — "harmony" appeared on 100% of Claude's music→mathematics paths but 0% of Gemini's.
 
@@ -64,7 +64,7 @@ Phases 4 and 5 converged on a characterization of what makes a concept function 
 
 **Off-axis associations fail universally.** "Metaphor" (associated with both language and thought) appeared at 0.00 on the language→thought path. "Energy" appeared at 0.00 on hot→cold. These concepts are associated with both endpoints but do not name the primary axis of connection.
 
-> [FIGURE 7: Bridge Taxonomy] — 2×2 grid showing bridge frequency by model for: bottleneck bridges (spectrum, deposit, sentence), off-axis associations (metaphor, energy), process vs object (germination vs plant), and too-central concepts (fire, water).
+<!-- See writeup/figures/fig07-bridge-taxonomy.pdf -->
 
 **Process-naming outperforms object-naming.** "Germination" (the process connecting seed to garden) outperformed "plant" (the object that inhabits both) in all four models: Claude 1.00 vs 0.00, GPT 0.95 vs 0.65, Grok 0.15 vs 0.00, Gemini 1.00 vs 0.00 (O4). The explanation parallels the spectrum/deposit pattern: "germination" names the *transformation* from seed to garden, adding directional information; "plant" names something already implied by both endpoints, adding no navigational value. Navigational salience depends on directional information content, not solely on generic associative strength.
 
@@ -98,7 +98,7 @@ Phase 5C tested whether bridge concepts create a convergence peak at the midpoin
 
 **Bridges anchor early, not at the midpoint.** Across 10 pairs and 4 models (40 positional profiles), the cross-model modal bridge position was 1–2 (0-indexed; the 2nd–3rd waypoint out of 7) for 8 of 10 pairs. The peak-detection contrast — bridge frequency at the modal position minus the mean of non-modal positions — was 0.345 (95% CI [0.224, 0.459]), significantly positive. The fixed-midpoint contrast was −0.080 (95% CI [−0.141, −0.024]), confirming that the Phase 5C W-shape null was a methodological artifact of the rigid midpoint assumption, not evidence against bridge positional structure.
 
-> [FIGURE 8: Bridge Position Profiles] — Heatmap or small-multiples showing bridge position distributions for 10 pairs across 4 models. Early-anchoring pattern highlighted, with the taxonomic exception annotated.
+<!-- See writeup/figures/fig08-bridge-positions.pdf -->
 
 **The taxonomic exception.** The sole departure from early anchoring was the hierarchical pair animal→poodle, where "dog" anchored at positions 4–5 across models. This late positioning reflects the structure of the taxonomic chain: the path from animal to poodle narrows progressively (mammal → carnivore → canine → dog → breed), and "dog" is the penultimate step, not an early waypoint. Taxonomic bridges reflect their position in the hierarchy rather than a universal early-anchoring tendency.
 

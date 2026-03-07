@@ -8,7 +8,7 @@ The early-anchoring pattern from Section 5.7 — bridge concepts cluster at posi
 
 **Pre-filling causally displaces bridge concepts.** In the primary incongruent condition, mean displacement across 8 pairs and 4 models was 0.515 (95% CI [0.357, 0.664], excluding zero); congruent and neutral conditions showed comparable magnitudes (0.436 and 0.536 respectively; see Section 6.2 for condition-level analysis). Bridge frequency dropped from 0.807 under unconstrained elicitation to 0.460 under pre-fill conditions — a 43% relative decline. The positional shift exceeded the mechanical +1 that would result from merely inserting a waypoint before the bridge, confirming genuine topological displacement rather than arithmetic position-bumping.
 
-> [FIGURE 9: Pre-Fill Displacement] — Paired bar chart: unconstrained vs pre-filled bridge frequency for 8 pairs, grouped by bridge type (heading, taxonomic, forced-crossing). Error bars show cross-model variance.
+<!-- See writeup/figures/fig09-prefill-displacement.pdf -->
 
 **Taxonomic bridges resist displacement.** The animal→poodle pair, where "dog" occupies a hierarchically determined mid-path position (Section 5.7), showed displacement of only 0.140 — less than a third of the 0.515 mean for heading-bridge pairs. The taxonomic bridge resists pre-fill perturbation because its position is structurally determined by the hierarchy (mammal → carnivore → canine → dog → breed), not by generation-order primacy. This confirms the distinction from Section 5.7: taxonomic bridges and heading bridges respond to different causal mechanisms.
 
@@ -65,7 +65,7 @@ Phase 10B refined the content-modulation finding from Section 6.2 by systematica
 
 **Replication of Phase 9C results.** Two pairs with direct Phase 9C comparisons showed near-perfect replication: warm (hot→cold on-axis) at 0.000 survival in both phases (diff = 0.000), and fermentation (grape→wine same-domain) at 0.991 vs 1.017 (diff = 0.026). This provides cross-phase validation of the pre-fill paradigm's measurement reliability.
 
-> [FIGURE 10: Relation Class Survival] — Boxplot or violin plot showing bridge survival by relation class (unrelated, on-axis, same-domain). Include the Friedman p-value and note post-hoc correction status.
+<!-- See writeup/figures/fig10-relation-class.pdf -->
 
 ## 6.4 Marginal Bridge Facilitation
 

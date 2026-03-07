@@ -8,7 +8,7 @@ Prediction accuracy across the benchmark follows a distinctive trajectory. The e
 
 Phase 8 achieved 24% (6/25 evaluable predictions), the lowest in the benchmark's history. Phase 9 achieved 20% (5/25). Combined across 50 evaluable predictions in the two most mechanism-focused phases, accuracy was 22%, with zero novel mechanistic predictions confirmed. The confirmed predictions clustered as replications of established structural facts (known bridges appeared at known frequencies, cross-model distance correlation remained low) and qualitative directional calls (Claude retained the most compact navigational profile, marginal bridges showed facilitation under congruent pre-fill). Every prediction that required a specific variable to explain a specific pattern — competitor count predicts fragility, gradient type predicts Gemini's deficit, gait normalization rescues cross-model distance — failed.
 
-> [FIGURE 11: Prediction Accuracy by Phase] — Line plot showing prediction accuracy across Phases 4–11. Annotate the descent from 81.3% (Phase 4, characterization) to 20–24% (Phases 8–9, mechanism). Include horizontal reference lines for replication (~80%), structural (~50%), and mechanistic (~15%) prediction types.
+<!-- See writeup/figures/fig11-prediction-accuracy.pdf -->
 
 The decline is not random degradation. It tracks a systematic shift in prediction type. Replication predictions — "will X hold in new data?" — succeed at approximately 80% across all phases. Structural predictions — "will X pattern generalize to new pairs/models?" — succeed at approximately 50%. Mechanistic predictions — "will variable Y explain pattern X?" — succeed at approximately 0–15%. The benchmark maps coarse geometry reliably but cannot predict fine-grained mechanism with single-variable models.
 
@@ -16,7 +16,7 @@ The decline is not random degradation. It tracks a systematic shift in predictio
 
 Across Phases 8–10, seven major follow-up predictions were falsified and one early false negative was later resurrected with additional data. These span different types — genuinely mechanistic (predicting which variable explains a pattern), model-deficit characterizations (predicting the mechanism behind Gemini's divergence), methodological (attempting to rescue a measurement approach), structural (testing whether a finding generalizes), and effect-direction (predicting the ordering of a known effect). Presenting them as a uniform class of "failed mechanism predictions" would be misleading; they failed for different reasons and teach different lessons.
 
-> [TABLE 5: Hypothesis Outcomes]
+<!-- See writeup/tables/table05_hypotheses.tex -->
 
 | # | Hypothesis | Phase | Predicted | Observed | Type |
 |---|-----------|-------|-----------|----------|------|

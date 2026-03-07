@@ -29,7 +29,7 @@ The range spans 2.9× from GPT (0.258) to Mistral (0.747). Gait is not bounded a
 
 **R2 (asymmetry) replicates universally.** All 12 models exceed the 0.60 directional asymmetry threshold: Phase 10A models ranged from 0.638 (MiniMax) to 0.785 (Llama 8B); Phase 11A models from 0.673 (Llama 4 Maverick) to 0.729 (Mistral). The quasimetric property — that forward and reverse paths share few waypoints — is universal across models from 11 independent training pipelines. The resolution-dependence caveat from Section 5.1 (asymmetry falls below threshold at 5 waypoints in the Phase 11C robustness subset) applies to the measurement, not the phenomenon.
 
-> [FIGURE 12: 12-Model Gait and Asymmetry] — Two-panel figure. Left: gait by model (12 bars, sorted by value). Right: asymmetry by model (12 bars). Horizontal line at the 0.60 asymmetry threshold.
+<!-- See writeup/figures/fig12-gait-asymmetry.pdf -->
 
 ## 8.2 The Structure/Content/Scale Hierarchy
 
@@ -41,7 +41,7 @@ The most informative result from the generality phases is not that structure rep
 
 **Scale differentiates.** Llama 3.1 8B Instruct is the sole outlier in bridge frequency: mean 0.200, compared to 0.717–0.817 for all frontier-scale models. Phase 11A provides a within-family comparison: Llama 4 Maverick (frontier-scale) shows bridge frequency of 0.724, while Llama 3.1 8B shows 0.200 — a 3.6× difference within the same model family. Both models have navigational structure (gait and asymmetry are present), but the small model navigates through different landmarks. Scale is the clearest observed differentiator in current data, though the threshold and the role of architecture remain open.
 
-> [FIGURE 13: Scale Effect] — Scatterplot of bridge frequency vs approximate model scale (log axis). Llama 8B is the clear outlier. All frontier-scale models cluster together.
+<!-- See writeup/figures/fig13-scale-effect.pdf -->
 
 **Connection to Karkada et al. (2025).** Karkada et al. proved that geometric structure in LLM representations arises inevitably from translation symmetry in co-occurrence statistics — structure that all models share because they train on similar data distributions. Our empirical finding of structure/content generality is consistent with this prediction: if geometric structure is determined by data statistics, then navigational structure derived from that geometry should also generalize. The scale effect suggests a minimum capacity threshold for extracting the full navigational structure from shared data statistics.
 

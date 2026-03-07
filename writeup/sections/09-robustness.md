@@ -6,7 +6,7 @@ The structural claims in Sections 4–8 rest on a specific elicitation protocol:
 
 The factorial analysis testing gait (intra-model Jaccard) against model identity, waypoint count, temperature, and their interaction produces the cleanest result in the benchmark:
 
-> [TABLE 6: ANOVA Results]
+<!-- See writeup/tables/table06_anova.tex -->
 
 | Factor | η² (SS Proportion) | p-value (approx.) |
 |--------|-------------------:|-------------------:|
@@ -35,7 +35,7 @@ Bridge frequency across all conditions:
 
 All conditions exceed 0.97. The lowest (5wp-t0.9 at 0.978) — the condition most likely to produce variability, with fewer waypoint slots and higher sampling randomness — is still essentially at ceiling. Bridge bottleneck structure is insensitive to both waypoint count and temperature. "Spectrum" for light→color and "warm" for hot→cold appear as obligatory landmarks regardless of how many total waypoints are available or how much randomness is introduced. "Sadness" for emotion→melancholy is near-obligatory, dipping to 0.933 in one condition (Claude at 9wp-t0.5) and 0.867 in another (GPT at 9wp-t0.9) but never absent.
 
-> [FIGURE 14: Robustness Heatmap] — 5×3 heatmap (conditions × metrics: gait, asymmetry, bridge frequency). Color intensity = metric value. Bridge frequency row is uniformly dark (high). Asymmetry row shows the resolution effect at 5 waypoints.
+<!-- See writeup/figures/fig14-robustness.pdf -->
 
 This result strengthens R6 (bridge bottlenecks) as the benchmark's most protocol-robust claim. The bottleneck phenomenon is not an artifact of long paths or low temperature — it persists even with short paths at high temperature.
 
@@ -79,7 +79,7 @@ This finding qualifies R2: the quasimetric property is real — individual model
 
 The most uncomfortable finding in the robustness analysis concerns the benchmark's control validation. Phase 11B tested 4 replacement control candidates — accordion–stalactite, turmeric–trigonometry, barnacle–sonnet, and magnesium–ballet — across 6 models. The result was decisive: 0 of 24 model–candidate cells passed either the frequency gate (< 0.15) or the entropy gate (> 5.0).
 
-> [TABLE 7: Control Pair Screening]
+<!-- See writeup/tables/table07_control.tex -->
 
 | Candidate | Max Top Freq | Min Entropy | Passes? |
 |-----------|------------:|------------:|:-------:|

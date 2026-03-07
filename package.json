@@ -65,7 +65,10 @@
     "robustness": "bun run experiments/11c-robustness.ts",
     "analyze-robustness": "bun run analysis/11c-robustness.ts",
     "phase11": "bun run experiments/11a-expanded-generality.ts && bun run analysis/11a-expanded-generality.ts && bun run experiments/11b-control-revision.ts && bun run analysis/11b-control-revision.ts && bun run experiments/11c-robustness.ts && bun run analysis/11c-robustness.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "manifest": "python3 writeup/scripts/build_manifest.py",
+    "figures": "python3 writeup/scripts/generate_figures.py",
+    "tables": "python3 writeup/scripts/generate_tables.py"
   },
   "dependencies": {
     "compromise": "^14.14.3",

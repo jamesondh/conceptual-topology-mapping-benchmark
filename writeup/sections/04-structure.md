@@ -23,13 +23,13 @@ The most robust finding in the benchmark is that each model navigates conceptual
 | Grok 4.1 Fast | 0.293 | Original | 1–9 |
 | GPT-5.2 | 0.258 | Original | 1–11 |
 
-> [FIGURE 2: Gait Spectrum] — Horizontal bar chart showing Jaccard consistency for all 12 models, ordered by gait value. Color-coded by provider family. Annotated for Mistral (highest, 0.747) and GPT (lowest, 0.258). Error bars show cross-pair variance.
+<!-- See writeup/figures/fig02-gait-spectrum.pdf -->
 
 At the extremes, Mistral produced near-deterministic paths on several pairs (Jaccard 0.936 on music→mathematics, 0.934 on hot→cold), while GPT's most consistent experimental pair (hot→cold, Jaccard 0.911 in Phase 1) was an outlier against its otherwise exploratory profile.
 
 **Temporal stability.** For the four core models (Claude, GPT, Grok, Gemini), gait consistency was measured across Phases 1 through 9 — a span of multiple days and over 9,500 runs. The gait ordering (Claude > Gemini > Grok > GPT) was preserved throughout. Claude's mean Jaccard remained within [0.55, 0.60] across all phases in which it was tested; GPT's remained within [0.24, 0.28]. No systematic drift was detected.
 
-> [FIGURE 3: Gait Stability] — For the 4 core models, gait consistency plotted across Phases 1–9 (x-axis: phase, y-axis: mean Jaccard). Demonstrates temporal stability of the gait ordering.
+<!-- See writeup/figures/fig03-gait-stability.pdf -->
 
 **Cross-architecture generality.** Gait was initially characterized on 4 models from 4 providers (Phase 1). Phase 10A added 4 models from 4 additional providers, all falling within the previously observed range (0.298–0.508). Phase 11A added 4 more models extending the range upward (Mistral 0.747). Across 12 models from 11 independent training pipelines, every model exhibited a characteristic gait, confirming that this is a universal property of LLM conceptual navigation rather than a quirk of the original cohort.
 
@@ -67,7 +67,7 @@ The starting-point hypothesis predicted a monotonic increase from position 1 to 
 
 **The dual-anchor interpretation.** Both endpoints exert "gravitational pull" on nearby waypoints. Position 1 (forward waypoint 1 vs. reverse waypoint 5) shows elevated overlap because both measurements sample from the neighborhood of concept A — the forward path's first step away from A and the reverse path's last step arriving at A draw from the same constrained vicinity. Position 5 shows even higher overlap for the same reason applied to concept B. The middle positions (2–4) form a valley because this is the region of maximum navigational freedom — unconstrained by either endpoint, dominated by model-specific and run-specific choices.
 
-> [FIGURE 4: Dual-Anchor U-Shape] — Line plot of mirror-match rate by position, broken out by category (antonym, identity, random, nonsense). The U-shape is visible for experimental categories; nonsense controls are flat near zero.
+<!-- See writeup/figures/fig04-dual-anchor.pdf -->
 
 **Category-dependent signatures.** The U-shape was not uniform across relationship types. Each category produced a distinctive convergence profile:
 

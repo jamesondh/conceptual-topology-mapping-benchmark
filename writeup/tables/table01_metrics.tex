@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Metric definitions.}
+\label{tab:metrics}
+\small
+\begin{tabular}{l p{5.0cm} c p{4.0cm}}
+\toprule
+Metric & Formal Definition & Range & Interpretation \\
+\midrule
+    Gait (Intra-model Jaccard) ($J_{\text{intra}}$) & Mean pairwise Jaccard similarity of waypoint sets across repeated runs of the same model on the same pair & $[0, 1]$ & Higher = more consistent/rigid navigation \\
+    Asymmetry Index ($A$) & 1 minus the mean cross-direction Jaccard (forward vs reverse waypoint sets) & $[0, 1]$ & Higher = more asymmetric paths; 0 = perfectly symmetric \\
+    Bridge Frequency ($f_{\text{bridge}}$) & Fraction of runs in which the predicted bridge concept appears in the waypoint sequence & $[0, 1]$ & Higher = more reliable bottleneck \\
+    Waypoint Transitivity ($T$) & Mean Jaccard similarity between the union of A-B and B-C waypoint sets and the A-C waypoint set & $[0, 1]$ & Higher = more compositional (A-C path reuses A-B and B-C concepts) \\
+    Positional Profile ($P(i)$) & Bridge frequency at each waypoint position i in the sequence & $[0, 1]$ per position & Reveals where bridges anchor in the navigational sequence \\
+    Triangle Inequality Excess ($E$) & d(A,B) + d(B,C) - d(A,C) where d = 1 - Jaccard & $(-\infty, \infty)$ & Positive = triangle inequality holds; negative = violation \\
+    Pre-fill Displacement ($\Delta_{f}$) & Change in bridge frequency when waypoint 1 is pre-filled vs unconstrained & $[-1, 1]$ & Negative = displacement; positive = facilitation \\
+\bottomrule
+\end{tabular}
+\end{table}

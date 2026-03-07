@@ -106,7 +106,7 @@ Lower entropy indicates concentrated, near-deterministic navigation; higher entr
 
 **Uniformity test.** Departure from a uniform waypoint distribution is assessed via chi-squared goodness-of-fit test (comparing observed waypoint counts against the expectation that all waypoints are equally likely), with *p*-values computed using the Wilson-Hilferty normal approximation. When testing multiple pairs, Bonferroni correction is applied at the pair level (dividing the significance threshold by the number of pairs tested). Pair-level rejection is assessed per model; aggregate summaries report the fraction of pairs where at least one model rejects uniformity at the corrected threshold.
 
-[TABLE 1: Metric Definitions]
+<!-- See writeup/tables/table01_metrics.tex -->
 
 | Metric | Formal Definition | Range | Interpretation | Key Limitation |
 |--------|------------------|-------|----------------|----------------|
@@ -165,7 +165,7 @@ After canonicalization, duplicate waypoints within a single run are removed (pre
 
 Twelve models from 11 independent training pipelines were tested across the benchmark's 11 phases, all accessed via the OpenRouter API for a uniform interface. Models were added incrementally as the benchmark expanded:
 
-[TABLE 2: Model Summary]
+<!-- See writeup/tables/table02_models.tex -->
 
 | Model | Provider | OpenRouter ID | Approx. Scale | Cohort | Phases |
 |-------|----------|---------------|---------------|--------|--------|
@@ -195,7 +195,7 @@ Twelve models from 11 independent training pipelines were tested across the benc
 
 The benchmark followed an exploration-first methodology: each phase was designed to follow the most interesting signal from the previous phase's findings. This produced a non-linear progression through the space of possible experiments, with the direction of inquiry determined by data rather than a fixed plan. Eleven phases were completed, comprising approximately 21,540 total API runs.
 
-[TABLE 3: Phase Summary]
+<!-- See writeup/tables/table03_phases.tex -->
 
 | Phase | Name | New Runs | Key Question | Primary Finding |
 |-------|------|----------|--------------|-----------------|

@@ -72,11 +72,11 @@ This paper makes six contributions, spanning paradigm design, empirical findings
 
 6. **29 documented dead ends** as honest accounting of the benchmark's learning curve. Failed predictions — "metaphor" at frequency 0.00 for language-to-thought, gait normalization producing 0.000 improvement, three successive Gemini deficit characterizations all falsified — contain more methodological information than several of the successful findings. The graveyard is a methodological contribution, not a failure record.
 
-> [TABLE 0: Headline Claims at a Glance] — Claim, evidence tier ([robust]/[observed]/[qualified]), models and phases supporting, core statistic, key qualification. One row per major claim (R1-R7 + O15, O25, O30).
+<!-- See writeup/tables/table00_claims.tex -->
 
-> [FIGURE 0: "Same Map, Different Routes"] — For 2-3 canonical pairs (e.g., music-mathematics, love-death), show the full waypoint trajectories for all 12 models side by side. Same endpoints, divergent paths. Central visual claim.
+<!-- See writeup/figures/fig00-same-map-different-routes.pdf (placeholder — requires manual design) -->
 
-> [FIGURE 1: Overview] — Schematic of the benchmark paradigm. Left: waypoint elicitation prompt. Center: example paths from 4 models for music-mathematics. Right: derived metrics (gait, asymmetry, bridge frequency, triangle inequality).
+<!-- See writeup/figures/fig01-benchmark-overview.pdf (placeholder — requires TikZ/manual design) -->
 
 ## 1.4 Paper Structure
 
