@@ -217,7 +217,7 @@ def build_fig04_dual_anchor() -> dict:
 
 
 def build_fig05_asymmetry() -> dict:
-    """Asymmetry index values from reversal-metrics.json, excluding controls."""
+    """Asymmetry index values from reversal-metrics.json, ALL pairs including controls."""
     print("  fig05_asymmetry ...")
 
     data = load_json("reversal-metrics.json")
@@ -229,8 +229,6 @@ def build_fig05_asymmetry() -> dict:
     entries = []
 
     for pm in data.get("pairModelMetrics", []):
-        if is_control_pair(pm["pairId"]):
-            continue
         ai = pm.get("asymmetryIndex")
         if ai is not None:
             per_model[pm["modelId"]].append(ai)
@@ -254,6 +252,32 @@ def build_fig05_asymmetry() -> dict:
     }
 
 
+def classify_triple(triple_id: str) -> str:
+    """Classify a triple as 'hierarchical', 'random', or 'other'.
+
+    Hierarchical: taxonomic/hierarchical bridges (animal-dog-poodle,
+    emotion-nostalgia-melancholy, music-harmony-mathematics).
+    Random controls: stapler or flamingo bridges (music-stapler-mathematics,
+    hot-flamingo-cold).
+    Other: everything else (hot-energy-cold, beyonce-justice-erosion,
+    bank-river-ocean).
+    """
+    HIERARCHICAL_IDS = {
+        "triple-animal-dog-poodle",
+        "triple-emotion-nostalgia-melancholy",
+        "triple-music-harmony-mathematics",
+    }
+    RANDOM_IDS = {
+        "triple-music-stapler-mathematics",
+        "triple-hot-flamingo-cold",
+    }
+    if triple_id in HIERARCHICAL_IDS:
+        return "hierarchical"
+    if triple_id in RANDOM_IDS:
+        return "random"
+    return "other"
+
+
 def build_fig06_compositional() -> dict:
     """Transitivity and bridge frequency from transitivity-metrics.json."""
     print("  fig06_compositional ...")
@@ -265,8 +289,7 @@ def build_fig06_compositional() -> dict:
     entries = []
     for tm in data.get("tripleModelMetrics", []):
         tid = tm["tripleId"]
-        is_control = tid.endswith("-stapler-mathematics") or tid.endswith("-flamingo-cold") \
-            or "stapler" in tid or "flamingo" in tid
+        triple_type = classify_triple(tid)
         entries.append({
             "tripleId": tid,
             "modelId": tm["modelId"],
@@ -275,7 +298,9 @@ def build_fig06_compositional() -> dict:
             "bridgeConceptAppears": tm.get("bridgeConceptAppears"),
             "triangleInequalityHolds": tm.get("triangleInequalityHolds"),
             "triangleSlack": tm.get("triangleSlack"),
-            "isControl": is_control,
+            "tripleType": triple_type,
+            # Keep isControl for backward compatibility
+            "isControl": triple_type == "random",
         })
 
     return {"entries": entries}
@@ -284,39 +309,61 @@ def build_fig06_compositional() -> dict:
 def build_fig07_bridge_taxonomy() -> dict:
     """Bridge taxonomy data from targeted-bridges, cue-strength, and too-central.
 
-    Three categories:
-    - bottleneck bridges (spectrum, deposit, sentence) from targeted-bridges-metrics.json
-    - process vs object (germination vs plant) from cue-strength-metrics.json
-    - too-central (fire, water) from too-central-metrics.json
+    Four panels:
+    1. Bottleneck bridges (spectrum, deposit, sentence) from targeted-bridges
+    2. Off-axis associations (metaphor, energy) from targeted-bridges
+    3. Process vs object (germination vs plant) from cue-strength
+    4. Too-central (fire, water) from too-central
     """
     print("  fig07_bridge_taxonomy ...")
 
     result = {}
 
-    # --- Targeted bridges (bottleneck bridges) ---
+    # --- Targeted bridges: split into bottleneck vs off-axis ---
+    # Bottleneck: spectrum, deposit (+ other high-frequency bridges)
+    # Off-axis: metaphor, chandelier, calendar (associative but not navigational)
+    BOTTLENECK_BRIDGES = {"spectrum", "deposit", "forest"}
+    OFF_AXIS_BRIDGES = {"metaphor", "chandelier", "calendar", "nostalgia"}
     targeted = load_json("targeted-bridges-metrics.json")
     if targeted:
         bottleneck = []
+        off_axis = []
         for tm in targeted.get("tripleModelMetrics", []):
-            bottleneck.append({
+            entry = {
                 "tripleId": tm["tripleId"],
                 "modelId": tm["modelId"],
                 "bridgeConceptFrequency": tm.get("bridgeConceptFrequency"),
                 "bridgeConceptAppears": tm.get("bridgeConceptAppears"),
                 "waypointTransitivity": tm.get("waypointTransitivity"),
-            })
+            }
+            # Extract bridge name from tripleId: e.g. p4-light-spectrum-color -> spectrum
+            parts = tm["tripleId"].split("-")
+            bridge_name = parts[2] if len(parts) >= 4 else ""
+            entry["bridgeName"] = bridge_name
+            if bridge_name in BOTTLENECK_BRIDGES:
+                bottleneck.append(entry)
+            elif bridge_name in OFF_AXIS_BRIDGES:
+                off_axis.append(entry)
+            else:
+                # Include river as bottleneck (bank-river-ocean)
+                bottleneck.append(entry)
         result["bottleneck"] = bottleneck
+        result["offAxis"] = off_axis
 
     # --- Cue strength (process vs object) ---
     cue = load_json("cue-strength-metrics.json")
     if cue:
         cue_entries = []
         for tm in cue.get("tripleModelMetrics", []):
+            # Extract bridge name from tripleId: e.g. p5a-seed-germination-garden -> germination
+            parts = tm["tripleId"].split("-")
+            bridge_name = parts[2] if len(parts) >= 4 else ""
             cue_entries.append({
                 "tripleId": tm["tripleId"],
                 "modelId": tm["modelId"],
                 "bridgeConceptFrequency": tm.get("bridgeConceptFrequency"),
                 "bridgeConceptAppears": tm.get("bridgeConceptAppears"),
+                "bridgeName": bridge_name,
             })
         result["cueStrength"] = cue_entries
 
@@ -1124,9 +1171,22 @@ def build_table07_control() -> dict:
             "meanTopFrequency": safe_mean(info["topFreqs"]),
         })
 
+    # --- Stapler-monsoon retrospective (panel a) ---
+    retrospective = []
+    for entry in data.get("staplerMonsoonRetrospective", []):
+        retrospective.append({
+            "modelId": entry["modelId"],
+            "topWaypoint": entry.get("topWaypoint"),
+            "topFrequency": entry.get("topFrequency"),
+            "entropy": entry.get("entropy"),
+            "passesR5": entry.get("passesR5"),
+            "cohort": entry.get("cohort"),
+        })
+
     return {
         "screeningResults": screening,
         "candidateSummary": summary,
+        "retrospective": retrospective,
     }
 
 

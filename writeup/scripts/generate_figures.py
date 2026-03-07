@@ -159,35 +159,40 @@ def generate_fig03(manifest, plt):
 def generate_fig04(manifest, plt):
     data = manifest["fig04_dual_anchor"]["byCategory"]
 
-    experimental = ["antonym", "hierarchy", "synonym", "anchor", "cross", "polysemy"]
-    controls = ["control-identity", "control-nonsense", "control-random"]
+    # Paper specifies exactly 4 categories:
+    # antonym (main experimental signal) and 3 control conditions
+    experimental = ["antonym"]
+    controls = ["control-identity", "control-random", "control-nonsense"]
 
     positions = np.arange(1, 6)
 
     fig, ax = plt.subplots(figsize=(FIG_WIDTH_DOUBLE, FIG_HEIGHT_DEFAULT))
 
-    # Colour cycle for experimental categories
-    cmap = plt.cm.Set2
-    for i, cat in enumerate(experimental):
-        if cat in data:
-            vals = data[cat]["perPositionMatchRate"]
-            ax.plot(positions, vals, marker="o", label=cat.capitalize(),
-                    color=cmap(i / len(experimental)), linewidth=1.5, markersize=4)
+    # Antonym: solid line, main signal
+    if "antonym" in data:
+        vals = data["antonym"]["perPositionMatchRate"]
+        ax.plot(positions, vals, marker="o", label="Antonym",
+                color="#7C3AED", linewidth=2.0, markersize=5)
 
-    # Controls: dashed
-    grey_shades = ["#999999", "#bbbbbb", "#dddddd"]
-    for i, cat in enumerate(controls):
+    # Controls: dashed lines
+    control_styles = {
+        "control-identity": ("#10B981", "Identity"),
+        "control-random": ("#F59E0B", "Random"),
+        "control-nonsense": ("#EF4444", "Nonsense"),
+    }
+    for cat in controls:
         if cat in data:
+            color, label = control_styles[cat]
             vals = data[cat]["perPositionMatchRate"]
             ax.plot(positions, vals, marker="s", linestyle="--",
-                    label=cat, color=grey_shades[i % len(grey_shades)],
+                    label=label, color=color,
                     linewidth=1.0, markersize=3)
 
     ax.set_xlabel("Waypoint Position")
     ax.set_ylabel("Mirror-Match Rate")
     ax.set_title("Fig 4. Dual-Anchor Mirror Match by Position")
     ax.set_xticks(positions)
-    ax.legend(fontsize=FONT_SIZE_TICK - 1, loc="upper left", frameon=False, ncol=2)
+    ax.legend(fontsize=FONT_SIZE_TICK, loc="upper left", frameon=False)
     fig.tight_layout()
     _save(fig, "fig04-dual-anchor", plt)
 
@@ -225,37 +230,39 @@ def generate_fig05(manifest, plt):
 def generate_fig06(manifest, plt):
     entries = manifest["fig06_compositional"]["entries"]
 
-    # Split into hierarchical (not control) and control
-    hier_trans = [e["waypointTransitivity"] for e in entries if not e["isControl"]]
-    ctrl_trans = [e["waypointTransitivity"] for e in entries if e["isControl"]]
+    # Use tripleType field: "hierarchical" vs "random" only (skip "other")
+    hier_trans = [e["waypointTransitivity"] for e in entries
+                  if e.get("tripleType") == "hierarchical"]
+    rand_trans = [e["waypointTransitivity"] for e in entries
+                  if e.get("tripleType") == "random"]
 
     hier_bridge = [e["bridgeConceptFrequency"] for e in entries
-                   if not e["isControl"]]
-    ctrl_bridge = [e["bridgeConceptFrequency"] for e in entries
-                   if e["isControl"]]
+                   if e.get("tripleType") == "hierarchical"]
+    rand_bridge = [e["bridgeConceptFrequency"] for e in entries
+                   if e.get("tripleType") == "random"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(FIG_WIDTH_DOUBLE, FIG_HEIGHT_DEFAULT))
 
     # Left panel: transitivity
-    cats = ["Taxonomic", "Control"]
-    means_t = [np.mean(hier_trans), np.mean(ctrl_trans)]
+    cats = ["Hierarchical", "Random Control"]
+    means_t = [np.mean(hier_trans), np.mean(rand_trans)]
     sems_t = [np.std(hier_trans) / np.sqrt(len(hier_trans)),
-              np.std(ctrl_trans) / np.sqrt(len(ctrl_trans))]
+              np.std(rand_trans) / np.sqrt(len(rand_trans))]
     bars1 = ax1.bar(cats, means_t, yerr=sems_t, color=["#7C3AED", "#999999"],
                     edgecolor="white", capsize=4)
     ax1.set_ylabel("Waypoint Transitivity")
     ax1.set_title("Transitivity")
 
     # Right panel: bridge frequency
-    means_b = [np.mean(hier_bridge), np.mean(ctrl_bridge)]
+    means_b = [np.mean(hier_bridge), np.mean(rand_bridge)]
     sems_b = [np.std(hier_bridge) / np.sqrt(len(hier_bridge)),
-              np.std(ctrl_bridge) / np.sqrt(len(ctrl_bridge))]
+              np.std(rand_bridge) / np.sqrt(len(rand_bridge))]
     bars2 = ax2.bar(cats, means_b, yerr=sems_b, color=["#10B981", "#999999"],
                     edgecolor="white", capsize=4)
     ax2.set_ylabel("Bridge Concept Frequency")
     ax2.set_title("Bridge Frequency")
 
-    fig.suptitle("Fig 6. Compositional Structure: Taxonomic vs. Control",
+    fig.suptitle("Fig 6. Compositional Structure: Hierarchical vs. Random",
                  fontsize=FONT_SIZE_TITLE)
     fig.tight_layout(rect=[0, 0, 1, 0.93])
     _save(fig, "fig06-compositional", plt)
@@ -268,48 +275,124 @@ def generate_fig06(manifest, plt):
 def generate_fig07(manifest, plt):
     tax = manifest["fig07_bridge_taxonomy"]
 
-    # We have 4 subcategories spread across 3 keys:
-    # bottleneck, cueStrength, tooCentral (which includes too-central,
-    # obvious-useful, and boundary)
-    panels = {}
-
-    # bottleneck: aggregate bridge freq per model
-    _agg = defaultdict(list)
-    for e in tax["bottleneck"]:
-        _agg[e["modelId"]].append(e["bridgeConceptFrequency"])
-    panels["Bottleneck"] = {m: np.mean(v) for m, v in _agg.items()}
-
-    # cueStrength
-    _agg = defaultdict(list)
-    for e in tax["cueStrength"]:
-        _agg[e["modelId"]].append(e["bridgeConceptFrequency"])
-    panels["Cue-Strength"] = {m: np.mean(v) for m, v in _agg.items()}
-
-    # tooCentral -- split by category
-    too_central_entries = defaultdict(lambda: defaultdict(list))
-    for e in tax["tooCentral"]:
-        too_central_entries[e["category"]][e["modelId"]].append(e["bridgeFrequency"])
-    for cat_key in ["too-central", "obvious-useful", "boundary"]:
-        nice_name = cat_key.replace("-", " ").title()
-        if cat_key in too_central_entries:
-            panels[nice_name] = {m: np.mean(v)
-                                 for m, v in too_central_entries[cat_key].items()}
-
-    # Pick 4 panels (may have 5 -- take first 4 for 2x2 grid)
-    panel_names = list(panels.keys())[:4]
+    # 4 panels per paper outline:
+    # Panel 1 (Bottleneck): spectrum, deposit, sentence frequencies per model
+    # Panel 2 (Off-axis): metaphor, energy frequencies per model
+    # Panel 3 (Process vs Object): germination vs plant per model
+    # Panel 4 (Too-central): fire, water frequencies per model
 
     fig, axes = plt.subplots(2, 2, figsize=(FIG_WIDTH_DOUBLE, FIG_HEIGHT_DEFAULT * 1.6))
 
-    for ax, panel_name in zip(axes.flat, panel_names):
-        pdata = panels[panel_name]
-        models_present = [m for m in ORIGINAL_MODELS if m in pdata]
-        vals = [pdata[m] for m in models_present]
-        colors = [MODEL_COLORS.get(m, "#888") for m in models_present]
-        names = [MODEL_NAMES.get(m, m).split()[0] for m in models_present]
-        ax.bar(names, vals, color=colors, edgecolor="white", linewidth=0.5)
-        ax.set_title(panel_name, fontsize=FONT_SIZE_LABEL)
-        ax.set_ylim(0, 1.05)
-        ax.set_ylabel("Bridge Freq.")
+    # --- Panel 1: Bottleneck bridges ---
+    ax1 = axes[0, 0]
+    # Filter to specific bottleneck bridges: spectrum, deposit, sentence
+    # sentence comes from cue-strength (word-sentence-paragraph)
+    bottleneck_bridges = {"spectrum", "deposit", "river"}
+    bottleneck_data = defaultdict(lambda: defaultdict(list))
+    for e in tax.get("bottleneck", []):
+        bridge = e.get("bridgeName", "")
+        if bridge in bottleneck_bridges:
+            bottleneck_data[bridge][e["modelId"]].append(e["bridgeConceptFrequency"])
+    # Also add sentence from cue-strength
+    for e in tax.get("cueStrength", []):
+        if e.get("bridgeName") == "sentence":
+            bottleneck_data["sentence"][e["modelId"]].append(e["bridgeConceptFrequency"])
+
+    bridge_names_p1 = sorted(bottleneck_data.keys())
+    models_p1 = [m for m in ORIGINAL_MODELS
+                 if any(m in bottleneck_data[b] for b in bridge_names_p1)]
+    x_p1 = np.arange(len(models_p1))
+    width_p1 = 0.8 / max(len(bridge_names_p1), 1)
+    colors_p1 = ["#7C3AED", "#10B981", "#F59E0B", "#EF4444"]
+    for i, bridge in enumerate(bridge_names_p1):
+        vals = [np.mean(bottleneck_data[bridge].get(m, [0])) for m in models_p1]
+        ax1.bar(x_p1 + i * width_p1, vals, width_p1, label=bridge.capitalize(),
+                color=colors_p1[i % len(colors_p1)], edgecolor="white", linewidth=0.5)
+    ax1.set_xticks(x_p1 + width_p1 * (len(bridge_names_p1) - 1) / 2)
+    ax1.set_xticklabels([MODEL_NAMES.get(m, m).split()[0] for m in models_p1],
+                        fontsize=FONT_SIZE_TICK - 1)
+    ax1.set_title("Bottleneck Bridges", fontsize=FONT_SIZE_LABEL)
+    ax1.set_ylim(0, 1.05)
+    ax1.set_ylabel("Bridge Freq.")
+    ax1.legend(fontsize=FONT_SIZE_TICK - 2, frameon=False)
+
+    # --- Panel 2: Off-axis associations ---
+    ax2 = axes[0, 1]
+    off_axis_bridges = {"metaphor", "chandelier", "calendar"}
+    off_axis_data = defaultdict(lambda: defaultdict(list))
+    for e in tax.get("offAxis", []):
+        bridge = e.get("bridgeName", "")
+        if bridge in off_axis_bridges:
+            off_axis_data[bridge][e["modelId"]].append(e["bridgeConceptFrequency"])
+    # Also check cue-strength for energy-related bridges
+    # "energy" from hot-energy-cold is in transitivity, not cue-strength;
+    # use what we have from off-axis targeted bridges
+    bridge_names_p2 = sorted(off_axis_data.keys())
+    models_p2 = [m for m in ORIGINAL_MODELS
+                 if any(m in off_axis_data[b] for b in bridge_names_p2)]
+    x_p2 = np.arange(len(models_p2))
+    width_p2 = 0.8 / max(len(bridge_names_p2), 1)
+    for i, bridge in enumerate(bridge_names_p2):
+        vals = [np.mean(off_axis_data[bridge].get(m, [0])) for m in models_p2]
+        ax2.bar(x_p2 + i * width_p2, vals, width_p2, label=bridge.capitalize(),
+                color=colors_p1[i % len(colors_p1)], edgecolor="white", linewidth=0.5)
+    ax2.set_xticks(x_p2 + width_p2 * (max(len(bridge_names_p2), 1) - 1) / 2)
+    ax2.set_xticklabels([MODEL_NAMES.get(m, m).split()[0] for m in models_p2],
+                        fontsize=FONT_SIZE_TICK - 1)
+    ax2.set_title("Off-Axis Associations", fontsize=FONT_SIZE_LABEL)
+    ax2.set_ylim(0, 1.05)
+    ax2.set_ylabel("Bridge Freq.")
+    ax2.legend(fontsize=FONT_SIZE_TICK - 2, frameon=False)
+
+    # --- Panel 3: Process vs Object (germination vs plant) ---
+    ax3 = axes[1, 0]
+    process_bridges = {"germination", "plant"}
+    process_data = defaultdict(lambda: defaultdict(list))
+    for e in tax.get("cueStrength", []):
+        bridge = e.get("bridgeName", "")
+        if bridge in process_bridges:
+            process_data[bridge][e["modelId"]].append(e["bridgeConceptFrequency"])
+    bridge_names_p3 = sorted(process_data.keys())
+    models_p3 = [m for m in ORIGINAL_MODELS
+                 if any(m in process_data[b] for b in bridge_names_p3)]
+    x_p3 = np.arange(len(models_p3))
+    width_p3 = 0.8 / max(len(bridge_names_p3), 1)
+    for i, bridge in enumerate(bridge_names_p3):
+        vals = [np.mean(process_data[bridge].get(m, [0])) for m in models_p3]
+        ax3.bar(x_p3 + i * width_p3, vals, width_p3, label=bridge.capitalize(),
+                color=colors_p1[i % len(colors_p1)], edgecolor="white", linewidth=0.5)
+    ax3.set_xticks(x_p3 + width_p3 * (max(len(bridge_names_p3), 1) - 1) / 2)
+    ax3.set_xticklabels([MODEL_NAMES.get(m, m).split()[0] for m in models_p3],
+                        fontsize=FONT_SIZE_TICK - 1)
+    ax3.set_title("Process vs. Object", fontsize=FONT_SIZE_LABEL)
+    ax3.set_ylim(0, 1.05)
+    ax3.set_ylabel("Bridge Freq.")
+    ax3.legend(fontsize=FONT_SIZE_TICK - 2, frameon=False)
+
+    # --- Panel 4: Too-central (fire, water) ---
+    ax4 = axes[1, 1]
+    tc_bridges = {"fire", "water"}
+    tc_data = defaultdict(lambda: defaultdict(list))
+    for e in tax.get("tooCentral", []):
+        bridge = e.get("candidateBridge", "")
+        if bridge in tc_bridges:
+            tc_data[bridge][e["modelId"]].append(e["bridgeFrequency"])
+    bridge_names_p4 = sorted(tc_data.keys())
+    models_p4 = [m for m in ORIGINAL_MODELS
+                 if any(m in tc_data[b] for b in bridge_names_p4)]
+    x_p4 = np.arange(len(models_p4))
+    width_p4 = 0.8 / max(len(bridge_names_p4), 1)
+    for i, bridge in enumerate(bridge_names_p4):
+        vals = [np.mean(tc_data[bridge].get(m, [0])) for m in models_p4]
+        ax4.bar(x_p4 + i * width_p4, vals, width_p4, label=bridge.capitalize(),
+                color=colors_p1[i % len(colors_p1)], edgecolor="white", linewidth=0.5)
+    ax4.set_xticks(x_p4 + width_p4 * (max(len(bridge_names_p4), 1) - 1) / 2)
+    ax4.set_xticklabels([MODEL_NAMES.get(m, m).split()[0] for m in models_p4],
+                        fontsize=FONT_SIZE_TICK - 1)
+    ax4.set_title("Too-Central", fontsize=FONT_SIZE_LABEL)
+    ax4.set_ylim(0, 1.05)
+    ax4.set_ylabel("Bridge Freq.")
+    ax4.legend(fontsize=FONT_SIZE_TICK - 2, frameon=False)
 
     fig.suptitle("Fig 7. Bridge Taxonomy: Frequency by Category",
                  fontsize=FONT_SIZE_TITLE)
@@ -350,7 +433,7 @@ def generate_fig08(manifest, plt):
     im = ax.imshow(mat, aspect="auto", cmap=cmap, vmin=0, vmax=1)
 
     ax.set_xticks(range(max_pos))
-    ax.set_xticklabels([f"Pos {i}" for i in range(max_pos)], fontsize=FONT_SIZE_TICK - 1)
+    ax.set_xticklabels([f"Pos {i + 1}" for i in range(max_pos)], fontsize=FONT_SIZE_TICK - 1)
     ax.set_yticks(range(len(row_labels)))
     ax.set_yticklabels(row_labels, fontsize=FONT_SIZE_TICK - 2)
     ax.set_xlabel("Waypoint Position")

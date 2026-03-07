@@ -233,6 +233,86 @@
         "pValue": 0
       },
       {
+        "pairId": "control-random-stapler-monsoon",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.9452777777777779,
+        "asymmetryCI": [
+          0.9359722222222223,
+          0.9533333333333334
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-stapler-monsoon",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.9675,
+        "asymmetryCI": [
+          0.9594444444444445,
+          0.975
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-stapler-monsoon",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9409722222222223,
+        "asymmetryCI": [
+          0.9312500000000001,
+          0.951388888888889
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-stapler-monsoon",
+        "modelId": "claude",
+        "asymmetryIndex": 0.9926388888888888,
+        "asymmetryCI": [
+          0.9880555555555556,
+          0.9965277777777778
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-identity-apple",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.5696031746031738,
+        "asymmetryCI": [
+          0.5210515873015864,
+          0.6122420634920628
+        ],
+        "pValue": 0.862
+      },
+      {
+        "pairId": "control-identity-apple",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.5334523809523803,
+        "asymmetryCI": [
+          0.5038095238095229,
+          0.5623809523809518
+        ],
+        "pValue": 0.961
+      },
+      {
+        "pairId": "control-identity-apple",
+        "modelId": "grok",
+        "asymmetryIndex": 0.7039880952380952,
+        "asymmetryCI": [
+          0.6667261904761903,
+          0.7420238095238094
+        ],
+        "pValue": 0.785
+      },
+      {
+        "pairId": "control-identity-apple",
+        "modelId": "claude",
+        "asymmetryIndex": 0.01666666666666683,
+        "asymmetryCI": [
+          0.00666666666666671,
+          0.02666666666666684
+        ],
+        "pValue": 0.64
+      },
+      {
         "pairId": "synonym-cemetery-graveyard",
         "modelId": "gemini",
         "asymmetryIndex": 0.6708531746031741,
@@ -349,6 +429,46 @@
         "asymmetryCI": [
           0.8888888888888892,
           0.8888888888888892
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-origami-gravity",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.8783333333333334,
+        "asymmetryCI": [
+          0.8459920634920636,
+          0.9082539682539683
+        ],
+        "pValue": 0.018
+      },
+      {
+        "pairId": "control-random-origami-gravity",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.9130158730158731,
+        "asymmetryCI": [
+          0.8871428571428572,
+          0.9340873015873016
+        ],
+        "pValue": 0.22
+      },
+      {
+        "pairId": "control-random-origami-gravity",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9436507936507936,
+        "asymmetryCI": [
+          0.9239285714285714,
+          0.9605555555555556
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-origami-gravity",
+        "modelId": "claude",
+        "asymmetryIndex": 1,
+        "asymmetryCI": [
+          1,
+          1
         ],
         "pValue": 0
       },
@@ -513,6 +633,86 @@
         "pValue": 0
       },
       {
+        "pairId": "control-random-umbrella-photosynthesis",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.9244444444444445,
+        "asymmetryCI": [
+          0.9080555555555556,
+          0.9405555555555556
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-umbrella-photosynthesis",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.8570634920634923,
+        "asymmetryCI": [
+          0.8359523809523811,
+          0.8767460317460319
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-umbrella-photosynthesis",
+        "modelId": "grok",
+        "asymmetryIndex": 0.810357142857143,
+        "asymmetryCI": [
+          0.7853174603174605,
+          0.8361111111111111
+        ],
+        "pValue": 0.001
+      },
+      {
+        "pairId": "control-random-umbrella-photosynthesis",
+        "modelId": "claude",
+        "asymmetryIndex": 0.7103174603174605,
+        "asymmetryCI": [
+          0.692261904761905,
+          0.7305555555555557
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-telescope-jealousy",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.7375,
+        "asymmetryCI": [
+          0.7285714285714286,
+          0.7446428571428572
+        ],
+        "pValue": 0.001
+      },
+      {
+        "pairId": "control-random-telescope-jealousy",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.7965873015873017,
+        "asymmetryCI": [
+          0.7561507936507939,
+          0.8321825396825397
+        ],
+        "pValue": 0.034
+      },
+      {
+        "pairId": "control-random-telescope-jealousy",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9286111111111113,
+        "asymmetryCI": [
+          0.9169444444444446,
+          0.9400000000000001
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-telescope-jealousy",
+        "modelId": "claude",
+        "asymmetryIndex": 0.8758333333333335,
+        "asymmetryCI": [
+          0.8575000000000002,
+          0.8930555555555557
+        ],
+        "pValue": 0
+      },
+      {
         "pairId": "hierarchy-animal-poodle",
         "modelId": "gemini",
         "asymmetryIndex": 0.7706349206349201,
@@ -593,6 +793,46 @@
         "pValue": 0
       },
       {
+        "pairId": "control-random-shoelace-democracy",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.8982539682539683,
+        "asymmetryCI": [
+          0.8785714285714287,
+          0.916825396825397
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-shoelace-democracy",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.935,
+        "asymmetryCI": [
+          0.9183333333333334,
+          0.9497222222222222
+        ],
+        "pValue": 0.015
+      },
+      {
+        "pairId": "control-random-shoelace-democracy",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9338095238095239,
+        "asymmetryCI": [
+          0.9142857142857144,
+          0.9497619047619048
+        ],
+        "pValue": 0.011
+      },
+      {
+        "pairId": "control-random-shoelace-democracy",
+        "modelId": "claude",
+        "asymmetryIndex": 0.9541666666666667,
+        "asymmetryCI": [
+          0.9377777777777778,
+          0.9691666666666666
+        ],
+        "pValue": 0
+      },
+      {
         "pairId": "anchor-skull-garden",
         "modelId": "gemini",
         "asymmetryIndex": 0.9202777777777779,
@@ -629,6 +869,46 @@
         "asymmetryCI": [
           0.8391666666666668,
           0.8686111111111112
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-nonsense-xkplm-qrvzt",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.9958333333333333,
+        "asymmetryCI": [
+          0.9916666666666667,
+          0.9994444444444445
+        ],
+        "pValue": 0.007
+      },
+      {
+        "pairId": "control-nonsense-xkplm-qrvzt",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.9905555555555555,
+        "asymmetryCI": [
+          0.9861111111111112,
+          0.995
+        ],
+        "pValue": 0.606
+      },
+      {
+        "pairId": "control-nonsense-xkplm-qrvzt",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9595238095238096,
+        "asymmetryCI": [
+          0.9358730158730159,
+          0.98
+        ],
+        "pValue": 0.193
+      },
+      {
+        "pairId": "control-nonsense-xkplm-qrvzt",
+        "modelId": "claude",
+        "asymmetryIndex": 0.9988194444444445,
+        "asymmetryCI": [
+          0.9971527777777778,
+          1
         ],
         "pValue": 0
       },
@@ -711,15 +991,55 @@
           0.8005952380952382
         ],
         "pValue": 0
+      },
+      {
+        "pairId": "control-random-flamingo-calculus",
+        "modelId": "gemini",
+        "asymmetryIndex": 0.9298015873015874,
+        "asymmetryCI": [
+          0.9086507936507937,
+          0.948968253968254
+        ],
+        "pValue": 0.008
+      },
+      {
+        "pairId": "control-random-flamingo-calculus",
+        "modelId": "gpt",
+        "asymmetryIndex": 0.9811111111111112,
+        "asymmetryCI": [
+          0.9722222222222222,
+          0.9888888888888889
+        ],
+        "pValue": 0
+      },
+      {
+        "pairId": "control-random-flamingo-calculus",
+        "modelId": "grok",
+        "asymmetryIndex": 0.9680555555555556,
+        "asymmetryCI": [
+          0.9561111111111111,
+          0.9788888888888889
+        ],
+        "pValue": 0.002
+      },
+      {
+        "pairId": "control-random-flamingo-calculus",
+        "modelId": "claude",
+        "asymmetryIndex": 0.98,
+        "asymmetryCI": [
+          0.9711111111111111,
+          0.9877777777777778
+        ],
+        "pValue": 0
       }
     ],
     "perModelMean": {
-      "gemini": 0.871541514041514,
-      "gpt": 0.7461584249084248,
-      "grok": 0.7442338217338217,
-      "claude": 0.758452380952381
+      "gemini": 0.867099395313681,
+      "gpt": 0.7940164399092969,
+      "grok": 0.8030479969765684,
+      "claude": 0.7803963529856387
     },
-    "grandMean": 0.7800965354090353
+    "grandMean": 0.8111400462962963
   },
   "fig06_compositional": {
     "entries": [
@@ -731,6 +1051,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.2862921191868568,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -741,6 +1062,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.9595191682910993,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -751,6 +1073,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.6347489093103139,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -761,6 +1084,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.4466095795043168,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -771,6 +1095,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.49735449735449755,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -781,6 +1106,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5468253968253964,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -791,6 +1117,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.7697530864197536,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -801,6 +1128,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.7209876543209878,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -811,6 +1139,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.1935045948203854,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -821,6 +1150,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.6543418732015234,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -831,6 +1161,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5825605680868842,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -841,6 +1172,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": false,
         "triangleSlack": -0.31892926761347784,
+        "tripleType": "hierarchical",
         "isControl": false
       },
       {
@@ -851,6 +1183,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": false,
         "triangleSlack": -0.022807017543860386,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -861,6 +1194,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.7588044184535417,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -871,6 +1205,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 1.0421052631578949,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -881,6 +1216,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.3424742411584525,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -891,6 +1227,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.4435834957764806,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -901,6 +1238,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5277800983941332,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -911,6 +1249,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5083890281258698,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -921,6 +1260,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.0898635477582842,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -931,6 +1271,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.4875870231133381,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -941,6 +1282,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.6991831430427924,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -951,6 +1293,7 @@
         "bridgeConceptAppears": true,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.6210038986354774,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -961,6 +1304,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": false,
         "triangleSlack": -0.061090225563910416,
+        "tripleType": "other",
         "isControl": false
       },
       {
@@ -971,6 +1315,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5219878399702975,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -981,6 +1326,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 1.126740462266779,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -991,6 +1337,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.7266522788452616,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -1001,6 +1348,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.3319525666016898,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -1011,6 +1359,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5409495962127535,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -1021,6 +1370,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 1.4179754942912843,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -1031,6 +1381,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.8489835700362014,
+        "tripleType": "random",
         "isControl": true
       },
       {
@@ -1041,6 +1392,7 @@
         "bridgeConceptAppears": false,
         "triangleInequalityHolds": true,
         "triangleSlack": 0.5716629536804987,
+        "tripleType": "random",
         "isControl": true
       }
     ]
@@ -1052,224 +1404,258 @@
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.135296010471025
+        "waypointTransitivity": 0.135296010471025,
+        "bridgeName": "river"
       },
       {
         "tripleId": "p4-bank-river-ocean",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0.9,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.17074775933943168
+        "waypointTransitivity": 0.17074775933943168,
+        "bridgeName": "river"
       },
       {
         "tripleId": "p4-bank-river-ocean",
         "modelId": "grok",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.2112695175195319
+        "waypointTransitivity": 0.2112695175195319,
+        "bridgeName": "river"
       },
       {
         "tripleId": "p4-bank-river-ocean",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.08906959706961849
+        "waypointTransitivity": 0.08906959706961849,
+        "bridgeName": "river"
       },
       {
         "tripleId": "p4-bank-deposit-savings",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.27909090909091316
+        "waypointTransitivity": 0.27909090909091316,
+        "bridgeName": "deposit"
       },
       {
         "tripleId": "p4-bank-deposit-savings",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.12100872668997749
+        "waypointTransitivity": 0.12100872668997749,
+        "bridgeName": "deposit"
       },
       {
         "tripleId": "p4-bank-deposit-savings",
         "modelId": "grok",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.2529738719613689
+        "waypointTransitivity": 0.2529738719613689,
+        "bridgeName": "deposit"
       },
       {
         "tripleId": "p4-bank-deposit-savings",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.16500686813188112
+        "waypointTransitivity": 0.16500686813188112,
+        "bridgeName": "deposit"
       },
       {
         "tripleId": "p4-light-spectrum-color",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.4000000000000567
+        "waypointTransitivity": 0.4000000000000567,
+        "bridgeName": "spectrum"
       },
       {
         "tripleId": "p4-light-spectrum-color",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.1850439026251547
+        "waypointTransitivity": 0.1850439026251547,
+        "bridgeName": "spectrum"
       },
       {
         "tripleId": "p4-light-spectrum-color",
         "modelId": "grok",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.10065918456543302
+        "waypointTransitivity": 0.10065918456543302,
+        "bridgeName": "spectrum"
       },
       {
         "tripleId": "p4-light-spectrum-color",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.3459999999999588
-      },
-      {
-        "tripleId": "p4-emotion-nostalgia-melancholy",
-        "modelId": "claude",
-        "bridgeConceptFrequency": 0.36666666666666664,
-        "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.10141880341880921
-      },
-      {
-        "tripleId": "p4-emotion-nostalgia-melancholy",
-        "modelId": "gpt",
-        "bridgeConceptFrequency": 0.2,
-        "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.14760083805084118
-      },
-      {
-        "tripleId": "p4-emotion-nostalgia-melancholy",
-        "modelId": "grok",
-        "bridgeConceptFrequency": 0.7,
-        "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.12290083620083667
-      },
-      {
-        "tripleId": "p4-emotion-nostalgia-melancholy",
-        "modelId": "gemini",
-        "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.010843610093610118
-      },
-      {
-        "tripleId": "p4-language-metaphor-thought",
-        "modelId": "claude",
-        "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.436796987734489
-      },
-      {
-        "tripleId": "p4-language-metaphor-thought",
-        "modelId": "gpt",
-        "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.12186078504828617
-      },
-      {
-        "tripleId": "p4-language-metaphor-thought",
-        "modelId": "grok",
-        "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.15583121045621298
-      },
-      {
-        "tripleId": "p4-language-metaphor-thought",
-        "modelId": "gemini",
-        "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.09956134421134402
+        "waypointTransitivity": 0.3459999999999588,
+        "bridgeName": "spectrum"
       },
       {
         "tripleId": "p4-tree-forest-ecosystem",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.30115209790209063
+        "waypointTransitivity": 0.30115209790209063,
+        "bridgeName": "forest"
       },
       {
         "tripleId": "p4-tree-forest-ecosystem",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0.95,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.2501289772727277
+        "waypointTransitivity": 0.2501289772727277,
+        "bridgeName": "forest"
       },
       {
         "tripleId": "p4-tree-forest-ecosystem",
         "modelId": "grok",
         "bridgeConceptFrequency": 1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.17095931568431863
+        "waypointTransitivity": 0.17095931568431863,
+        "bridgeName": "forest"
       },
       {
         "tripleId": "p4-tree-forest-ecosystem",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0.1,
         "bridgeConceptAppears": true,
-        "waypointTransitivity": 0.08045027888777716
+        "waypointTransitivity": 0.08045027888777716,
+        "bridgeName": "forest"
+      }
+    ],
+    "offAxis": [
+      {
+        "tripleId": "p4-emotion-nostalgia-melancholy",
+        "modelId": "claude",
+        "bridgeConceptFrequency": 0.36666666666666664,
+        "bridgeConceptAppears": true,
+        "waypointTransitivity": 0.10141880341880921,
+        "bridgeName": "nostalgia"
+      },
+      {
+        "tripleId": "p4-emotion-nostalgia-melancholy",
+        "modelId": "gpt",
+        "bridgeConceptFrequency": 0.2,
+        "bridgeConceptAppears": true,
+        "waypointTransitivity": 0.14760083805084118,
+        "bridgeName": "nostalgia"
+      },
+      {
+        "tripleId": "p4-emotion-nostalgia-melancholy",
+        "modelId": "grok",
+        "bridgeConceptFrequency": 0.7,
+        "bridgeConceptAppears": true,
+        "waypointTransitivity": 0.12290083620083667,
+        "bridgeName": "nostalgia"
+      },
+      {
+        "tripleId": "p4-emotion-nostalgia-melancholy",
+        "modelId": "gemini",
+        "bridgeConceptFrequency": 0,
+        "bridgeConceptAppears": false,
+        "waypointTransitivity": 0.010843610093610118,
+        "bridgeName": "nostalgia"
+      },
+      {
+        "tripleId": "p4-language-metaphor-thought",
+        "modelId": "claude",
+        "bridgeConceptFrequency": 0,
+        "bridgeConceptAppears": false,
+        "waypointTransitivity": 0.436796987734489,
+        "bridgeName": "metaphor"
+      },
+      {
+        "tripleId": "p4-language-metaphor-thought",
+        "modelId": "gpt",
+        "bridgeConceptFrequency": 0,
+        "bridgeConceptAppears": false,
+        "waypointTransitivity": 0.12186078504828617,
+        "bridgeName": "metaphor"
+      },
+      {
+        "tripleId": "p4-language-metaphor-thought",
+        "modelId": "grok",
+        "bridgeConceptFrequency": 0,
+        "bridgeConceptAppears": false,
+        "waypointTransitivity": 0.15583121045621298,
+        "bridgeName": "metaphor"
+      },
+      {
+        "tripleId": "p4-language-metaphor-thought",
+        "modelId": "gemini",
+        "bridgeConceptFrequency": 0,
+        "bridgeConceptAppears": false,
+        "waypointTransitivity": 0.09956134421134402,
+        "bridgeName": "metaphor"
       },
       {
         "tripleId": "p4-light-chandelier-color",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.17312937062937114
+        "waypointTransitivity": 0.17312937062937114,
+        "bridgeName": "chandelier"
       },
       {
         "tripleId": "p4-light-chandelier-color",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.083909340659341
+        "waypointTransitivity": 0.083909340659341,
+        "bridgeName": "chandelier"
       },
       {
         "tripleId": "p4-light-chandelier-color",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.0646136363636364
+        "waypointTransitivity": 0.0646136363636364,
+        "bridgeName": "chandelier"
       },
       {
         "tripleId": "p4-light-chandelier-color",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.17098834498834614
+        "waypointTransitivity": 0.17098834498834614,
+        "bridgeName": "chandelier"
       },
       {
         "tripleId": "p4-emotion-calendar-melancholy",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.05774725274725317
+        "waypointTransitivity": 0.05774725274725317,
+        "bridgeName": "calendar"
       },
       {
         "tripleId": "p4-emotion-calendar-melancholy",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.09754936729936864
+        "waypointTransitivity": 0.09754936729936864,
+        "bridgeName": "calendar"
       },
       {
         "tripleId": "p4-emotion-calendar-melancholy",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.13814127539127635
+        "waypointTransitivity": 0.13814127539127635,
+        "bridgeName": "calendar"
       },
       {
         "tripleId": "p4-emotion-calendar-melancholy",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
         "bridgeConceptAppears": false,
-        "waypointTransitivity": 0.012235347985347962
+        "waypointTransitivity": 0.012235347985347962,
+        "bridgeName": "calendar"
       }
     ],
     "cueStrength": [
@@ -1277,337 +1663,393 @@
         "tripleId": "p5a-sun-heat-desert",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "heat"
       },
       {
         "tripleId": "p5a-sun-heat-desert",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "heat"
       },
       {
         "tripleId": "p5a-sun-heat-desert",
         "modelId": "grok",
         "bridgeConceptFrequency": 0.9,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "heat"
       },
       {
         "tripleId": "p5a-sun-heat-desert",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "heat"
       },
       {
         "tripleId": "p5a-sun-radiation-desert",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "radiation"
       },
       {
         "tripleId": "p5a-sun-radiation-desert",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "radiation"
       },
       {
         "tripleId": "p5a-sun-radiation-desert",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "radiation"
       },
       {
         "tripleId": "p5a-sun-radiation-desert",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0.8,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "radiation"
       },
       {
         "tripleId": "p5a-sun-solstice-desert",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "solstice"
       },
       {
         "tripleId": "p5a-sun-solstice-desert",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "solstice"
       },
       {
         "tripleId": "p5a-sun-solstice-desert",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "solstice"
       },
       {
         "tripleId": "p5a-sun-solstice-desert",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "solstice"
       },
       {
         "tripleId": "p5a-seed-plant-garden",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "plant"
       },
       {
         "tripleId": "p5a-seed-plant-garden",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0.65,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "plant"
       },
       {
         "tripleId": "p5a-seed-plant-garden",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "plant"
       },
       {
         "tripleId": "p5a-seed-plant-garden",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "plant"
       },
       {
         "tripleId": "p5a-seed-germination-garden",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "germination"
       },
       {
         "tripleId": "p5a-seed-germination-garden",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0.95,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "germination"
       },
       {
         "tripleId": "p5a-seed-germination-garden",
         "modelId": "grok",
         "bridgeConceptFrequency": 0.15,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "germination"
       },
       {
         "tripleId": "p5a-seed-germination-garden",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "germination"
       },
       {
         "tripleId": "p5a-seed-husk-garden",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "husk"
       },
       {
         "tripleId": "p5a-seed-husk-garden",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "husk"
       },
       {
         "tripleId": "p5a-seed-husk-garden",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "husk"
       },
       {
         "tripleId": "p5a-seed-husk-garden",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "husk"
       },
       {
         "tripleId": "p5a-word-sentence-paragraph",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sentence"
       },
       {
         "tripleId": "p5a-word-sentence-paragraph",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sentence"
       },
       {
         "tripleId": "p5a-word-sentence-paragraph",
         "modelId": "grok",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sentence"
       },
       {
         "tripleId": "p5a-word-sentence-paragraph",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sentence"
       },
       {
         "tripleId": "p5a-word-clause-paragraph",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "clause"
       },
       {
         "tripleId": "p5a-word-clause-paragraph",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "clause"
       },
       {
         "tripleId": "p5a-word-clause-paragraph",
         "modelId": "grok",
         "bridgeConceptFrequency": 0.9,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "clause"
       },
       {
         "tripleId": "p5a-word-clause-paragraph",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "clause"
       },
       {
         "tripleId": "p5a-word-syllable-paragraph",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "syllable"
       },
       {
         "tripleId": "p5a-word-syllable-paragraph",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "syllable"
       },
       {
         "tripleId": "p5a-word-syllable-paragraph",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "syllable"
       },
       {
         "tripleId": "p5a-word-syllable-paragraph",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "syllable"
       },
       {
         "tripleId": "p5a-emotion-sadness-melancholy",
         "modelId": "claude",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sadness"
       },
       {
         "tripleId": "p5a-emotion-sadness-melancholy",
         "modelId": "gpt",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sadness"
       },
       {
         "tripleId": "p5a-emotion-sadness-melancholy",
         "modelId": "grok",
         "bridgeConceptFrequency": 0.9666666666666667,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sadness"
       },
       {
         "tripleId": "p5a-emotion-sadness-melancholy",
         "modelId": "gemini",
         "bridgeConceptFrequency": 1,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "sadness"
       },
       {
         "tripleId": "p5a-emotion-nostalgia-melancholy",
         "modelId": "claude",
         "bridgeConceptFrequency": 0.15,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "nostalgia"
       },
       {
         "tripleId": "p5a-emotion-nostalgia-melancholy",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0.3,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "nostalgia"
       },
       {
         "tripleId": "p5a-emotion-nostalgia-melancholy",
         "modelId": "grok",
         "bridgeConceptFrequency": 0.8,
-        "bridgeConceptAppears": true
+        "bridgeConceptAppears": true,
+        "bridgeName": "nostalgia"
       },
       {
         "tripleId": "p5a-emotion-nostalgia-melancholy",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "nostalgia"
       },
       {
         "tripleId": "p5a-emotion-apathy-melancholy",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "apathy"
       },
       {
         "tripleId": "p5a-emotion-apathy-melancholy",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "apathy"
       },
       {
         "tripleId": "p5a-emotion-apathy-melancholy",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "apathy"
       },
       {
         "tripleId": "p5a-emotion-apathy-melancholy",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "apathy"
       },
       {
         "tripleId": "p5a-sun-umbrella-desert",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "umbrella"
       },
       {
         "tripleId": "p5a-sun-umbrella-desert",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "umbrella"
       },
       {
         "tripleId": "p5a-sun-umbrella-desert",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "umbrella"
       },
       {
         "tripleId": "p5a-sun-umbrella-desert",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "umbrella"
       },
       {
         "tripleId": "p5a-seed-telescope-garden",
         "modelId": "claude",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "telescope"
       },
       {
         "tripleId": "p5a-seed-telescope-garden",
         "modelId": "gpt",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "telescope"
       },
       {
         "tripleId": "p5a-seed-telescope-garden",
         "modelId": "grok",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "telescope"
       },
       {
         "tripleId": "p5a-seed-telescope-garden",
         "modelId": "gemini",
         "bridgeConceptFrequency": 0,
-        "bridgeConceptAppears": false
+        "bridgeConceptAppears": false,
+        "bridgeName": "telescope"
       }
     ],
     "tooCentral": [
@@ -8538,6 +8980,104 @@
         "passCount": 0,
         "totalModels": 6,
         "meanTopFrequency": 0.9333333333333332
+      }
+    ],
+    "retrospective": [
+      {
+        "modelId": "claude",
+        "topWaypoint": "office",
+        "topFrequency": 0.775,
+        "entropy": 5.173669874069196,
+        "passesR5": false,
+        "cohort": "original"
+      },
+      {
+        "modelId": "gpt",
+        "topWaypoint": "paperwork",
+        "topFrequency": 0.65,
+        "entropy": 6.264219862700237,
+        "passesR5": false,
+        "cohort": "original"
+      },
+      {
+        "modelId": "grok",
+        "topWaypoint": "flood",
+        "topFrequency": 0.7,
+        "entropy": 5.277826545399499,
+        "passesR5": false,
+        "cohort": "original"
+      },
+      {
+        "modelId": "gemini",
+        "topWaypoint": "humidity",
+        "topFrequency": 0.775,
+        "entropy": 5.010237122212732,
+        "passesR5": false,
+        "cohort": "original"
+      },
+      {
+        "modelId": "minimax",
+        "topWaypoint": "paper",
+        "topFrequency": 0.9333333333333333,
+        "entropy": 4.604115392303625,
+        "passesR5": false,
+        "cohort": "phase10a"
+      },
+      {
+        "modelId": "kimi",
+        "topWaypoint": "paper",
+        "topFrequency": 0.9333333333333333,
+        "entropy": 4.2838594190177535,
+        "passesR5": false,
+        "cohort": "phase10a"
+      },
+      {
+        "modelId": "qwen",
+        "topWaypoint": "cloud",
+        "topFrequency": 0.8666666666666667,
+        "entropy": 4.147151167481363,
+        "passesR5": false,
+        "cohort": "phase10a"
+      },
+      {
+        "modelId": "llama",
+        "topWaypoint": "office",
+        "topFrequency": 0.8,
+        "entropy": 4.9390809542996985,
+        "passesR5": false,
+        "cohort": "phase10a"
+      },
+      {
+        "modelId": "deepseek",
+        "topWaypoint": "paperclip",
+        "topFrequency": 0.6,
+        "entropy": 4.690609060251609,
+        "passesR5": false,
+        "cohort": "phase11a"
+      },
+      {
+        "modelId": "mistral",
+        "topWaypoint": "workplace",
+        "topFrequency": 1,
+        "entropy": 3.547002964973443,
+        "passesR5": false,
+        "cohort": "phase11a"
+      },
+      {
+        "modelId": "cohere",
+        "topWaypoint": "office supply",
+        "topFrequency": 1,
+        "entropy": 4.547454476946702,
+        "passesR5": false,
+        "cohort": "phase11a"
+      },
+      {
+        "modelId": "llama4",
+        "topWaypoint": "paperweight",
+        "topFrequency": 1,
+        "entropy": 4.359989339091871,
+        "passesR5": false,
+        "cohort": "phase11a"
       }
     ]
   }

@@ -451,57 +451,33 @@ def generate_table07(manifest):
     """Generate Table 7: Control Pair Screening.
 
     Two sub-tables:
-    (a) Stapler-monsoon retrospective across robustness conditions (from fig14 data)
+    (a) Stapler-monsoon retrospective across 12 models (from 11b-control-revision.json)
     (b) New candidates across 6 screening models
     """
     t7 = manifest["table07_control"]
-    fig14 = manifest.get("fig14_robustness", {})
 
     # --- Sub-table (a): stapler-monsoon retrospective ---
-    # Extract stapler-monsoon entries from fig14 robustness cellEntries
+    # Use dedicated retrospective data from 11b-control-revision.json
     sm_rows = []
-    cell_entries = fig14.get("cellEntries", [])
-    sm_entries = [
-        e for e in cell_entries
-        if e.get("pairId") == "p11c-stapler-monsoon"
-    ]
-    if sm_entries:
-        # Group by model
-        by_model = {}
-        for e in sm_entries:
-            mid = e["modelId"]
-            if mid not in by_model:
-                by_model[mid] = []
-            by_model[mid].append(e)
-
-        for mid in sorted(by_model.keys()):
-            entries = by_model[mid]
-            jaccards = [
-                e.get("intraModelJaccard", 0) for e in entries
-                if e.get("intraModelJaccard") is not None
-            ]
-            mean_j = statistics.mean(jaccards) if jaccards else 0.0
-            bridge_vals = [
-                e.get("bridgeFrequency") for e in entries
-                if e.get("bridgeFrequency") is not None
-            ]
-            bridge_str = (
-                f"{statistics.mean(bridge_vals):.2f}"
-                if bridge_vals else "---"
-            )
-            # Pass = unstructured (low Jaccard, no bridge)
-            passes = mean_j < 0.20 and (
-                not bridge_vals
-                or statistics.mean(bridge_vals) < 0.30
-            )
-            pass_str = "pass" if passes else "fail"
-
+    retrospective = t7.get("retrospective", [])
+    if retrospective:
+        for entry in retrospective:
+            mid = entry["modelId"]
             display = MODEL_NAMES.get(mid, mid)
+            top_wp = entry.get("topWaypoint", "---")
+            top_freq = entry.get("topFrequency")
+            entropy = entry.get("entropy")
+            passes_r5 = entry.get("passesR5", False)
+
+            freq_str = f"{top_freq:.3f}" if top_freq is not None else "---"
+            entropy_str = f"{entropy:.2f}" if entropy is not None else "---"
+            pass_str = "pass" if passes_r5 else "fail"
 
             sm_rows.append(
                 f"    {escape_latex(display)} & "
-                f"{mean_j:.3f} & "
-                f"{bridge_str} & "
+                f"{escape_latex(top_wp)} & "
+                f"{freq_str} & "
+                f"{entropy_str} & "
                 f"{pass_str} \\\\"
             )
 
@@ -517,7 +493,7 @@ def generate_table07(manifest):
 
         # Find most common top waypoint
         top_wps = [e["topWaypoint"] for e in entries]
-        most_common_wp = max(set(top_wps), key=top_wps.count)
+        most_common_wp = sorted(set(top_wps), key=lambda x: (-top_wps.count(x), x))[0]
 
         mean_freq = cs["meanTopFrequency"]
         pass_count = cs["passCount"]
@@ -532,23 +508,24 @@ def generate_table07(manifest):
         )
 
     # Build the combined table
+    # Panel (a) has 5 columns; panel (b) has 4 columns.  Use 5-column layout.
     part_a = ""
     if sm_rows:
         part_a = (
-            "    \\multicolumn{4}{l}"
-            "{\\textbf{(a) Stapler--monsoon retrospective}} \\\\\n"
+            "    \\multicolumn{5}{l}"
+            "{\\textbf{(a) Stapler--monsoon retrospective (12 models)}} \\\\\n"
             "    \\midrule\n"
-            "    Model & Mean Jaccard & Bridge Freq & Status \\\\\n"
+            "    Model & Top Waypoint & Top Freq & Entropy & Status \\\\\n"
             "    \\midrule\n"
             + "\n".join(sm_rows) + "\n"
             "    \\midrule\n"
         )
 
     part_b_header = (
-        "    \\multicolumn{4}{l}"
+        "    \\multicolumn{5}{l}"
         "{\\textbf{(b) New control-pair candidates (6 screening models)}} \\\\\n"
         "    \\midrule\n"
-        "    Pair & Top Waypoint & Mean Top Freq & Status \\\\\n"
+        "    Pair & Top Waypoint & Mean Top Freq & Status & \\\\\n"
         "    \\midrule\n"
     )
 
@@ -558,7 +535,7 @@ def generate_table07(manifest):
         "\\caption{Control pair screening.}\n"
         "\\label{tab:control}\n"
         "\\small\n"
-        "\\begin{tabular}{llcc}\n"
+        "\\begin{tabular}{llccc}\n"
         "\\toprule\n"
         f"{part_a}"
         f"{part_b_header}"

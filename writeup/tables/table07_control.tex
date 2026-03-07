@@ -3,21 +3,30 @@
 \caption{Control pair screening.}
 \label{tab:control}
 \small
-\begin{tabular}{llcc}
+\begin{tabular}{llccc}
 \toprule
-    \multicolumn{4}{l}{\textbf{(a) Stapler--monsoon retrospective}} \\
+    \multicolumn{5}{l}{\textbf{(a) Stapler--monsoon retrospective (12 models)}} \\
     \midrule
-    Model & Mean Jaccard & Bridge Freq & Status \\
+    Model & Top Waypoint & Top Freq & Entropy & Status \\
     \midrule
-    Claude Sonnet 4.6 & 0.292 & --- & fail \\
-    DeepSeek V3.2 & 0.212 & --- & fail \\
-    GPT-5.2 & 0.101 & --- & pass \\
+    Claude Sonnet 4.6 & office & 0.775 & 5.17 & fail \\
+    GPT-5.2 & paperwork & 0.650 & 6.26 & fail \\
+    Grok 4.1 Fast & flood & 0.700 & 5.28 & fail \\
+    Gemini 3 Flash & humidity & 0.775 & 5.01 & fail \\
+    MiniMax M2.5 & paper & 0.933 & 4.60 & fail \\
+    Kimi K2.5 & paper & 0.933 & 4.28 & fail \\
+    Qwen 3.5 397B-A17B & cloud & 0.867 & 4.15 & fail \\
+    Llama 3.1 8B & office & 0.800 & 4.94 & fail \\
+    DeepSeek V3.2 & paperclip & 0.600 & 4.69 & fail \\
+    Mistral Large 3 & workplace & 1.000 & 3.55 & fail \\
+    Cohere Command A & office supply & 1.000 & 4.55 & fail \\
+    Llama 4 Maverick & paperweight & 1.000 & 4.36 & fail \\
     \midrule
-    \multicolumn{4}{l}{\textbf{(b) New control-pair candidates (6 screening models)}} \\
+    \multicolumn{5}{l}{\textbf{(b) New control-pair candidates (6 screening models)}} \\
     \midrule
-    Pair & Top Waypoint & Mean Top Freq & Status \\
+    Pair & Top Waypoint & Mean Top Freq & Status & \\
     \midrule
-    turmeric / trigonometry & angle & 0.92 & 0/6 pass \\
+    turmeric / trigonometry & ancient india & 0.92 & 0/6 pass \\
     barnacle / sonnet & rhyme & 0.87 & 0/6 pass \\
     magnesium / ballet & choreography & 0.87 & 0/6 pass \\
     accordion / stalactite & bellow & 0.93 & 0/6 pass \\
