@@ -1,9 +1,9 @@
 # Makefile for building the Conceptual Topology Mapping Benchmark paper
-# Requires: pdflatex, bibtex (from texlive-latex-base + texlive-latex-extra)
+# Requires: pdflatex, bibtex (TinyTeX installed in ~/.TinyTeX)
 
 PAPER = paper
-LATEX = pdflatex
-BIBTEX = bibtex
+LATEX = $(HOME)/.local/bin/pdflatex
+BIBTEX = $(HOME)/.local/bin/bibtex
 
 .PHONY: all clean
 

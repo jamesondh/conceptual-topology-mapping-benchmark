@@ -4,3 +4,15 @@ results/
 .env
 *.log
 __pycache__/
+
+# LaTeX build artifacts (keep paper.pdf)
+writeup/latex/*.aux
+writeup/latex/*.bbl
+writeup/latex/*.blg
+writeup/latex/*.out
+writeup/latex/*.toc
+writeup/latex/*.lof
+writeup/latex/*.lot
+writeup/latex/*.nav
+writeup/latex/*.snm
+writeup/latex/*.vrb
