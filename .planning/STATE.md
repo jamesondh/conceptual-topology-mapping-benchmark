@@ -65,8 +65,22 @@ Phase 12: Paper Writing — **ALL SECTIONS DRAFTED AND REVIEWED**
   - Fig 4: Filtered to 4 categories, Fig 8: 1-based positions, Table 7: deterministic ties
 - Section placeholders replaced with file references in all 8 section files
 
+## BibTeX and Appendices (Phase 12 Sub-Task)
+- `writeup/references.bib` — 40 entries organized by topic
+- 6 appendices drafted: A (Concept Pair Inventory), B (Phase Results), C (Graveyard), D (Prompt Templates), E (Statistical Methods), F (Robustness Details)
+
+## LaTeX Conversion (Phase 12 Sub-Task)
+- `writeup/latex/` — complete arxiv-ready LaTeX package
+- `paper.tex` — article class, natbib, 11 sections + 6 appendices
+- `convert.py` — pandoc post-processor: hypertarget cleanup, 40+ citation patterns, figure/table insertion, appendix title normalization
+- 18 .tex files (12 sections + 6 appendices), Makefile, symlinks for figures/tables/bib
+- Structural verification: 243 balanced environments, 48 citation invocations, 0 HTML/pandoc artifacts remaining
+
 ## Blockers
 None
 
 ## Next Steps
-- Remaining: appendix drafting, LaTeX conversion, citation formatting, target venue selection
+- Install texlive and compile; fix any compilation errors
+- Fig 0 (path visualization) and Fig 1 (benchmark schematic) — design placeholders
+- Final proofreading pass
+- Target venue selection (Jameson mentioned arxiv initially)

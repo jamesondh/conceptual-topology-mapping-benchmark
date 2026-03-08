@@ -1,0 +1,216 @@
+\section{Statistical Methods}\label{appendix-e-statistical-methods}
+
+This appendix documents the statistical procedures used throughout the benchmark. All analyses were implemented in TypeScript (Bun runtime) unless otherwise noted.
+
+\subsection{E.1 Bootstrap Confidence Intervals}\label{e.1-bootstrap-confidence-intervals}
+
+Confidence intervals for Jaccard-based metrics (gait consistency, path asymmetry, bridge frequency, transitivity) are 95\% percentile bootstrap intervals computed from 1,000 resamples with a seeded PRNG (seed = 42) for reproducibility.
+
+\textbf{Procedure.} For a metric computed over \emph{n} independent runs:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Resample \emph{n} runs with replacement (1,000 times).
+\item
+  Recompute the metric on each resample.
+\item
+  Report the 2.5th and 97.5th percentiles as the 95\% CI.
+\end{enumerate}
+
+\textbf{Limitation.} \citet{efron1993bootstrap} recommend 5,000--10,000 resamples for publication-quality confidence intervals. The benchmark uses 1,000 for computational efficiency during the exploration-first workflow. CIs should be interpreted as approximate; the qualitative conclusions (whether a CI includes zero) are robust to resample count, but exact CI bounds may shift slightly with more resamples.
+
+\subsection{E.2 Permutation Tests for Asymmetry}\label{e.2-permutation-tests-for-asymmetry}
+
+Statistical significance of path asymmetry is assessed via permutation test. For a given (model, pair) combination with \emph{n\_f} forward runs and \emph{n\_r} reverse runs:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Pool all \emph{n\_f + n\_r} runs.
+\item
+  Randomly assign \emph{n\_f} to ``forward'' and \emph{n\_r} to ``reverse'' (1,000 permutations).
+\item
+  Compute the mean cross-direction Jaccard for each permutation.
+\item
+  The \emph{p}-value is the fraction of permutations producing a cross-direction Jaccard as low or lower than the observed value, using the \citet{phipson2010permutation} correction to avoid exact-zero \emph{p}-values:
+\end{enumerate}
+
+\[p = \frac{b + 1}{m + 1}\]
+
+where \emph{b} is the count of permutations with test statistic as extreme as observed and \emph{m} is the total number of permutations.
+
+\textbf{Limitation.} With 1,000 permutations, the minimum achievable \emph{p}-value is approximately 0.001 (after the Phipson--Smyth correction). This limits resolution for Bonferroni-corrected thresholds. The 87\% significance rate reported in Section 5.1 (73 of 84 combinations at p \textless{} 0.05) was computed without multiple-comparison correction. With Bonferroni correction (threshold 0.05/84 \(\approx\) 0.0006), the percentage would be lower, and the permutation test's resolution is insufficient to distinguish near this corrected threshold. The qualitative conclusion --- that the vast majority of combinations show genuine asymmetry --- is robust, but the specific percentage should be interpreted conservatively.
+
+\subsection{E.3 Friedman Test and Post-Hoc Comparisons}\label{e.3-friedman-test-and-post-hoc-comparisons}
+
+The effect of pre-fill relation class on bridge survival (Section 6.3) was tested using the Friedman test, a non-parametric repeated-measures alternative to one-way ANOVA. The 8 concept pairs serve as blocks, and the 3 relation classes (on-axis, same-domain, unrelated) serve as treatments.
+
+\textbf{Procedure:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  For each pair, rank the 3 survival rates.
+\item
+  Compute the Friedman chi-squared statistic from the rank sums.
+\item
+  Assess significance against the chi-squared distribution with \emph{k - 1} = 2 degrees of freedom.
+\end{enumerate}
+
+\textbf{Result:} \(\chi^2\) = 6.750, \emph{df} = 2, \emph{p} = 0.034.
+
+\textbf{Post-hoc comparisons.} Pairwise Wilcoxon signed-rank tests:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Comparison & \emph{p}-value & Survives Bonferroni (0.05/3 = 0.017)? \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+On-axis vs.~unrelated & 0.025 & No \\
+Same-domain vs.~unrelated & 0.036 & No \\
+On-axis vs.~same-domain & 0.889 & N/A \\
+\end{longtable}
+
+Neither pairwise comparison survives Bonferroni correction for 3 comparisons. The qualitative conclusion --- unrelated pre-fills are more disruptive than related ones --- is supported by the omnibus Friedman test but the specific pairwise \emph{p}-values are suggestive rather than confirmatory.
+
+\subsection{E.4 ANOVA for Multiverse Robustness}\label{e.4-anova-for-multiverse-robustness}
+
+The Phase 11C robustness analysis used a factorial ANOVA decomposing gait variance across model identity, waypoint count, and temperature.
+
+\textbf{Design:} 3 models (Claude, GPT, DeepSeek) \(\times\) 2 waypoint counts (5, 9) \(\times\) 2 temperatures (0.5, 0.9), plus the 7-waypoint / 0.7-temperature baseline assembled from prior-phase data.
+
+\textbf{Procedure:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Compute cell means: mean Jaccard for each (model, waypoint count, temperature, pair) combination.
+\item
+  Compute sum of squares for each factor and interaction.
+\item
+  Express as eta-squared (\(\eta^2\) = SS\(_{\text{factor}}\) / SS\(_{\text{total}}\)).
+\item
+  Approximate \emph{p}-values using the chi-squared distribution (ignoring denominator degrees of freedom).
+\end{enumerate}
+
+\textbf{Results:}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Factor & \(\eta^2\) & Approx. \emph{p} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Model identity & 0.242 & \(\approx\) 0.001 \\
+Waypoint count & 0.008 & \(\approx\) 0.520 \\
+Temperature & 0.002 & \(\approx\) 0.743 \\
+Waypoint \(\times\) Temperature & \(\approx\) 0.000 & \(\approx\) 0.886 \\
+\end{longtable}
+
+\textbf{Limitations:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{P}-value approximation.* The chi-squared approximation ignores denominator degrees of freedom. Exact F-test \emph{p}-values would require a proper mean squares decomposition. The eta-squared effect sizes are more reliable than the exact \emph{p}-values.
+\item
+  \emph{Independence assumption.} Per-pair cells are treated as independent observations without repeated-measures modeling. A mixed-effects model with pair as a random effect would be more appropriate for confirmatory inference.
+\item
+  \emph{Coverage.} Only 3 models were tested. The conclusion that model identity dominates protocol variation is supported within this subset but should be extended with caution.
+\item
+  \emph{Baseline sparsity.} DeepSeek has no prior-phase data; its 7wp-t0.7 baseline cells are empty. This affects the baseline condition but not the four new conditions.
+\end{enumerate}
+
+The analysis should be understood as descriptive/exploratory rather than confirmatory. The qualitative conclusion --- that model identity accounts for far more variance than protocol parameters --- is robust to these approximations, as the effect size gap (0.242 vs.~0.008 and 0.002) is large.
+
+\subsection{E.5 Chi-Squared Goodness-of-Fit Test}\label{e.5-chi-squared-goodness-of-fit-test}
+
+Departure from uniform waypoint distributions (Section 5.6) is assessed via chi-squared goodness-of-fit test.
+
+\textbf{Procedure.} For each (model, pair) condition:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Count unique waypoints across all runs, treating each waypoint as appearing once per run.
+\item
+  Compute expected frequencies under the null hypothesis that all waypoints are equally likely.
+\item
+  Compute the chi-squared statistic: \(\chi^2 = \sum (O_i - E_i)^2 / E_i\).
+\item
+  Compute \emph{p}-value using the Wilson--Hilferty normal approximation.
+\item
+  Apply Bonferroni correction at the pair level (dividing the significance threshold by the number of pairs tested).
+\end{enumerate}
+
+\textbf{Note on naming.} The codebase function implementing this test is named \texttt{ksTestUniform} (after Kolmogorov--Smirnov), but the implementation is chi-squared goodness-of-fit, which is more appropriate for categorical frequency data. The paper uses the correct name (chi-squared).
+
+\subsection{E.6 Kendall's W (Coefficient of Concordance)}\label{e.6-kendalls-w-coefficient-of-concordance}
+
+Gait rank stability across protocol conditions (Section 9.3) is assessed via Kendall's W:
+
+\[W = \frac{12 \sum_{i=1}^{n} (R_i - \bar{R})^2}{k^2(n^3 - n)}\]
+
+where \(R_i\) is the rank sum for model \emph{i} across \emph{k} conditions, and \emph{n} is the number of models. W = 1 indicates perfect agreement across conditions; W = 0 indicates no agreement. The observed W = 0.840 indicates strong but imperfect rank stability.
+
+\subsection{E.7 Bridge Frequency Comparison (Confidence Interval on Difference)}\label{e.7-bridge-frequency-comparison-confidence-interval-on-difference}
+
+The structure/content/scale hierarchy (Section 8.2) compares aggregate bridge frequency between the original cohort and expanded cohorts using bootstrap CIs on the difference:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  For each cohort, compute mean bridge frequency across all (model, pair) conditions.
+\item
+  Bootstrap the difference (original mean \(-\) new mean) with 1,000 resamples.
+\item
+  If the 95\% CI includes zero, the cohorts are statistically indistinguishable.
+\end{enumerate}
+
+Phase 10A: diff = \(-0.096\), CI {[}\(-0.241\), 0.064{]} (includes zero). Phase 11A combined: diff = \(-0.100\), CI {[}\(-0.286\), 0.089{]} (includes zero).
+
+\subsection{E.8 Canonicalization and Its Statistical Implications}\label{e.8-canonicalization-and-its-statistical-implications}
+
+All metrics operate on canonicalized waypoint tokens. The canonicalization pipeline (Section 2.3) handles morphological variants but not synonyms. This has systematic statistical implications:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Jaccard similarity} is computed on token identity after canonicalization. Semantically equivalent but lexically distinct waypoints (``melody'' vs.~``tune,'' ``cemetery'' vs.~``graveyard'') are treated as completely different. All Jaccard-based metrics therefore \emph{underestimate} true conceptual overlap.
+\item
+  \textbf{Gait consistency} is a lower bound on true navigational consistency.
+\item
+  \textbf{Path asymmetry} is an upper bound on true conceptual asymmetry.
+\item
+  \textbf{Bridge frequency} may miss bridges expressed through synonyms rather than exact (or morphologically related) tokens.
+\end{itemize}
+
+The magnitude of this bias is bounded by the canonicalization (which collapses morphological variants) but is otherwise unknown. Embedding-based semantic similarity would help bound this effect but was deferred due to API cost.
+
+\subsection{E.9 Multiple Comparison Corrections}\label{e.9-multiple-comparison-corrections}
+
+The benchmark applies Bonferroni correction in two contexts:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Uniformity tests} (Section 5.6): 8 pairs tested per model; threshold adjusted to 0.05/8 = 0.00625.
+\item
+  \textbf{Asymmetry significance} (Section 5.1): 84 pair/model combinations; the 87\% significance rate is reported without correction. With Bonferroni (0.05/84 \(\approx\) 0.0006), the percentage would be lower.
+\end{enumerate}
+
+No correction is applied to the phase-level prediction accuracy tracking (Sections 7.1, 7.2), which is descriptive rather than inferential.
+
+For the Friedman post-hoc comparisons (Section 6.3, Appendix E.3), Bonferroni correction for 3 pairwise comparisons (threshold 0.017) is documented but results in neither surviving comparison reaching significance. The paper reports both corrected and uncorrected results for transparency.

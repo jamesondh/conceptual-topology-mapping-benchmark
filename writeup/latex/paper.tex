@@ -1,0 +1,103 @@
+% =============================================================================
+% Conceptual Topology Mapping Benchmark
+% Jameson Hodge, 2025-2026
+% =============================================================================
+\documentclass[11pt]{article}
+
+% --- Page geometry ---
+\usepackage[margin=1in]{geometry}
+
+% --- Math ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- Graphics ---
+\usepackage{graphicx}
+
+% --- Tables ---
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}       % for \real{} in pandoc longtables
+\usepackage{multirow}
+
+% --- Lists ---
+\usepackage{enumitem}
+
+% --- Citations ---
+\usepackage[round]{natbib}
+\bibliographystyle{plainnat}
+
+% --- Hyperlinks ---
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{url}
+
+% --- Pandoc compatibility ---
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% --- Custom commands ---
+\newcommand{\eg}{e.g.\@}
+\newcommand{\ie}{i.e.\@}
+
+% =============================================================================
+\title{Conceptual Topology Mapping Benchmark:\\
+  Waypoint Elicitation Reveals Structured, Asymmetric,\\
+  Model-Specific Navigation in LLM Conceptual Space}
+
+\author{Jameson Hodge\\
+  \texttt{jameson@jamesonhodge.com}\\
+  \url{https://jamesonhodge.com}}
+
+\date{March 2026}
+
+% =============================================================================
+\begin{document}
+
+\maketitle
+
+% --- Abstract ---
+\begin{abstract}
+Static geometric structure in LLM representations is increasingly well-characterized: linear directions encode concepts, hierarchies form polytopes, and translation symmetry in data statistics determines manifold shape. But no work has tested whether this geometry supports reliable \emph{behavioral traversal} --- whether models can consistently navigate between concepts, not merely represent them. The distinction between map and route is logically independent, and static structure alone does not entail navigational consistency.
+
+We introduce the Conceptual Topology Mapping Benchmark, a waypoint-elicitation paradigm that probes navigational geometry across approximately 21,540 runs, 12 models from 11 independent training pipelines, and 11 experimental phases. Models are given concept pairs and asked to produce intermediate waypoints; the resulting paths are evaluated against metric axioms, compositional structure, and causal perturbation, yielding six robust empirical claims plus one qualified.
+
+Models exhibit distinct ``conceptual gaits'' --- navigational signatures with consistency spanning a 2.9x range (0.258 to 0.747 across 12 models) --- on a shared underlying geometry. Navigation is fundamentally asymmetric (mean directional asymmetry 0.811), consistent with quasimetric rather than metric structure. Bridge concepts function as structural bottlenecks, not mere associations, with frequencies exceeding 0.97 under robustness testing. These properties generalize across all 12 models and resist protocol variation. Single-variable explanations consistently fail: seven follow-up hypotheses --- spanning mechanistic, model-deficit, methodological, and structural types --- were falsified and one resurrected with additional data, revealing a mechanism ceiling where qualitative structure is characterizable but quantitative dynamics remain opaque to current tools. Twenty-nine documented dead ends provide transparent accounting of explanatory limits. The benchmark establishes that conceptual navigation has geometric regularity that can be reliably detected but cannot yet be mechanistically decomposed.
+\end{abstract}
+
+% =============================================================================
+% Main text
+% =============================================================================
+
+\input{01-introduction}     % Section 1: Introduction
+\input{02-benchmark}        % Section 2: The Benchmark
+\input{03-related-work}     % Section 3: Related Work
+\input{04-structure}        % Section 4: Act I -- Structure
+\input{05-topology}         % Section 5: Act II -- Topology
+\input{06-mechanism}        % Section 6: Act III -- Mechanism
+\input{07-limits}           % Section 7: Act IV -- Limits
+\input{08-generality}       % Section 8: Act V -- Generality
+\input{09-robustness}       % Section 9: Act VI -- Robustness
+\input{10-discussion}       % Section 10: Discussion
+\input{11-conclusion}       % Section 11: Conclusion
+
+% =============================================================================
+% Bibliography
+% =============================================================================
+
+\bibliography{references}
+
+% =============================================================================
+% Appendices
+% =============================================================================
+
+\appendix
+
+\input{A-concept-pairs}        % Appendix A: Concept Pair Inventory
+\input{B-phase-results}        % Appendix B: Phase-by-Phase Results
+\input{C-graveyard}            % Appendix C: Dead Ends and Failed Hypotheses
+\input{D-prompt-templates}     % Appendix D: Prompt Templates
+\input{E-statistical-methods}  % Appendix E: Statistical Methods
+\input{F-robustness-details}   % Appendix F: Robustness Details
+
+\end{document}

@@ -1,0 +1,164 @@
+\section{Act I --- Structure: Models Have Navigational Geometry}\label{act-i-structure-models-have-navigational-geometry}
+
+The first three experimental phases established the empirical foundation for the benchmark: models navigate conceptual space with measurable, stable, model-specific structure. This section summarizes the five structural findings from the early phases; some were later replicated across expanded model cohorts (R1), while others remain well-supported observations from the original cohort (O1, O2, O9, O10).
+
+\subsection{Conceptual Gaits Are Distinct and Stable}\label{conceptual-gaits-are-distinct-and-stable}
+
+The most robust finding in the benchmark is that each model navigates conceptual space with a characteristic level of consistency --- a property we term its \emph{conceptual gait}. Gait is operationalized as the mean pairwise Jaccard similarity across independent runs on the same (model, pair, direction) condition: high gait indicates that a model produces similar waypoints each time it traverses a given conceptual path; low gait indicates that each traversal explores different intermediate territory.
+
+\textbf{The 12-model gait spectrum.} Across 12 models from 11 independent training pipelines, conceptual gait spans a 2.9× range:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Model & Mean Jaccard & Cohort & Phases \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Mistral Large 3 & 0.747 & Phase 11A & 11 \\
+Claude Sonnet 4.6 & 0.578 & Original & 1--11 \\
+DeepSeek V3.2 & 0.540 & Phase 11A & 11 \\
+Llama 4 Maverick & 0.539 & Phase 11A & 11 \\
+Qwen 3.5 397B-A17B & 0.508 & Phase 10A & 10 \\
+Cohere Command A & 0.502 & Phase 11A & 11 \\
+MiniMax M2.5 & 0.419 & Phase 10A & 10 \\
+Moonshot Kimi K2.5 & 0.414 & Phase 10A & 10 \\
+Gemini 3 Flash & 0.372 & Original & 1--9 \\
+Llama 3.1 8B Instruct & 0.298 & Phase 10A & 10 \\
+Grok 4.1 Fast & 0.293 & Original & 1--9 \\
+GPT-5.2 & 0.258 & Original & 1--11 \\
+\end{longtable}
+
+At the extremes, Mistral produced near-deterministic paths on several pairs (Jaccard 0.936 on music→mathematics, 0.934 on hot→cold), while GPT's most consistent experimental pair (hot→cold, Jaccard 0.911 in Phase 1) was an outlier against its otherwise exploratory profile.
+
+\textbf{Temporal stability.} For the four core models (Claude, GPT, Grok, Gemini), gait consistency was measured across Phases 1 through 9 --- a span of multiple days and over 9,500 runs. The gait ordering (Claude \textgreater{} Gemini \textgreater{} Grok \textgreater{} GPT) was preserved throughout. Claude's mean Jaccard remained within {[}0.55, 0.60{]} across all phases in which it was tested; GPT's remained within {[}0.24, 0.28{]}. No systematic drift was detected.
+
+\textbf{Cross-architecture generality.} Gait was initially characterized on 4 models from 4 providers (Phase 1). Phase 10A added 4 models from 4 additional providers, all falling within the previously observed range (0.298--0.508). Phase 11A added 4 more models extending the range upward (Mistral 0.747). Across 12 models from 11 independent training pipelines, every model exhibited a characteristic gait, confirming that this is a universal property of LLM conceptual navigation rather than a quirk of the original cohort.
+
+\textbf{Protocol robustness.} Phase 11C tested whether gait was an artifact of the default elicitation protocol (7 waypoints, temperature 0.7) by varying both parameters in a 2×2 grid (5 and 9 waypoints × temperatures 0.5 and 0.9) for three models (Claude, GPT, DeepSeek). An ANOVA decomposition found that model identity accounted for the largest share of variance in Jaccard consistency (η² = 0.242, p ≈ 0.001), while waypoint count (η² = 0.008) and temperature (η² = 0.002) were negligible. The gait rank ordering across models was largely preserved (Kendall's W = 0.840), though not perfectly --- GPT and DeepSeek swapped positions in 4 of 5 conditions, with DeepSeek's baseline condition showing anomalously low Jaccard that was not replicated at other settings. These p-values are approximate (chi-squared approximation), and the robustness test covers only three models (Claude, GPT, DeepSeek); it addresses waypoint-count and temperature variation but not prompt sensitivity more broadly.
+
+\textbf{Control validation.} The nonsense control pair (xkplm→qrvzt) produced mean Jaccard of 0.062 across all models --- effectively zero consistency. GPT's nonsense Jaccard ranged from 0.006 to 0.015, indistinguishable from chance. This supports the interpretation that gait is content-sensitive rather than a decoding artifact: when there is no conceptual structure to navigate, consistency vanishes. (Control validation is qualified by Phase 11B's finding that single-pair controls are insufficient for broader generality testing --- see Section 2.6 --- but the relative gap between experimental and control conditions remains large and consistent across the original cohort.)
+
+\textbf{Interpretation.} Gait reflects a model's propensity to re-traverse the same conceptual territory across independent runs. A high-gait model like Mistral or Claude has a strongly determined internal map --- given two concepts, it finds essentially the same intermediate landmarks every time. A low-gait model like GPT explores broadly, sampling different landmarks on each traversal while still arriving at the destination. Neither extreme is intrinsically better; they represent different navigational strategies. Crucially, gait is pair-dependent even within a model: Claude's Jaccard on hot→cold (0.911) far exceeds its Jaccard on random control pairs (0.291--0.343), indicating that gait interacts with the structure of the conceptual terrain, not just the model's decoding behavior.
+
+\subsection{Paths Are Self-Consistent Within Models}\label{paths-are-self-consistent-within-models}
+
+Before attributing structure to waypoint paths, it is necessary to establish that they are stable model properties rather than transient artifacts of API versioning or server state.
+
+\textbf{No temporal drift.} Phase 4B (the targeted bridge topology experiment) collected data across multiple days. Cross-batch Jaccard --- the similarity between runs collected on different days --- fell within 0.05 of within-batch Jaccard for all tested (model, pair) combinations. The navigational behavior measured in the benchmark was stable over the tested collection window.
+
+\textbf{Scale consistency.} Phase 1 collected paths at both 5 and 10 waypoints for all 21 reporting pairs and 4 models. The 5-waypoint paths were not independent inventions but genuine coarse-grainings of the 10-waypoint paths: on average, 70.5\% of 5-waypoint concepts also appeared in the corresponding 10-waypoint paths, and 67.9\% of the time, the 5-waypoint sequence appeared as a proper subsequence of the 10-waypoint sequence --- same concepts in the same order, with additional waypoints interpolated between them. For example, GPT's 5-waypoint path from hot to cold (\emph{warm, tepid, lukewarm, cool, chilly}) appeared intact within its 10-waypoint path (\emph{scald, sear, warm, tepid, lukewarm, cool, chilly, brisk, frigid, icy}), with the longer path extending coverage at both endpoints and interpolating finer detail.
+
+These two findings support the conclusion that waypoint elicitation measures a stable, resolution-consistent property of each model's navigational geometry, not a transient or scale-dependent artifact.
+
+\subsection{The Dual-Anchor Effect}\label{the-dual-anchor-effect}
+
+Phase 2 established that conceptual navigation is fundamentally asymmetric: forward (A→B) and reverse (B→A) paths share less than 19\% of their waypoints on average (full results in Section 5). This prompted the starting-point hypothesis --- that models construct paths by greedy forward search from the starting concept, producing near-complete divergence between forward and reverse trajectories. Phase 3A tested this hypothesis by examining where in the waypoint sequence forward and reverse paths converge.
+
+\textbf{The U-shaped convergence profile.} To measure positional convergence, forward position \emph{i} was compared against reverse position \emph{(N+1−i)} --- the mirror position. If forward waypoint 1 matched reverse waypoint 5, forward waypoint 2 matched reverse waypoint 4, and so on, this would indicate that both paths traversed the same intermediate concepts in opposite order. The per-position mirror-match rates across all 84 pair/model combinations were:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Position & Forward & Reverse (mirror) & Match Rate \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & wp1 & wp5 & 0.102 \\
+2 & wp2 & wp4 & 0.057 \\
+3 & wp3 & wp3 & 0.065 \\
+4 & wp4 & wp2 & 0.085 \\
+5 & wp5 & wp1 & 0.129 \\
+\end{longtable}
+
+The starting-point hypothesis predicted a monotonic increase from position 1 to position 5 --- early waypoints should diverge most (each direction dominated by its starting concept's neighborhood), with convergence increasing as both paths approach the shared target. Instead, the data revealed a U-shape: positions 1 and 5 were both elevated relative to the middle. The overall convergence slope was weakly positive (0.0082, 95\% CI {[}−0.0030, 0.0198{]}) and only 50\% of pair/model combinations showed a positive slope. The starting-point hypothesis, in its simple form, was not supported.
+
+\textbf{The dual-anchor interpretation.} Both endpoints exert ``gravitational pull'' on nearby waypoints. Position 1 (forward waypoint 1 vs.~reverse waypoint 5) shows elevated overlap because both measurements sample from the neighborhood of concept A --- the forward path's first step away from A and the reverse path's last step arriving at A draw from the same constrained vicinity. Position 5 shows even higher overlap for the same reason applied to concept B. The middle positions (2--4) form a valley because this is the region of maximum navigational freedom --- unconstrained by either endpoint, dominated by model-specific and run-specific choices.
+
+\textbf{Category-dependent signatures.} The U-shape was not uniform across relationship types. Each category produced a distinctive convergence profile:
+
+\begin{itemize}
+\item
+  \emph{Antonyms} (hot--cold) showed extreme late convergence: 0.054, 0.035, 0.215, 0.338, 0.344. The temperature axis acts as a funnel --- once either direction has traversed 2--3 waypoints, both paths enter the same tightly constrained central region. This was the one category that supported the original starting-point hypothesis (slope 0.088, CI above zero).
+\item
+  \emph{Identity controls} (apple--apple) showed middle domination: 0.000, 0.044, 0.319, 0.048, 0.018. With no distance to traverse, both paths circulate through the same core associations (fruit, tree, harvest), and the middle waypoint is where they are most likely to align.
+\item
+  \emph{Random controls} showed a pure U-shape: 0.099, 0.025, 0.010, 0.031, 0.121. Both endpoints exert local pull, but no semantic bridge constrains the middle. The path between telescope and jealousy wandered freely through intermediate territory.
+\item
+  \emph{Nonsense controls} were flat near zero: 0.001, 0.003, 0.008, 0.001, 0.009. No anchoring effect, because nonsense strings have no semantic neighborhoods to constrain waypoint selection.
+\end{itemize}
+
+The category signatures in the convergence profile encode the type of semantic relationship between endpoints. Tightly constrained relationships (antonyms, hierarchies) show structured convergence; unconstrained relationships (random, nonsense) show the pure dual-anchor pattern or no pattern at all. This suggests that positional convergence profiles may help discriminate relationship types, though this observation has not been validated as a predictive tool in subsequent phases.
+
+\textbf{Model-level variation.} Claude showed the only negative convergence slope (−0.005) among the four core models, meaning its U-shape tilted slightly toward the start-side anchor. This is consistent with Claude's rigid navigational style: its paths are so determined by the pair's global topology that the target exerts less incremental pull than it does for more variable navigators. GPT (0.015) and Grok (0.016) showed positive slopes, consistent with their more exploratory styles producing stronger late-stage convergence toward the target.
+
+\subsection{Three Models Agree, Gemini Diverges}\label{three-models-agree-gemini-diverges}
+
+Across the 6 non-control triples analyzed in Phase 4A, Claude, GPT, and Grok aligned more closely with one another than with Gemini, which systematically diverged. The sample is small (6 triples, with two universal-zero triples that inflate pairwise correlations), but the pattern was consistent across multiple metrics.
+
+\textbf{Bridge frequency agreement.} Phase 4A analyzed inter-model agreement on bridge concept usage across 6 non-control triples. Claude, GPT, and Grok showed 100\% binary bridge agreement --- for every triple, all three models either found the bridge or all three missed it. Gemini agreed with the other models on only 50\% of triples.
+
+Pairwise Pearson correlations on the 6-element bridge frequency vectors:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Model Pair & Pearson \emph{r} & Binary Agreement \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Claude--GPT & 0.772 & 100\% \\
+Claude--Grok & 0.768 & 100\% \\
+GPT--Grok & 0.667 & 100\% \\
+GPT--Gemini & 0.679 & 50\% \\
+Claude--Gemini & 0.446 & 50\% \\
+Grok--Gemini & 0.340 & 50\% \\
+\end{longtable}
+
+To quantify Gemini's divergence, the mean absolute bridge frequency difference (\textbar Δfreq\textbar) was computed for Gemini-paired model pairs versus non-Gemini pairs. Gemini-paired mean \textbar Δfreq\textbar{} was 0.336, compared to 0.200 for non-Gemini pairs --- an isolation index of 0.136. The 95\% CI {[}−0.092, 0.378{]} includes zero, so this trend may not be reliable at the aggregate level. The qualitative pattern, however, was consistent: Gemini's bridge frequency disagreements were concentrated on specific triples where the other three models agreed.
+
+\textbf{Characteristic divergence patterns.} The divergence was not random. Gemini consistently failed to route through bridge concepts that the other three models found reliably:
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{bank→ocean}: Claude, GPT, and Grok all routed through ``river'' (frequency 0.90--1.00); Gemini did not (0.00), following alternative non-river routes.
+\item
+  \emph{music→mathematics}: Claude (1.00), Grok (0.85), and GPT (0.15) routed through ``harmony''; Gemini did not (0.00).
+\item
+  \emph{emotion→melancholy via nostalgia}: Grok found the bridge reliably (0.90); Claude and GPT found it at low frequency (0.10); Gemini did not (0.00).
+\end{itemize}
+
+The only case where all four models agreed on strong bridge presence was the hierarchical triple animal→dog→poodle (bridge frequency 0.95--1.00). (All four models also agreed on universal zero for the hot→energy→cold and beyoncé→justice→erosion triples, where no model found the designated bridge.) Gemini's topology preserved hierarchical/taxonomic structure but fragmented on cross-domain and abstract bridges.
+
+\textbf{Connection to later findings.} The Gemini divergence persisted through the later core-cohort phases in which Gemini was tested (through Phase 9). Three mechanistic hypotheses for Gemini's deficit --- frame-crossing threshold (Phase 5), gradient blindness (Phase 8B), and transformation-chain blindness (Phase 9B) --- were all falsified (graveyard entries G7, G21, G24). The deficit is real, stable within the tested phases, and mechanistically uncharacterized as of the end of data collection. It is discussed further in Section 7.5.
+
+\subsection{Polysemy Sense Differentiation}\label{polysemy-sense-differentiation}
+
+Polysemous concepts --- words with multiple distinct meanings --- provided a natural test of whether waypoint elicitation measures genuine conceptual structure or surface-level word statistics. If paths reflect word co-occurrence patterns, a polysemous source word should produce partially overlapping paths regardless of the target (since the same word token drives the associations). If paths reflect conceptual navigation, different targets should activate different senses and produce non-overlapping paths.
+
+\textbf{The result was unambiguous.} Three polysemy groups were tested in Phase 1 (bank, bat, crane), each with two sense-steering target concepts. Phase 2 supplementary runs corrected an initial artifact (the holdout pairs had lacked pilot data, inflating the Phase 1 zero-overlap result). The corrected cross-pair Jaccard values --- measuring the overlap between paths from the same source word to different sense-targets --- were:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Group & Pair A & Pair B & Cross-Pair Jaccard \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+bank & bank→river & bank→mortgage & 0.062 \\
+bat & bat→cave & bat→baseball & 0.059 \\
+crane & crane→construction & crane→wetland & 0.011 \\
+\end{longtable}
+
+All values were near zero. The crane group (0.011) was particularly clean --- essentially a single shared waypoint across all models and runs between the construction-crane and bird-crane paths. For comparison, within-pair Jaccard for these same models on meaningful pairs ranged from 0.258 (GPT) to 0.578 (Claude), and even the random control mean was 0.337.
+
+\textbf{Interpretation.} Under the benchmark's lexical similarity measure, the target concept strongly determines which sense of the polysemous source is activated, and this sense activation redirects the navigational trajectory. The word ``bank'' paired with ``river'' activates a geographic/hydrological frame; the same word paired with ``mortgage'' activates a financial frame. The resulting paths share almost no intermediate territory. This is strong evidence that waypoint elicitation probes conceptual structure --- the semantic content of the path --- rather than surface statistics about the source word.
+
+The polysemy result also connects to the dual-anchor finding (Section 4.3): even though the source concept (``bank'') is identical in both conditions, the target concept exerts sufficient gravitational pull to redirect the path from waypoint 1 onward. This is incompatible with a pure forward-chaining model in which only the starting concept determines the trajectory. The target's influence is detectable from the very beginning of the path, at least when the source is polysemous and the target provides strong sense-disambiguating signal.
+
+\textbf{Extension to later phases.} Phase 5B extended the polysemy finding to forced crossings --- concept triples where a polysemous word serves as the only connection between two domains (e.g., loan→bank→shore). These triples produced the highest bridge frequencies in the benchmark (0.95--1.00 for three of four models), confirming that polysemous concepts can serve as obligatory navigational bottlenecks when they are the sole path between semantic domains. The full forced-crossing analysis appears in Section 5.4.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The five findings in this section --- distinct gaits, self-consistent paths, dual-anchor convergence, cross-model agreement structure, and polysemy sense differentiation --- collectively support the conclusion that waypoint elicitation measures real geometric structure in LLM conceptual navigation, as captured by lexical overlap under the current canonicalization pipeline (Section 2.3). The structure is stable over time, consistent across resolutions, driven by semantic content, and characteristic of each model. This foundation supports the more demanding geometric claims in the sections that follow.

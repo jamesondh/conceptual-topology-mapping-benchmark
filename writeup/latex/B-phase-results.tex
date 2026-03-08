@@ -1,0 +1,180 @@
+\section{Phase-by-Phase Results Summary}\label{appendix-b-phase-by-phase-results-summary}
+
+This appendix provides a condensed summary of each phase's design, findings, predictions, and prediction accuracy. It is intended for readers who want to trace the exploration-first methodology in detail.
+
+\subsection{Phase 1: Pilot and Prompt Selection}\label{phase-1-pilot-and-prompt-selection}
+
+\textbf{Runs:} \textasciitilde2,480 (4 models, 36 pairs, 20 runs each)
+
+\textbf{Key question:} Do models produce consistent waypoint paths?
+
+\textbf{Design:} Evaluated two prompt formats (semantic, direct) on 15 holdout pairs. Collected 20-run batches on 21 reporting pairs across 4 models (Claude Sonnet 4.6, GPT-5.2, Grok 4.1 Fast, Gemini 3 Flash). Tested both 5-waypoint and 10-waypoint conditions.
+
+\textbf{Primary findings:} - Models have distinct conceptual gaits: Claude 0.578 vs GPT 0.258 (2.2x gap) {[}R1{]}. - Control validation: nonsense pairs produce near-zero Jaccard (0.062). - Polysemy sense differentiation: cross-pair Jaccard 0.011--0.062 {[}R3{]}. - 5-waypoint paths are genuine coarse-grainings of 10-waypoint paths (70.5\% shared, 67.9\% subsequence rate) {[}O10{]}. - Semantic prompt format selected over direct format.
+
+\textbf{Prediction accuracy:} N/A (exploratory phase).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 2: Reversals and Path Consistency}\label{phase-2-reversals-and-path-consistency}
+
+\textbf{Runs:} \textasciitilde960 (840 reverse + 120 polysemy supplementary)
+
+\textbf{Key question:} Is A-to-B navigation symmetric with B-to-A?
+
+\textbf{Design:} Reversed all 21 reporting pairs across 4 models (20 runs each). Added 120 supplementary runs to correct the Phase 1 polysemy artifact (G1).
+
+\textbf{Primary findings:} - Navigation is fundamentally asymmetric: mean directional asymmetry 0.811 {[}R2{]}. - 87\% of 84 pair/model combinations show significant asymmetry (permutation test, p \textless{} 0.05). - Dual-anchor effect: U-shaped convergence profile {[}O2{]}. - Category symmetry predictions failed for 4 of 8 categories {[}G3{]}.
+
+\textbf{Prediction accuracy:} N/A (exploratory phase).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 3: Positional Convergence and Transitive Path Structure}\label{phase-3-positional-convergence-and-transitive-path-structure}
+
+\textbf{Runs:} \textasciitilde1,260 (\textasciitilde660 Phase 3B new runs; Phase 3A was pure analysis)
+
+\textbf{Key question:} Do paths compose? Does the triangle inequality hold?
+
+\textbf{Design:} Part A: pure analysis of Phase 2 reversal data for positional convergence. Part B: 8 concept triples (hierarchical, semantic-chain, polysemy-extend, random-control) with 10 runs per leg, testing transitivity and triangle inequality.
+
+\textbf{Primary findings:} - Hierarchical transitivity 0.175 vs random 0.036 (4.9x, non-overlapping CIs) {[}R4{]}. - Triangle inequality holds in 90.6\% of cases (29/32 triple/model combinations). - Bridge frequency model-dependent: ``dog'' 15--100\%, ``harmony'' 0--100\%. - ``Energy'' fails as hot--cold bridge {[}G4{]}.
+
+\textbf{Prediction accuracy:} N/A (exploratory phase).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 4: Cross-Model Bridge Topology}\label{phase-4-cross-model-bridge-topology}
+
+\textbf{Runs:} \textasciitilde1,600 (Part A: 0 new runs, pure analysis; Part B: \textasciitilde1,520 new runs)
+
+\textbf{Key question:} Do models agree on bridge concepts?
+
+\textbf{Design:} Part A: analyzed inter-model bridge agreement across 6 non-control triples from Phase 3B. Part B: 8 targeted triples with 20 runs per leg across 4 models, testing specific bridge predictions.
+
+\textbf{Primary findings:} - Three models agree, Gemini diverges (isolation index 0.136) {[}O1{]}. - Bridges are structural bottlenecks: ``spectrum'' 1.00 all models {[}R6{]}. - ``Metaphor'' fails at 0.00 all models {[}G5{]}. - Universal concrete bridging (spectrum 100\%), universal abstract failure (metaphor 0\%). - Triangle inequality replicates at 93.8\%.
+
+\textbf{Prediction accuracy:} 81.3\% (26/32). The highest in the benchmark --- characterization questions.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 5: Cue-Strength and Dimensionality}\label{phase-5-cue-strength-and-dimensionality}
+
+\textbf{Runs:} \textasciitilde3,720 new + 200 reused
+
+\textbf{Key question:} Is bridge frequency graded by semantic cue strength?
+
+\textbf{Design:} Part A: 4 concept families x 3 cue levels x 4 models. Part B: polysemy dimensionality with same-axis vs cross-axis triples. Part C: triple-anchor convergence (W-shape test).
+
+\textbf{Primary findings:} - Cue-strength gradient real: 12/16 monotonic {[}R7{]}. All 4 failures in biological-growth family. - ``Germination'' \textgreater{} ``plant'': process \textgreater{} object {[}O4, G8{]}. - Forced crossing discovery (loan--bank--shore) {[}O5{]}. - ``Fire'' dead as bridge (too-central) {[}O6, G10{]}. - W-shape aggregate null {[}G11{]}. Gemini threshold hypothesis fails {[}G7{]}.
+
+\textbf{Prediction accuracy:} 42.9\% (Phase 5A: 64.6\%; Phase 5B: 31/48 but overall combined lower).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 6: Navigational Salience and Bridge Position}\label{phase-6-navigational-salience-and-bridge-position}
+
+\textbf{Runs:} \textasciitilde2,080 new + 280 reused
+
+\textbf{Key question:} Where do bridges appear in paths, and how does salience vary?
+
+\textbf{Design:} Part A: salience mapping (40 runs/condition, 8 pairs, 4 models). Part B: forced-crossing asymmetry test (8 pairs). Part C: positional bridge scanning (10 pairs, 4 models).
+
+\textbf{Primary findings:} - Salience distributions non-uniform: 31/32 conditions reject uniformity {[}O11{]}. - Forced-crossing asymmetry matches baseline (0.817 vs 0.811) {[}G12{]}. - Bridges anchor early (positions 1--2), not midpoint {[}O12{]}. - Peak-detection contrast 0.345 (CI excludes zero) {[}O13{]}. - Forced-crossing bridges positionally unstable (SD 1.71 vs 0.52) {[}G14{]}. - GPT highest entropy (3.44); Claude lowest (2.59).
+
+\textbf{Prediction accuracy:} \textasciitilde50\% (structural predictions mixed).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 7: Early Anchoring and Navigational Mechanics}\label{phase-7-early-anchoring-and-navigational-mechanics}
+
+\textbf{Runs:} \textasciitilde2,360 new + 920 reused
+
+\textbf{Key question:} Does pre-filling a waypoint causally affect the path?
+
+\textbf{Design:} Part A: 8 pairs x 3 pre-fill conditions (incongruent, congruent, neutral) x 4 models. Part B: 8 curvature triangles. Part C: 10 too-central pairs.
+
+\textbf{Primary findings:} - Pre-filling causally displaces bridges: mean 0.515, CI excludes zero {[}O15{]}. - Mechanism is associative primacy, not directional heading {[}G15{]}. - Bridge survival is bimodal: sadness/dog survive; harmony/germination collapse. - Taxonomic bridges resist displacement (0.140). - Triangle inequality replicates at 90.6\%. - Cross-model distance fails (r = 0.170) {[}O18, G17{]}. - Gradient \textgreater{} causal-chain bridges (0.730 vs 0.496).
+
+\textbf{Prediction accuracy:} \textasciitilde50\% (structural replications succeed, mechanistic novel predictions fail).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 8: Bridge Fragility and Gemini Deficit}\label{phase-8-bridge-fragility-and-gemini-deficit}
+
+\textbf{Runs:} \textasciitilde2,690 new + 2,960 reused
+
+\textbf{Key question:} Can bridge fragility be predicted from single variables?
+
+\textbf{Design:} Part A: 14 fragility pairs testing route exclusivity (competitor count). Part B: 20 gradient/causal pairs testing Gemini gradient blindness. Part C: 16 distance pairs testing gait normalization.
+
+\textbf{Primary findings:} - Route exclusivity fails: \(\rho\) = 0.116, opposite direction {[}G20{]}. - Gemini gradient blindness fails: interaction 0.046, null {[}G21{]}. - Gait normalization: zero improvement (r = 0.212 before and after) {[}G22{]}. - O17 replicates: gradient 0.770 vs causal 0.578. - New hypotheses proposed: H9 (dominance ratio), H10 (transformation blindness), H11 (facilitation).
+
+\textbf{Prediction accuracy:} 24\% (6/25). The benchmark's lowest --- all novel mechanistic predictions fail.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 9: Dominance, Transformation, and Facilitation}\label{phase-9-dominance-transformation-and-facilitation}
+
+\textbf{Runs:} \textasciitilde3,037 new + \textasciitilde5,270 reused
+
+\textbf{Key question:} Can bridge survival be explained by dominance ratio, transformation type, or facilitation crossover?
+
+\textbf{Design:} Part A: 14 pairs testing dominance ratio as fragility predictor. Part B: 20 transformation/gradient pairs retesting Gemini. Part C: 14 facilitation pairs testing the crossover regression.
+
+\textbf{Primary findings:} - Dominance ratio fails: \(\rho\) = 0.157 {[}G23{]}. - Transformation blindness fails with reversal: Gemini transformation mean 0.667 vs gradient 0.293 {[}G24{]}. - Crossover regression: slope correct direction but CI includes zero {[}G25{]}. - Pre-fill content is secondary modulator; 5/8 Phase 7A pairs replicate. - Marginal bridges show massive facilitation: mean 3.761x {[}O22{]}.
+
+\textbf{Prediction accuracy:} 20\% (5/25). Mechanism ceiling confirmed.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 10: Model Generality and Relation Classes}\label{phase-10-model-generality-and-relation-classes}
+
+\textbf{Runs:} \textasciitilde1,680 new + 778 reused
+
+\textbf{Key question:} Do structural findings generalize to new models?
+
+\textbf{Design:} Part A: 5 new models (Qwen, MiniMax, Kimi, GLM, Llama 8B) on 12 pairs with reliability probing. Part B: 4 core models on 8 pairs with 3 pre-fill relation classes.
+
+\textbf{Primary findings:} - R1 replicates: new model gaits 0.298--0.508 {[}R1 extended{]}. - R2 replicates: all new models exceed 0.60 asymmetry threshold {[}R2 extended{]}. - Bridge frequency CI includes zero (0.721 vs 0.817): bridge structure generalizes. - Llama 8B sole outlier (bridge freq 0.200): scale effect {[}O25{]}. - Relation class matters (Friedman p = 0.034): unrelated \textless{} related {[}O26{]}. - Predicted relation class ordering wrong {[}G27{]}. G26 resurrected.
+
+\textbf{Prediction accuracy:} 50\% (9/18). Recovery from mechanism floor --- more replication/structural predictions.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Phase 11: Expanded Generality, Control Revision, and Robustness}\label{phase-11-expanded-generality-control-revision-and-robustness}
+
+\textbf{Runs:} \textasciitilde2,040 new + \textasciitilde340 reused
+
+\textbf{Key question:} Do findings survive more models and protocol variation?
+
+\textbf{Design:} Part A: 4 new models (DeepSeek, Mistral, Cohere, Llama 4 Maverick) on 12 pairs. Part B: 4 control pair candidates across 6 models. Part C: 3 models x 2x2 waypoint/temperature grid.
+
+\textbf{Primary findings:} - R1/R2 universal across all 12 models. Mistral record gait (0.747) {[}O28{]}. - Llama scale confirmed: Maverick 0.724 vs 8B 0.200. - All 4 control candidates fail (0/24 cells pass). Stapler-monsoon fails for all 12 models {[}G28{]}. - ANOVA: model identity \(\eta^2\) = 0.242; protocol \(\approx\) 0 {[}O30{]}. - Bridge frequency most robust (\textgreater{} 0.97 all conditions) {[}O31{]}. - Asymmetry resolution-dependent: 5wp 0.594, 9wp 0.669 {[}O32, G29{]}.
+
+\textbf{Prediction accuracy:} 44\% (8/18). Intermediate --- mix of replication and structural predictions.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Cumulative Statistics}\label{cumulative-statistics}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Phase & New Runs & Prediction Accuracy & Dominant Prediction Type \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1--3 & \textasciitilde4,700 & N/A (exploratory) & --- \\
+4 & \textasciitilde1,600 & 81.3\% & Characterization \\
+5 & \textasciitilde3,720 & 42.9\% & Characterization + structure \\
+6 & \textasciitilde2,080 & \textasciitilde50\% & Structure \\
+7 & \textasciitilde2,360 & \textasciitilde50\% & Structure + mechanism \\
+8 & \textasciitilde2,690 & 24\% & Mechanism \\
+9 & \textasciitilde3,037 & 20\% & Mechanism \\
+10 & \textasciitilde1,680 & 50\% & Replication + structure \\
+11 & \textasciitilde2,040 & 44\% & Replication + robustness \\
+\textbf{Total} & \textbf{\textasciitilde21,540} & & \\
+\end{longtable}
+
+The prediction accuracy trajectory --- 81.3\% \(\to\) 42.9\% \(\to\) \textasciitilde50\% \(\to\) \textasciitilde50\% \(\to\) 24\% \(\to\) 20\% \(\to\) 50\% \(\to\) 44\% --- tracks the shift between prediction types. Replication predictions succeed at \textasciitilde80\%; structural predictions at \textasciitilde50\%; mechanistic predictions at 0--15\%.
