@@ -2,6 +2,8 @@
 
 A novel LLM benchmark testing whether models have consistent, measurable geometric structure in how they navigate between concepts.
 
+**📝 Read the full writeup: [Conceptual Topology Mapping Benchmark](https://jamesonhodge.com/posts/conceptual-topology-mapping-benchmark)**
+
 ## The Idea
 
 Give models two concepts, ask for intermediate waypoints, and test whether the resulting paths reveal consistent topological structure. Unlike static embedding analysis, this benchmark evaluates *behavioral navigation* — do models traverse conceptual space with predictable "gaits"?
